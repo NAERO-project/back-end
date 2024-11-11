@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.UUID;
 
 @Service
@@ -41,12 +42,15 @@ public class ProductService {
 
         String imageName = UUID.randomUUID().toString().replace("-", "");
         String replaceFileName = null;
+        String replaceThumbnailFileName = null;
         int result = 0;
 
         try {
             replaceFileName = FileUploadUtils.saveFile(IMAGE_DIR, imageName, productImage);
+            replaceThumbnailFileName = FileUploadUtils.saveThumbnailFile(IMAGE_DIR, replaceFileName);
 
             productDTO.setProductImg(replaceFileName);
+            productDTO.setProductThumbnail(replaceThumbnailFileName);
 
             log.info("[ProductService] insert Image Name : {}", replaceFileName);
 
