@@ -69,7 +69,7 @@ CREATE TABLE `tbl_user` (
                             `user_email`	varchar(255)	NULL	COMMENT '이메일',
                             `user_phone`	varchar(20)	NULL	COMMENT '연락처',
                             `user_point`	int	NOT NULL DEFAULT 0	COMMENT '보유 포인트',
-                            `enroll_date`	 DATETIME	NOT NULL 	COMMENT '가입일',
+                            `enroll_date`	 DATE	NOT NULL 	COMMENT '가입일',
                             `with_status`	varchar(1)	NULL DEFAULT 'N'	COMMENT '탈퇴여부',
                             `grade_id`	int	NOT NULL	DEFAULT 1	COMMENT '회원 등급 번호'
 );
