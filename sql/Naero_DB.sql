@@ -68,12 +68,16 @@ CREATE TABLE `tbl_user` (
                             `password`	varchar(255)	NOT NULL	COMMENT '비밀번호',
                             `user_email`	varchar(255)	NULL	COMMENT '이메일',
                             `user_phone`	varchar(20)	NULL	COMMENT '연락처',
-                            `user_point`	int	NOT NULL	COMMENT '보유 포인트',
-                            `enroll_date`	Date	NOT NULL	COMMENT '가입일',
-                            `with_status`	varchar(1)	NULL	COMMENT '탈퇴여부',
+                            `user_point`	int	NOT NULL DEFAULT 0	COMMENT '보유 포인트',
+                            `enroll_date`	 DATETIME	NOT NULL 	COMMENT '가입일',
+                            `with_status`	varchar(1)	NULL DEFAULT 'N'	COMMENT '탈퇴여부',
                             `grade_id`	int	NOT NULL	DEFAULT 1	COMMENT '회원 등급 번호'
 );
 
+CREATE TRIGGER before_insert_tbl_user
+    BEFORE INSERT ON `tbl_user`
+    FOR EACH ROW
+    SET NEW.enroll_date = IFNULL(NEW.enroll_date, CURRENT_DATE);
 
 CREATE TABLE `tbl_producer` (
                                 `producer_id`	int	NOT NULL 	COMMENT '판매자 회원 번호',
@@ -107,11 +111,16 @@ CREATE TABLE `tbl_question` (
                                 `question_content`	text	NOT NULL	COMMENT '1:1문의 내용',
                                 `question_date`	DateTime	NOT NULL	COMMENT '1:1문의 작성일자',
                                 `question_update`	DateTime	NULL	COMMENT '1:1문의 수정일자',
-                                `question_status`	boolean	NOT NULL	COMMENT '1:1문의 답변 상태',
+                                `question_status`	boolean	NOT NULL DEFAULT false	COMMENT '1:1문의 답변 상태',
                                 `question_image`	varchar(255)	NULL	COMMENT '1:1문의 이미지',
                                 `user_id`	int	NOT NULL	COMMENT '문의한 회원번호'
 );
 
+
+CREATE TRIGGER before_insert_tbl_question
+    BEFORE INSERT ON `tbl_question`
+    FOR EACH ROW
+    SET NEW.question_date = IFNULL(NEW.question_date, CURRENT_TIMESTAMP);
 
 CREATE TABLE `tbl_answer` (
                               `answer_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '1:1문의 답변 번호',
@@ -123,6 +132,10 @@ CREATE TABLE `tbl_answer` (
                               `answer_emp_id`	int	NOT NULL	COMMENT '1:1문의 답변자 번호'
 );
 
+CREATE TRIGGER before_insert_tbl_answer
+    BEFORE INSERT ON `tbl_answer`
+    FOR EACH ROW
+    SET NEW.answer_date = IFNULL(NEW.answer_date, CURRENT_TIMESTAMP);
 
 
 
@@ -183,6 +196,13 @@ CREATE TABLE `tbl_review` (
                               `user_id`	int	NOT NULL	COMMENT '회원 번호'
 );
 
+CREATE TRIGGER before_insert_tbl_review
+    BEFORE INSERT ON `tbl_review`
+    FOR EACH ROW
+    SET NEW.review_date = IFNULL(NEW.review_date, CURRENT_TIMESTAMP);
+
+
+
 
 CREATE TABLE `tbl_inquiry` (
                                `inquiry_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '문의 번호',
@@ -194,17 +214,27 @@ CREATE TABLE `tbl_inquiry` (
                                `inquiry_status`	boolean	NOT NULL	COMMENT '문의 답변 상태',
                                `user_id`	int	NOT NULL	COMMENT '회원 번호'
 );
+CREATE TRIGGER before_insert_tbl_inquiry
+    BEFORE INSERT ON `tbl_inquiry`
+    FOR EACH ROW
+    SET NEW.inquiry_date = IFNULL(NEW.inquiry_date, CURRENT_TIMESTAMP);
+
 
 
 CREATE TABLE tbl_response (
-                               `response_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '답변 번호',
-                               `response_title`	varchar(50)	NOT NULL	COMMENT '답변 제목',
-                               `response_content`	text	NOT NULL	COMMENT '답변 내용',
-                               `response_date`	DateTime	NOT NULL	COMMENT '답변 작성 일자',
-                               `response_update`	DateTime	NULL	COMMENT '답변 수정 일자',
-                               `inquiry_id`	int	NOT NULL	COMMENT '문의 번호',
-                               `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호'
+                              `response_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '답변 번호',
+                              `response_title`	varchar(50)	NOT NULL	COMMENT '답변 제목',
+                              `response_content`	text	NOT NULL	COMMENT '답변 내용',
+                              `response_date`	DateTime	NOT NULL	COMMENT '답변 작성 일자',
+                              `response_update`	DateTime	NULL	COMMENT '답변 수정 일자',
+                              `inquiry_id`	int	NOT NULL	COMMENT '문의 번호',
+                              `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호'
 );
+CREATE TRIGGER before_insert_tbl_response
+    BEFORE INSERT ON `tbl_response`
+    FOR EACH ROW
+    SET NEW.response_date = IFNULL(NEW.response_date, CURRENT_TIMESTAMP);
+
 
 CREATE TABLE `tbl_address` (
                                `address_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '주소 번호',
@@ -248,10 +278,10 @@ CREATE TABLE `tbl_magazine` (
 
 
 CREATE TABLE tbl_liked_seller (
-                              `likeSeller_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '찜번호',
-                              `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
-                              `user_id`	int	NOT NULL	COMMENT '회원 번호',
-                              `brand_like_date`	DateTime	NOT NULL	COMMENT '등록일시'
+                                  `likeSeller_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '찜번호',
+                                  `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
+                                  `user_id`	int	NOT NULL	COMMENT '회원 번호',
+                                  `brand_like_date`	DateTime	NOT NULL	COMMENT '등록일시'
 );
 
 
@@ -262,9 +292,15 @@ CREATE TABLE `tbl_liked_product` (
                                      `product_like_date`	DateTime	NOT NULL	COMMENT '등록일시'
 );
 
+CREATE TRIGGER before_insert_tbl_liked_product
+    BEFORE INSERT ON `tbl_liked_product`
+    FOR EACH ROW
+    SET NEW.product_like_date = IFNULL(NEW.product_like_date, CURRENT_TIMESTAMP);
+
 
 CREATE TABLE `tbl_coupon` (
                               `coupon_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '쿠폰번호',
+                              `coupon_name` varchar(50) NOT NULL    COMMENT '쿠폰이름',
                               `producer_id`	int	NOT NULL	COMMENT '발급 판매자 회원번호',
                               `sale_price`	int	NULL	COMMENT '할인율/할인금액',
                               `max_sale_price`	int	NULL	COMMENT '최대 할인 금액',
@@ -275,10 +311,16 @@ CREATE TABLE `tbl_coupon` (
                               `coupon_type`	varchar(10)	NOT NULL	COMMENT '쿠폰 유형'
 );
 
+CREATE TRIGGER before_insert_tbl_coupon
+    BEFORE INSERT ON `tbl_coupon`
+    FOR EACH ROW
+    SET NEW.pub_date = IFNULL(NEW.pub_date, CURRENT_TIMESTAMP);
+
+
 
 CREATE TABLE `tbl_coupon_list` (
                                    `Key`	int	NOT NULL  PRIMARY KEY AUTO_INCREMENT	COMMENT '쿠폰 수령 번호',
-                                   `use_status`	varchar(1)	NULL	COMMENT '사용 여부',
+                                   `use_status`	varchar(1)	NULL DEFAULT 'N'	COMMENT '사용 여부',
                                    `user_id`	int	NOT NULL	COMMENT '수령자',
                                    `coupon_id`	int	NOT NULL	COMMENT '쿠폰번호'
 );
@@ -322,6 +364,12 @@ CREATE TABLE `tbl_order` (
                              `updated_at`	DateTime	NULL	COMMENT '주문 정보 업데이트 일시',
                              user_id	int	NOT NULL	COMMENT '회원 번호'
 );
+CREATE TRIGGER before_insert_tbl_order
+    BEFORE INSERT ON `tbl_order`
+    FOR EACH ROW
+    SET NEW.created_at = IFNULL(NEW.created_at, CURRENT_TIMESTAMP);
+
+
 
 CREATE TABLE `tbl_ship_com` (
                                 `ship_com_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '택배사 번호',
@@ -368,6 +416,11 @@ CREATE TABLE `tbl_order_detail` (
                                     `order_id`	int	NOT NULL	COMMENT '주문 번호'
 );
 
+CREATE TRIGGER before_insert_tbl_order_detail
+    BEFORE INSERT ON `tbl_order_detail`
+    FOR EACH ROW
+    SET NEW.created_at = IFNULL(NEW.created_at, CURRENT_TIMESTAMP);
+
 
 
 
@@ -376,7 +429,7 @@ CREATE TABLE `tbl_auth` (
                             `auth_key`	varchar(20)	NOT NULL	COMMENT '인증 번호',
                             `start_time`	Time	NOT NULL	COMMENT '인증 시작 시간',
                             `Field`	varchar(20)	NULL	COMMENT '대상 이메일',
-                            `auth_status`	varchar(1)	NOT NULL	COMMENT '인증 성공 여부'
+                            `auth_status`	varchar(1)	NOT NULL 	COMMENT '인증 성공 여부'
 );
 
 #관계성 추가 구문 ---------------------------
@@ -557,14 +610,14 @@ ALTER TABLE `tbl_banner` ADD CONSTRAINT `FK_tbl_user_TO_tbl_banner_1` FOREIGN KE
         );
 
 ALTER TABLE tbl_liked_seller ADD CONSTRAINT `FK_tbl_producer_TO_tbl_seller_1` FOREIGN KEY (
-                                                                                       `producer_id`
+                                                                                           `producer_id`
     )
     REFERENCES `tbl_producer` (
                                `producer_id`
         );
 
 ALTER TABLE tbl_liked_seller ADD CONSTRAINT `FK_tbl_user_TO_tbl_seller_1` FOREIGN KEY (
-                                                                                   `user_id`
+                                                                                       `user_id`
     )
     REFERENCES `tbl_user` (
                            `user_id`
