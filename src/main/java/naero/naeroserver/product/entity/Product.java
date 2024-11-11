@@ -1,9 +1,6 @@
 package naero.naeroserver.product.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name ="tbl_product")
@@ -21,12 +18,36 @@ public class Product {
 
     @Column(name = "product_thumbnail")
     private String productThumbnail;
+
+    @Column(name = "product_img")
     private String productImg;
+
+    @Column(name = "product_desc")
     private String productDesc;
+
+    @Column(name = "product_create_at")
     private String productCreateAt;
+
+    @Column(name = "product_delete_at")
     private String prodcutDeleteAt;
+
+    @Column(name = "product_check")
     private String productCheck;
+
+    @Column(name = "product_quantity")
     private int productQuantity;
+
+//    @ManyToOne
+//    @Column(name = "producer_id")
+//    @JoinColumn(name = "producer_id")
+//    private Producer Producer;
+
+    @Column(name = "producer_id")
     private int producerId;
-    private int smallCategoryId;
+
+    @ManyToOne
+    @JoinColumn(name = "small_category_id")
+    private CategorySmall CategorySmall;
+
+
 }
