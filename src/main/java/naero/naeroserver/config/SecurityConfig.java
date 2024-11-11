@@ -1,4 +1,4 @@
-package nearo.nearoserver.config;
+package naero.naeroserver.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
