@@ -1,6 +1,7 @@
 package naero.naeroserver.product.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import naero.naeroserver.common.ResponseDTO;
 import naero.naeroserver.product.dto.ProductDTO;
 import naero.naeroserver.product.service.ProductService;
 import org.slf4j.Logger;
@@ -26,10 +27,10 @@ public class ProductController {
         this.productService = productService;
     }
 
-//    @Operation(summary = "상품 등록 요청", description = "해당 상품 등록이 진행됩니다.", tags = { "ProductController" })
-//    @PostMapping(value = "/products")
-//    public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
-//
-//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 입력 성공",  productService.insertProduct(productDTO, productImage)));
-//    }
+    @Operation(summary = "상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
+    @PostMapping(value = "/products")
+    public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
+    }
 }

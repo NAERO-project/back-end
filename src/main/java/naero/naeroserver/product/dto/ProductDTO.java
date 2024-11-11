@@ -12,14 +12,13 @@ public class ProductDTO {
     private String productDeleteAt;
     private String productCheck;
     private int productQuantity;
-//
     private int producerId;
-    private CategorySmallDTO smallCategoryId;
+    private int smallCategoryId;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(int productId, String productName, int productPrice, String productThumbnail, String productImg, String productDesc, String productCreateAt, String productDeleteAt, String productCheck, int productQuantity, int producerId, CategorySmallDTO smallCategoryId) {
+    public ProductDTO(int productId, String productName, int productPrice, String productThumbnail, String productImg, String productDesc, String productCreateAt, String productDeleteAt, String productCheck, int productQuantity, int producerId, int smallCategoryId) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
@@ -122,11 +121,11 @@ public class ProductDTO {
         this.producerId = producerId;
     }
 
-    public CategorySmallDTO getSmallCategoryId() {
+    public int getSmallCategoryId() {
         return smallCategoryId;
     }
 
-    public void setSmallCategoryId(CategorySmallDTO smallCategoryId) {
+    public void setSmallCategoryId(int smallCategoryId) {
         this.smallCategoryId = smallCategoryId;
     }
 

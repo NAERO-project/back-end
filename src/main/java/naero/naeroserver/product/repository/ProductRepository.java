@@ -1,4 +1,7 @@
 package naero.naeroserver.product.repository;
 
-public interface ProductRepository {
+import naero.naeroserver.entity.product.TblProduct;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
 }
