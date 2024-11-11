@@ -29,7 +29,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    /* 설명. 이미지 파일 저장 경로와 응답용 URL (WebConfig 설정파일 추가하기) */
+    /* 설명. 이미지 파일 저장 경로와 응답용 URL (WebConfig 설정파일 참고) */
     @Value("${image.image-dir}")
     private String IMAGE_DIR;
     @Value("${image.image-url}")
