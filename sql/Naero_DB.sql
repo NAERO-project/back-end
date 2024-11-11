@@ -69,7 +69,7 @@ CREATE TABLE `tbl_user` (
                             `user_email`	varchar(255)	NULL	COMMENT '이메일',
                             `user_phone`	varchar(20)	NULL	COMMENT '연락처',
                             `user_point`	int	NOT NULL DEFAULT 0	COMMENT '보유 포인트',
-                            `enroll_date`	 DATETIME	NOT NULL 	COMMENT '가입일',
+                            `enroll_date`	 DATE	NOT NULL 	COMMENT '가입일',
                             `with_status`	varchar(1)	NULL DEFAULT 'N'	COMMENT '탈퇴여부',
                             `grade_id`	int	NOT NULL	DEFAULT 1	COMMENT '회원 등급 번호'
 );
@@ -222,13 +222,13 @@ CREATE TRIGGER before_insert_tbl_inquiry
 
 
 CREATE TABLE tbl_response (
-                              `response_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '답변 번호',
-                              `response_title`	varchar(50)	NOT NULL	COMMENT '답변 제목',
-                              `response_content`	text	NOT NULL	COMMENT '답변 내용',
-                              `response_date`	DateTime	NOT NULL	COMMENT '답변 작성 일자',
-                              `response_update`	DateTime	NULL	COMMENT '답변 수정 일자',
-                              `inquiry_id`	int	NOT NULL	COMMENT '문의 번호',
-                              `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호'
+                               `response_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '답변 번호',
+                               `response_title`	varchar(50)	NOT NULL	COMMENT '답변 제목',
+                               `response_content`	text	NOT NULL	COMMENT '답변 내용',
+                               `response_date`	DateTime	NOT NULL	COMMENT '답변 작성 일자',
+                               `response_update`	DateTime	NULL	COMMENT '답변 수정 일자',
+                               `inquiry_id`	int	NOT NULL	COMMENT '문의 번호',
+                               `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호'
 );
 CREATE TRIGGER before_insert_tbl_response
     BEFORE INSERT ON `tbl_response`
@@ -278,10 +278,10 @@ CREATE TABLE `tbl_magazine` (
 
 
 CREATE TABLE tbl_liked_seller (
-                                  `likeSeller_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '찜번호',
-                                  `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
-                                  `user_id`	int	NOT NULL	COMMENT '회원 번호',
-                                  `brand_like_date`	DateTime	NOT NULL	COMMENT '등록일시'
+                              `likeSeller_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '찜번호',
+                              `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
+                              `user_id`	int	NOT NULL	COMMENT '회원 번호',
+                              `brand_like_date`	DateTime	NOT NULL	COMMENT '등록일시'
 );
 
 
@@ -610,14 +610,14 @@ ALTER TABLE `tbl_banner` ADD CONSTRAINT `FK_tbl_user_TO_tbl_banner_1` FOREIGN KE
         );
 
 ALTER TABLE tbl_liked_seller ADD CONSTRAINT `FK_tbl_producer_TO_tbl_seller_1` FOREIGN KEY (
-                                                                                           `producer_id`
+                                                                                       `producer_id`
     )
     REFERENCES `tbl_producer` (
                                `producer_id`
         );
 
 ALTER TABLE tbl_liked_seller ADD CONSTRAINT `FK_tbl_user_TO_tbl_seller_1` FOREIGN KEY (
-                                                                                       `user_id`
+                                                                                   `user_id`
     )
     REFERENCES `tbl_user` (
                            `user_id`
