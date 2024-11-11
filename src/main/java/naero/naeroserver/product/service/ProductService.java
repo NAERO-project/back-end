@@ -64,6 +64,6 @@ public class ProductService {
             throw new RuntimeException(e);
         }
 
-        return (result > 0) ? "상품 입력 성공" : "상품 입력 실패";
+        return "상품 입력 성공";
     }
 }
