@@ -8,8 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
+    List<TblProduct> findByProductCheck(String status);
 
-//    List<TblProduct> findByProductOrderable(String status);
-
-//    Page<TblProduct> findByProductOrderablePage(String status, Pageable paging);
+    Page<TblProduct> findByProductCheck(String status, Pageable paging);
 }

@@ -34,7 +34,7 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
     }
 
-    @Operation(summary = "상품 리스트 전체 조회", description = "상품 조회 및 페이징 처리 진행", tags = {"ProductController"})
+    @Operation(summary = "상품 더보기 리스트 전체 조회", description = "상품 조회 및 페이징 처리 진행", tags = {"ProductController"})
     @GetMapping("/products")
     public ResponseEntity<ResponseDTO> selectProductList(
             @RequestParam(name = "offset", defaultValue = "1") String offset){
