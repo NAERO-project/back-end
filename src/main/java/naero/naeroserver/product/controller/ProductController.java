@@ -37,7 +37,7 @@ public class ProductController {
 
     /* 상품 리스트 전체 조회 (페이징) */
     @Operation(summary = "상품 리스트 전체 조회 (페이징)", description = "상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
-    @GetMapping("/products")
+    @GetMapping("/products/more")
     public ResponseEntity<ResponseDTO> selectProductList(
             @RequestParam(name = "offset", defaultValue = "1") String offset){
 
@@ -55,13 +55,12 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
     }
 
-    /* 식품, 음료 리스트 전체 조회 (페이징) */
     @Operation(summary = "식품과 음료 리스트 조회 요청", description = "식품과 음료 카테고리에 해당하는 상품 리스트 조회 및 페이징 처리가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/food")
+    @GetMapping("/products/more/food")
     public ResponseEntity<ResponseDTO> selectProductListAboutFood(
             @RequestParam(name = "offset", defaultValue = "1") String offset) {
 
-        log.info("[ProductController] selectProductList 식품과 음 리스트 전체 조회(페이징) : " + offset);
+        log.info("[ProductController] selectProductList 식품과 음식 리스트 전체 조회(페이징) : " + offset);
 
         int foodTotal = productService.selectProductPageFood();
 
@@ -75,40 +74,38 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
     }
 
-    /* 건강, 뷰티 리스트 전체 조회 (페이징) */
     @Operation(summary = "건강과 뷰티 리스트 조회 요청", description = "건강과 뷰티 카테고리에 해당하는 상품 리스트 조회 및 페이징 처리가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/health")
-    public ResponseEntity<ResponseDTO> selectProductListAboutHealth(
+    @GetMapping("/products/more/beauty")
+    public ResponseEntity<ResponseDTO> selectProductListAboutBeauty(
             @RequestParam(name = "offset", defaultValue = "1") String offset) {
 
-        log.info("[ProductController] selectProductList 건강과 뷰티 리스트 전체 조회(페이징) : " + offset);
+        log.info("[ProductController] selectProductListAboutBeauty 건강과 뷰티 리스트 전체 조회(페이징) : " + offset);
 
-        int healthTotal = productService.selectProductPageHealth();
+        int healthTotal = productService.selectProductPageBeauty();
 
         Criteria cri = new Criteria(Integer.valueOf(offset), 12);
         PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
 
-        pagingResponseDTO.setData(productService.selectProductHealthListPaging(cri));
+        pagingResponseDTO.setData(productService.selectProductBeautyListPaging(cri));
 
         pagingResponseDTO.setPageInfo(new PageDTO(cri, healthTotal));
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
     }
 
-    /* 의류 리스트 전체 조회 (페이징) */
     @Operation(summary = "의류 리스트 조회 요청", description = "의류 카테고리에 해당하는 상품 리스트 조회 및 페이징 처리가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/apparel ")
-    public ResponseEntity<ResponseDTO> selectProductListAboutApparel (
+    @GetMapping("/products/more/fashion")
+    public ResponseEntity<ResponseDTO> selectProductListAboutFashion (
             @RequestParam(name = "offset", defaultValue = "1") String offset) {
 
-        log.info("[ProductController] selectProductList 의류 리스트 전체 조회(페이징) : " + offset);
+        log.info("[ProductController] selectProductListAboutFashion 의류 리스트 전체 조회(페이징) : " + offset);
 
-        int apparelTotal = productService.selectProductPageApparel();
+        int apparelTotal = productService.selectProductPageFashion();
 
         Criteria cri = new Criteria(Integer.valueOf(offset), 12);
         PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
 
-        pagingResponseDTO.setData(productService.selectProductApparelListPaging(cri));
+        pagingResponseDTO.setData(productService.selectProductFashionListPaging(cri));
 
         pagingResponseDTO.setPageInfo(new PageDTO(cri, apparelTotal));
 

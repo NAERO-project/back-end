@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,15 +78,14 @@ public class ProductService {
     /* 상품 리스트 전체 조회 (페이징) */
     public int selectProductPage() {
         log.info("[ProductService] selectProductPage 시작");
-
-        List<TblProduct> productList = productRepository.findByProductCheck("Y");
+        List<TblProduct> productList = productRepository.findByProductCheck();
+//        List<TblProduct> productList = productRepository.findByProductCheck("Y");
 
         log.info("[ProductService] selectProductPage 종료");
 
         return productList.size();
     }
 
-    /* 상품 리스트 전체 조회 (페이징) */
     public Object selectProductListPaging(Criteria cri) {
         log.info("[ProductService] selectProductListPaging() 시작");
 
@@ -93,7 +93,8 @@ public class ProductService {
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-        Page<TblProduct> result = productRepository.findByProductCheck("Y", paging);
+        Page<TblProduct> result = productRepository.findByProductCheck(paging);
+//        Page<TblProduct> result = productRepository.findByProductCheck("Y", paging);
         List<TblProduct> productList = (List<TblProduct>)result.getContent();
 
         for(int i = 0; i<productList.size(); i++){
@@ -105,18 +106,17 @@ public class ProductService {
         return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
     }
 
-    /* 식품, 음료 리스트 전체 조회 (페이징) */
     public int selectProductPageFood() {
-        log.info("[ProductService] selectProductPageFood 시작");
+        log.info("[ProductService] selectProductPageFood() 시작");
 
-        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryIdOrSmallCategoryId("Y", 2, 3);
+        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId(2);
+//        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryIdOrSmallCategoryId("Y", 2, 3);
 
-        log.info("[ProductService] selectProductPageFood 종료");
+        log.info("[ProductService] selectProductPageFood() 종료");
 
         return productList.size();
     }
 
-    /* 식품, 음료 리스트 전체 조회 (페이징) */
     public Object selectProductFoodListPaging(Criteria cri) {
         log.info("[ProductService] selectProductFoodListPaging() 시작");
 
@@ -124,7 +124,8 @@ public class ProductService {
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryIdOrSmallCategoryId("Y", 1,2, paging);
+        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId(2, paging);
+//        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryIdOrSmallCategoryId("Y", 1,2, paging);
         List<TblProduct> productList = (List<TblProduct>)result.getContent();
 
         for(int i = 0; i<productList.size(); i++){
@@ -136,64 +137,64 @@ public class ProductService {
         return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
     }
 
-    /* 건강, 뷰티 리스트 전체 조회 (페이징) */
-    public int selectProductPageHealth() {
-        log.info("[ProductService] selectProductPageHealth 시작");
+    public int selectProductPageBeauty() {
+        log.info("[ProductService] selectProductPageBeauty() 시작");
 
-        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryIdOrSmallCategoryId("Y", 3, 4);
+        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId(3);
+//        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryIdOrSmallCategoryId("Y", 3, 4);
 
-        log.info("[ProductService] selectProductPageHealth 종료");
+        log.info("[ProductService] selectProductPageBeauty() 종료");
 
         return productList.size();
     }
 
-    /* 건강, 뷰티 리스트 전체 조회 (페이징) */
-    public Object selectProductHealthListPaging(Criteria cri) {
-        log.info("[ProductService] selectProductHealthListPaging() 시작");
+    public Object selectProductBeautyListPaging(Criteria cri) {
+        log.info("[ProductService] selectProductBeautyListPaging() 시작");
 
         int index = cri.getPageNum() -1;
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryIdOrSmallCategoryId("Y", 3,4, paging);
+        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId(3, paging);
+//        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryIdOrSmallCategoryId("Y", 3,4, paging);
         List<TblProduct> productList = (List<TblProduct>)result.getContent();
 
         for(int i = 0; i<productList.size(); i++){
             productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
         }
 
-        log.info("[ProductService] selectProductHealthListPaging() 종료");
+        log.info("[ProductService] selectProductBeautyListPaging() 종료");
 
         return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
     }
 
-    /* 의류 리스트 전체 조회 (페이징) */
-    public int selectProductPageApparel() {
-        log.info("[ProductService] selectProductPageApparel 시작");
+    public int selectProductPageFashion() {
+        log.info("[ProductService] selectProductPageFashion 시작");
 
-        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId("Y", 5);
+        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId(4);
+//        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId("Y", 5);
 
-        log.info("[ProductService] selectProductPageApparel 종료");
+        log.info("[ProductService] selectProductPageFashion 종료");
 
         return productList.size();
     }
 
-    /* 의류 리스트 전체 조회 (페이징) */
-    public Object selectProductApparelListPaging(Criteria cri) {
-        log.info("[ProductService] selectProductApparelListPaging() 시작");
+    public Object selectProductFashionListPaging(Criteria cri) {
+        log.info("[ProductService] selectProductFashionListPaging() 시작");
 
         int index = cri.getPageNum() -1;
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId("Y", 5, paging);
+        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId(4, paging);
+//        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId("Y", 5, paging);
         List<TblProduct> productList = (List<TblProduct>)result.getContent();
 
         for(int i = 0; i<productList.size(); i++){
             productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
         }
 
-        log.info("[ProductService] selectProductApparelListPaging() 종료");
+        log.info("[ProductService] selectProductFashionListPaging() 종료");
 
         return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
     }

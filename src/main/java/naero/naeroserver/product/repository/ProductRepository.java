@@ -21,15 +21,29 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "ORDER BY p.productId DESC")
     List<TblProduct> findByFoodProductWithLimit(@Param("largeCategoryId") Integer largeCategoryId, Pageable pageable);
 
-    List<TblProduct> findByProductCheck(String status);
+    @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.productId DESC")
+    List<TblProduct> findByProductCheck();
+//    List<TblProduct> findByProductCheck(String status);
 
-    Page<TblProduct> findByProductCheck(String status, Pageable paging);
+    @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.productId DESC")
+    Page<TblProduct> findByProductCheck(Pageable paging);
+//    Page<TblProduct> findByProductCheck(String status, Pageable paging);
 
-    List<TblProduct> findByProductCheckAndSmallCategoryIdOrSmallCategoryId(String status, Integer smallCategoryId1, Integer smallCategoryId2);
+    @Query("SELECT p FROM TblProduct p " +
+            "JOIN p.smallCategory sc " +
+            "JOIN sc.mediumCategory mc " +
+            "JOIN mc.largeCategory lc " +
+            "WHERE lc.id = :largeCategoryId AND p.productCheck = 'Y' " +
+            "ORDER BY p.productId DESC")
+    List<TblProduct> findByProductCheckAndSmallCategoryId(@Param("largeCategoryId") Integer largeCategoryId);
+//    List<TblProduct> findByProductCheckAndSmallCategoryId(String status, Integer smallCategoryId1, Integer smallCategoryId2);
 
-    Page<TblProduct> findByProductCheckAndSmallCategoryIdOrSmallCategoryId(String status, Integer smallCategoryId1, Integer smallCategoryId2, Pageable paging);
+    @Query("SELECT p FROM TblProduct p " +
+            "JOIN p.smallCategory sc " +
+            "JOIN sc.mediumCategory mc " +
+            "JOIN mc.largeCategory lc " +
+            "WHERE lc.id = :largeCategoryId AND p.productCheck = 'Y' " +
+            "ORDER BY p.productId DESC")
+    Page<TblProduct> findByProductCheckAndSmallCategoryId(@Param("largeCategoryId") Integer largeCategoryId, Pageable paging);
 
-    List<TblProduct> findByProductCheckAndSmallCategoryId(String status, Integer smallCategoryId);
-
-    Page<TblProduct> findByProductCheckAndSmallCategoryId(String status, Integer smallCategoryId, Pageable paging);
 }
