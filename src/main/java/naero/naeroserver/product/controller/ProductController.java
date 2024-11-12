@@ -27,7 +27,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @Operation(summary = "상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
+    @Operation(summary = "판매자 상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
     @PostMapping(value = "/products")
     public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
 
