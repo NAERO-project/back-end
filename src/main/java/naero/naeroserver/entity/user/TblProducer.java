@@ -18,9 +18,14 @@ import java.util.Set;
 public class TblProducer {
     @Id
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Column(name = "producer_id") // userId와 동일한 값을 가진 필드여야 합니다.
+    private Integer producerId;  // 기본 키로 사용할 필드 추가
+
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "producer_id", nullable = false)
     private TblUser producer;
+
 
     @Size(max = 20)
     @Column(name = "busi_no", length = 20)
@@ -64,6 +69,14 @@ public class TblProducer {
 
     @OneToMany(mappedBy = "producer")
     private Set<TblResponse> tblResponses = new LinkedHashSet<>();
+
+    public @NotNull Integer getProducerId() {
+        return producerId;
+    }
+
+    public void setProducerId(@NotNull Integer producerId) {
+        this.producerId = producerId;
+    }
 
     public TblUser getProducer() {
         return producer;
