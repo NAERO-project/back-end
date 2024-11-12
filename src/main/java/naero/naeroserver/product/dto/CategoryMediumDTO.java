@@ -1,17 +1,16 @@
 package naero.naeroserver.product.dto;
 
-import naero.naeroserver.product.entity.CategoryLarge;
 
 public class CategoryMediumDTO {
 
     private int mediumCategoryId;
     private String mediumCategoryName;
-    private CategoryLarge largeCategoryId;
+    private CategoryLargeDTO largeCategoryId;
 
     public CategoryMediumDTO() {
     }
 
-    public CategoryMediumDTO(int mediumCategoryId, String mediumCategoryName, CategoryLarge largeCategoryId) {
+    public CategoryMediumDTO(int mediumCategoryId, String mediumCategoryName, CategoryLargeDTO largeCategoryId) {
         this.mediumCategoryId = mediumCategoryId;
         this.mediumCategoryName = mediumCategoryName;
         this.largeCategoryId = largeCategoryId;
@@ -33,11 +32,11 @@ public class CategoryMediumDTO {
         this.mediumCategoryName = mediumCategoryName;
     }
 
-    public CategoryLarge getLargeCategoryId() {
+    public CategoryLargeDTO getLargeCategoryId() {
         return largeCategoryId;
     }
 
-    public void setLargeCategoryId(CategoryLarge largeCategoryId) {
+    public void setLargeCategoryId(CategoryLargeDTO largeCategoryId) {
         this.largeCategoryId = largeCategoryId;
     }
 

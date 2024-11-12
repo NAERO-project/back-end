@@ -1,17 +1,15 @@
 package naero.naeroserver.product.dto;
 
-import naero.naeroserver.product.entity.CategoryMedium;
-
 public class CategorySmallDTO {
 
     private int smallCategoryId;
     private String smallCategoryName;
-    private CategoryMedium mediumCategoryId;
+    private CategoryMediumDTO mediumCategoryId;
 
     public CategorySmallDTO() {
     }
 
-    public CategorySmallDTO(int smallCategoryId, String smallCategoryName, CategoryMedium mediumCategoryId) {
+    public CategorySmallDTO(int smallCategoryId, String smallCategoryName, CategoryMediumDTO mediumCategoryId) {
         this.smallCategoryId = smallCategoryId;
         this.smallCategoryName = smallCategoryName;
         this.mediumCategoryId = mediumCategoryId;
@@ -33,11 +31,11 @@ public class CategorySmallDTO {
         this.smallCategoryId = smallCategoryId;
     }
 
-    public CategoryMedium getMediumCategoryId() {
+    public CategoryMediumDTO getMediumCategoryId() {
         return mediumCategoryId;
     }
 
-    public void setMediumCategoryId(CategoryMedium mediumCategoryId) {
+    public void setMediumCategoryId(CategoryMediumDTO mediumCategoryId) {
         this.mediumCategoryId = mediumCategoryId;
     }
 
