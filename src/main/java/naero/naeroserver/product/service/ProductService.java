@@ -76,12 +76,11 @@ public class ProductService {
     public int selectProductPage() {
         log.info("[ProductService] selectProductPage 시작");
 
-//        List<TblProduct> productList = productRepository.findByProductOrderable("Y");
+        List<TblProduct> productList = productRepository.findByProductCheck("Y");
 
         log.info("[ProductService] selectProductPage 종료");
 
-//        return productList.size();
-        return 0;
+        return productList.size();
     }
 
     public Object selectProductListPaging(Criteria cri) {
@@ -91,16 +90,15 @@ public class ProductService {
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-//        Page<TblProduct> result = productRepository.findByProductOrderablePage("Y", paging);
-//        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+        Page<TblProduct> result = productRepository.findByProductCheck("Y", paging);
+        List<TblProduct> productList = (List<TblProduct>)result.getContent();
 
-//        for(int i = 0; i<productList.size(); i++){
-//            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
-//        }
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+        }
 
         log.info("[ProductService] selectProductListPaging() 종료");
 
-//        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
-        return null;
+        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
     }
 }
