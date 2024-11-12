@@ -41,7 +41,7 @@ public class ProductService {
     @Value("${image.image-url}")
     private String IMAGE_URL;
 
-    /* 상품 등록 */
+    /* 판매자 상품 등록 */
     @Transactional
     public Object insertProduct(ProductDTO productDTO, MultipartFile productImage) {
         log.info("[ProductService] insertProduct() 시작");
@@ -196,5 +196,70 @@ public class ProductService {
         log.info("[ProductService] selectProductApparelListPaging() 종료");
 
         return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    /* 상품 리스트 미리보기 조회 */
+    public Object selectProductListPreview() {
+        log.info("[ProductService] selectProductListPreview() 시작");
+
+        Pageable pageable = PageRequest.of(0, 8); // 최신 상품 순으로 8개만 조회
+        List<TblProduct> productListPreview = productRepository.findAllProductWithLimit(pageable);
+
+        for (TblProduct tblProduct : productListPreview) {
+            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
+        }
+
+        log.info("[ProductService] selectProductListPreview() 종료");
+
+        return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+                                        .collect(Collectors.toList());
+    }
+
+    public Object selectProductListAboutFoodPreview() {
+        log.info("[ProductService] selectProductListAboutFoodPreview() 시작");
+
+        Pageable pageable = PageRequest.of(0, 8);
+        List<TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(2, pageable);
+
+        for (TblProduct tblProduct : productListPreview) {
+            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
+        }
+
+        log.info("[ProductService] selectProductListAboutFoodPreview() 종료");
+
+        return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public Object selectProductListAboutCosmeticsPreview() {
+        log.info("[ProductService] selectProductListAboutCosmeticsPreview() 시작");
+
+        Pageable pageable = PageRequest.of(0, 8);
+        List<TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(4, pageable);
+
+        for (TblProduct tblProduct : productListPreview) {
+            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
+        }
+
+        log.info("[ProductService] selectProductListAboutCosmeticsPreview() 종료");
+
+        return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public Object selectProductListAboutFashionPreview() {
+        log.info("[ProductService] selectProductListAboutFashionPreview() 시작");
+
+        Pageable pageable = PageRequest.of(0, 8);
+        List<TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(3, pageable);
+
+        for (TblProduct tblProduct : productListPreview) {
+            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
+        }
+
+        log.info("[ProductService] selectProductListAboutFashionPreview() 종료");
+
+        return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
     }
 }
