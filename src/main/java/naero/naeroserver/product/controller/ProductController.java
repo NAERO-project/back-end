@@ -27,8 +27,8 @@ public class ProductController {
         this.productService = productService;
     }
 
-    /* 상품 등록 */
-    @Operation(summary = "상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
+    /* 판매자 상품 등록 */
+    @Operation(summary = "판매자 상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
     @PostMapping(value = "/products")
     public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
 
@@ -113,6 +113,35 @@ public class ProductController {
         pagingResponseDTO.setPageInfo(new PageDTO(cri, apparelTotal));
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
+
+    /* 상품 리스트 미리보기 조회 */
+    @Operation(summary = "전체 상품 리스트 미리보기 조회 요청", description = "전체 카테고리에 해당하는 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/preview")
+    public ResponseEntity<ResponseDTO> selectProductListPreview() {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListPreview()));
+    }
+
+    @Operation(summary = "식품 상품 리스트 미리보기 조회 요청", description = "식품 카테고리에 해당하는 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/preview/food")
+    public ResponseEntity<ResponseDTO> selectProductListAboutFoodPreview() {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListAboutFoodPreview()));
+    }
+
+    @Operation(summary = "건강&뷰티 상품 리스트 미리보기 조회 요청", description = "건강&뷰티 카테고리에 해당하는 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/preview/beauty")
+    public ResponseEntity<ResponseDTO> selectProductListAboutCosmeticsPreview() {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListAboutCosmeticsPreview()));
+    }
+
+    @Operation(summary = "의류 상품 리스트 미리보기 조회 요청", description = "의류 카테고리에 해당하는 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/preview/fashion")
+    public ResponseEntity<ResponseDTO> selectProductListAboutFashionPreview() {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListAboutFashionPreview()));
     }
 
 }
