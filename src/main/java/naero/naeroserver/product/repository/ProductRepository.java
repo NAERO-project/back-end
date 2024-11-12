@@ -11,5 +11,5 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
 
     List<TblProduct> findByProductOrderable(String status);
 
-    Page<TblProduct> findByProductOrderablePage(String y, Pageable paging);
+    Page<TblProduct> findByProductOrderablePage(String status, Pageable paging);
 }

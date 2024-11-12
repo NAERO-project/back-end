@@ -410,7 +410,7 @@ CREATE TRIGGER before_insert_tbl_order
     BEFORE INSERT ON `tbl_order`
     FOR EACH ROW
     SET NEW.order_datetime = IFNULL(NEW.order_datetime, CURRENT_TIMESTAMP)
-        AND NEW.created_at = IFNULL(NEW.created_at, CURRENT_TIMESTAMP);
+        , NEW.created_at = IFNULL(NEW.created_at, CURRENT_TIMESTAMP);
 ;
 
 CREATE TABLE `tbl_order_detail` (
@@ -643,8 +643,8 @@ ALTER TABLE `tbl_order_detail` ADD CONSTRAINT `FK_tbl_order_TO_tbl_order_detail_
     REFERENCES `tbl_order` (
                             `order_id`
         );
-ALTER TABLE `tbl_order_detail` ADD CONSTRAINT `FK_tbl_ship_com_TO_tbl_shipping_1` FOREIGN KEY (
-                                                                                               `option_id`
+ALTER TABLE `tbl_order_detail` ADD CONSTRAINT `FK_tbl_option_TO_tbl_order_detail_1` FOREIGN KEY (
+                                                                                                 `option_id`
     )
     REFERENCES `tbl_option` (
                              `option_id`
