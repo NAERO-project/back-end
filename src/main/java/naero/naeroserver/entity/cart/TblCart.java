@@ -14,10 +14,6 @@ public class TblCart {
     private Integer id;
 
     @NotNull
-    @Column(name = "product_id", nullable = false)
-    private Integer productId;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "option_id", nullable = false)
     private TblOption option;
@@ -41,14 +37,6 @@ public class TblCart {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
     }
 
     public TblOption getOption() {

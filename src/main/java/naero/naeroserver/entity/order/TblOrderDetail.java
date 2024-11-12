@@ -15,8 +15,8 @@ public class TblOrderDetail {
     private Integer id;
 
     @NotNull
-    @Column(name = "product_id", nullable = false)
-    private Integer productId;
+    @Column(name = "option_id", nullable = false)
+    private Integer optionId;
 
     @NotNull
     @Column(name = "count", nullable = false)
@@ -50,12 +50,12 @@ public class TblOrderDetail {
         this.id = id;
     }
 
-    public Integer getProductId() {
-        return productId;
+    public Integer getOptionId() {
+        return optionId;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setOptionId(Integer productId) {
+        this.optionId = productId;
     }
 
     public Integer getCount() {
