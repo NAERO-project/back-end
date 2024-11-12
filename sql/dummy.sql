@@ -136,11 +136,11 @@ INSERT INTO tbl_review (review_image, review_thumbnail, review, review_rating, p
                              (NULL, NULL, '피부에 촉촉함이 오래 남아 좋아요.', 5, 9, 3);  -- 'user003'의 리뷰
 
 -- tbl_inquiry 데이터 삽입
-INSERT INTO tbl_inquiry (inquiry_title, inquiry_content, inquiry_lock, user_id, product_id ) VALUES
-                            ('정기 구독 따로 되나요?', '정기적으로 배송받고싶은데 가능한가요?', 'Y', 3, 1),
-                            ('세트로 구매시 할인 되나요?', '주방용품을 세트로 구매할 경우 할인이 가능한지 궁금합니다.', 'N', 4, 5),
-                            ('배송기간이 얼마나 걸리나요?', '비누 세트를 주문했는데 배송 기간이 궁금합니다.', 'Y', 5, 6),
-                            ('구매 후 환불 절차 문의', '베개를 환불하려고 하는데, 환불 절차가 어떻게 되나요?', 'N', 5, 7 );
+INSERT INTO tbl_inquiry (inquiry_title, inquiry_content, inquiry_lock, user_id,product_id ) VALUES
+                            ('정기 구독 따로 되나요?', '정기적으로 배송받고싶은데 가능한가요?', true, 3, 1),
+                            ('세트로 구매시 할인 되나요?', '주방용품을 세트로 구매할 경우 할인이 가능한지 궁금합니다.', false, 4, 5),
+                            ('배송기간이 얼마나 걸리나요?', '비누 세트를 주문했는데 배송 기간이 궁금합니다.', true, 5, 6),
+                            ('구매 후 환불 절차 문의', '베개를 환불하려고 하는데, 환불 절차가 어떻게 되나요?', false, 5, 7 );
 
 -- tbl_response 데이터 삽입
 INSERT INTO tbl_response (response_title, response_content,  inquiry_id, producer_id) VALUES
@@ -150,6 +150,7 @@ INSERT INTO tbl_response (response_title, response_content,  inquiry_id, produce
                             ('환불 절차 안내', '베개의 환불 절차는 제품 수령 후 7일 이내에 가능하며, 고객센터로 연락 바랍니다.', 4, 1);
 
 INSERT INTO tbl_address (address_name, address_road, address_detail, postal_code, user_id) VALUES
+                           ('학원', '서울 종로구 인사동길 12', '7층', '03163', 3),
                            ('하나은행 건물', '서울 중구 을지로 35', '00동 00호', '04523', 1),
                            ('삼성타워', '서울 강남구 테헤란로 108', '15층 1503호', '06235', 2),
                            ('롯데월드타워', '서울 송파구 올림픽로 300', '5층 501호', '05551', 3),
@@ -189,56 +190,89 @@ INSERT INTO tbl_coupon_list (user_id, coupon_id) VALUES
     (3,2),
     (3,2);
 
+-- 옵션이 없는 상품에 대한 더미 데이터 (NULL 값으로 채운 옵션)
+INSERT INTO tbl_option (product_id, option_quantity)VALUES
+    (1, 50),   -- '토마토 쥬스 소품' 상품 (옵션 없음)
+    (2, 200),  -- '콜라' 상품에 대한 옵션 없음
+    (3, 150),  -- '오렌지 주스' 상품에 대한 옵션 없음
+    (4, 75),   -- '초코 케이크' 상품에 대한 옵션 없음
+    (5, 45),   -- '냄비 세트' 상품에 대한 옵션 없음
+    (6, 150),  -- '비누 세트' 상품 (옵션 없음)
+    (7, 100),  -- '베개' 상품 (옵션 없음)
+    (8, 200);  -- '여름 티셔츠' 상품 (옵션 없음)
+
 -- 옵션이 있는 상품에 대한 더미 데이터 (옵션이 없는 항목 추가)
 INSERT INTO tbl_option (option_desc, add_price, product_id, option_quantity)VALUES
     ('제로 칼로리', 300, 2, 150),    -- '콜라' 상품에 대한 옵션
     ('사이다', 500, 2, 150),        -- '콜라' 상품에 대한 옵션
     ('1.25리터', 1000, 2, 150),    -- '콜라' 상품에 대한 옵션
-    (NULL, NULL, 2, 200),               -- '콜라' 상품에 대한 옵션 없음
     ('용량 선택', 500, 3, 100),         -- '오렌지 주스' 상품에 대한 옵션
-    (NULL, NULL, 3, 150),               -- '오렌지 주스' 상품에 대한 옵션 없음
     ('홀케이크로 변경 ', 20000, 4, 50), -- '초코 케이크' 상품에 대한 옵션
-    (NULL, NULL, 4, 75),                -- '초코 케이크' 상품에 대한 옵션 없음
-    ('추가 사은품', 2000, 5, 30),  -- '냄비 세트' 상품에 대한 옵션
-    (NULL, NULL, 5, 45);               -- '냄비 세트' 상품에 대한 옵션 없음
+    ('추가 사은품', 2000, 5, 30);  -- '냄비 세트' 상품에 대한 옵션
 
--- 옵션이 없는 상품에 대한 더미 데이터 (NULL 값으로 채운 옵션)
-INSERT INTO tbl_option (product_id, option_quantity)VALUES
-    (1, 50),   -- '토마토 쥬스 소품' 상품 (옵션 없음)
-    (6, 150),  -- '비누 세트' 상품 (옵션 없음)
-    (7, 100),  -- '베개' 상품 (옵션 없음)
-    (8, 200);  -- '여름 티셔츠' 상품 (옵션 없음)
+-- 옵션이 없는 상품
+INSERT INTO tbl_cart (option_id, count, price, user_id) VALUES
+    (1, 2, 3000, 3),
+    (2, 3, 3600, 3),
+    (3, 1, 2500, 4),
+    (4, 1, 5000, 4),
+    (5, 2, 60000, 5),
+    (6, 1, 8000, 5),
+    (7, 3, 36000, 6),
+    (8, 1, 7000, 6);
 
-INSERT INTO tbl_cart ()VALUES
-    (),
-    ();
-INSERT INTO tbl_order ()VALUES
-    (),
-    ();
-INSERT INTO tbl_ship_com ()VALUES
-    (),
-    ();
-INSERT INTO tbl_shipping ()VALUES
-    (),
-    ();
-INSERT INTO tbl_payment ()VALUES
-    (),
-    ();
-INSERT INTO tbl_order_detail ()VALUES
-    (),
-    ();
-INSERT INTO tbl_alarm ()VALUES
-    (),
-    ();
-INSERT INTO tbl_banner ()VALUES
-    (),
-    ();
-INSERT INTO tbl_faq ()VALUES
-    (),
-    ();
-INSERT INTO tbl_magazine ()VALUES
-    (),
-    ();
-INSERT INTO tbl_auth ()VALUES
-    (),
-    ();
+-- 옵션이 있는 상품
+INSERT INTO tbl_cart (option_id, count, price, user_id) VALUES
+    (9, 2, 3900, 3),  -- 제로 칼로리
+    (10, 1, 5000, 4), -- 사이다
+    (11, 1, 5500, 5), -- 1.25리터
+    (12, 2, 4000, 6), -- 용량 선택
+    (13, 1, 22000, 3), -- 홀케이크로 변경
+    (14, 2, 64000, 5); -- 추가 사은품
+
+INSERT INTO tbl_order (order_total_amount, order_total_count, delivery_status, order_status,
+                       delivery_fee, discount_amount, recipient_name, recipient_phone_number,
+                       postal_code, address_road, address_detail,
+                       address_name, delivery_note, tracking_number, user_id) VALUES
+    (50000, 5, 'pending', 'pending', 5000, 0, '박민지' ,'010-3333-3333','03163', '서울 종로구 인사동길 12', '7층',
+     '학원', '안전 배송 해주세요. 문이 닫혀있으면 문앞에 둬주세요', NULL,3  );
+
+
+INSERT INTO tbl_ship_com (ship_com_code, ship_com_name, ship_com_contact)VALUES
+    ('CJGLS','CJ', '1588-1255');
+
+INSERT INTO tbl_shipping (shipping_status, order_id, ship_com_id)VALUES
+    ('pending', 1,1);
+
+INSERT INTO tbl_order_detail (option_id, count, amount,
+                              shipping_id, order_id) VALUES
+                                                        (1,3, 6000 ,1,1),
+                                                        (3,5,10000,1,1),
+                                                        (6,3,14000,1,1)
+;
+
+
+# INSERT INTO tbl_payment ()VALUES
+#     (),
+#     ();
+
+# INSERT INTO tbl_alarm ()VALUES
+#     (),
+#     ();
+
+INSERT INTO tbl_banner (banner_thumbnail, banner_img, banner_url,
+                        banner_create_at, banner_delete_at, producer_id, banner_accept_at, approver_id)VALUES
+    ('banner_thum_image001.png', 'banner_image001.png', 'naver.com','2024-11-12 00:00:00', '2024-12-30 00:00:00',1, '2024-11-11 00:00:00', 8 ),
+    ('banner_thum_image002.png', 'banner_image002.png', 'naver.com','2024-11-20 00:00:00', '2024-12-30 00:00:00',1, '2024-11-11 00:00:00', 8 ),
+    ('banner_thum_image003.png', 'banner_image003.png', 'naver.com','2024-11-11 00:00:00', '2024-12-30 00:00:00',1, NULL, NULL );
+INSERT INTO tbl_faq (faq_title, faq_content)VALUES
+    ('회원가입은 어떻게 하나요?','회원가입은 하면되는 거죠'),
+    ('아이디를 잃어버렸어요.','아이디는 이메일 인증하면 찾을 수 있습니다.')
+;
+INSERT INTO tbl_magazine ( magazine_title, magazine_content, magazine_photo) VALUES
+    ('html 형식으로 할 것을 건의합니다', '<h1>html 형식으로 넣으면 나중에 inner HTML으로 html랜더링이 가능하다는 사실. 알고 계셧나요.</h1> <div> 아무튼 그렇다고 합니다. </div>',
+     'magazine_image001.png');
+
+# INSERT INTO tbl_auth ()VALUES
+#     (),
+#     ();
