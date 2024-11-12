@@ -3,10 +3,6 @@ package naero.naeroserver.entity.product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.cart.TblCart;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "tbl_option")
@@ -28,8 +24,9 @@ public class TblOption {
     @JoinColumn(name = "product_id", nullable = false)
     private TblProduct product;
 
-    @OneToMany(mappedBy = "option")
-    private Set<TblCart> tblCarts = new LinkedHashSet<>();
+    @NotNull
+    @Column(name = "option_quantity", nullable = false)
+    private Integer optionQuantity;
 
     public Integer getId() {
         return id;
@@ -63,12 +60,12 @@ public class TblOption {
         this.product = product;
     }
 
-    public Set<TblCart> getTblCarts() {
-        return tblCarts;
+    public Integer getOptionQuantity() {
+        return optionQuantity;
     }
 
-    public void setTblCarts(Set<TblCart> tblCarts) {
-        this.tblCarts = tblCarts;
+    public void setOptionQuantity(Integer optionQuantity) {
+        this.optionQuantity = optionQuantity;
     }
 
 }
