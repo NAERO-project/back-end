@@ -52,7 +52,7 @@ public class ProductService {
             productDTO.setProductImg(replaceFileName);
             productDTO.setProductThumbnail(replaceThumbnailFileName);
 
-            log.info("[ProductService] insert Image Name : {}", replaceFileName);
+            log.info("[ProductService] 등록 이미지명 : {}", replaceFileName);
 
             TblProduct insertProduct = modelMapper.map(productDTO, TblProduct.class);
 
