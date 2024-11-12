@@ -27,6 +27,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+    /* 상품 등록 */
     @Operation(summary = "상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
     @PostMapping(value = "/products")
     public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
@@ -34,12 +35,13 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
     }
 
-    @Operation(summary = "상품 더보기 리스트 전체 조회", description = "상품 조회 및 페이징 처리 진행", tags = {"ProductController"})
+    /* 상품 리스트 전체 조회 (페이징) */
+    @Operation(summary = "상품 리스트 전체 조회 (페이징)", description = "상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
     @GetMapping("/products")
     public ResponseEntity<ResponseDTO> selectProductList(
             @RequestParam(name = "offset", defaultValue = "1") String offset){
 
-        log.info("[ProductController] selectProductList : " + offset);
+        log.info("[ProductController] selectProductList 상품 리스트 전체 조회(페이징) : " + offset);
 
         int total = productService.selectProductPage();
 
@@ -52,4 +54,65 @@ public class ProductController {
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
     }
+
+    /* 식품, 음료 리스트 전체 조회 (페이징) */
+    @Operation(summary = "식품과 음료 리스트 조회 요청", description = "식품과 음료 카테고리에 해당하는 상품 리스트 조회 및 페이징 처리가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/food")
+    public ResponseEntity<ResponseDTO> selectProductListAboutFood(
+            @RequestParam(name = "offset", defaultValue = "1") String offset) {
+
+        log.info("[ProductController] selectProductList 식품과 음 리스트 전체 조회(페이징) : " + offset);
+
+        int foodTotal = productService.selectProductPageFood();
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+
+        pagingResponseDTO.setData(productService.selectProductFoodListPaging(cri));
+
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, foodTotal));
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
+
+    /* 건강, 뷰티 리스트 전체 조회 (페이징) */
+    @Operation(summary = "건강과 뷰티 리스트 조회 요청", description = "건강과 뷰티 카테고리에 해당하는 상품 리스트 조회 및 페이징 처리가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/health")
+    public ResponseEntity<ResponseDTO> selectProductListAboutHealth(
+            @RequestParam(name = "offset", defaultValue = "1") String offset) {
+
+        log.info("[ProductController] selectProductList 건강과 뷰티 리스트 전체 조회(페이징) : " + offset);
+
+        int healthTotal = productService.selectProductPageHealth();
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+
+        pagingResponseDTO.setData(productService.selectProductHealthListPaging(cri));
+
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, healthTotal));
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
+
+    /* 의류 리스트 전체 조회 (페이징) */
+    @Operation(summary = "의류 리스트 조회 요청", description = "의류 카테고리에 해당하는 상품 리스트 조회 및 페이징 처리가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/apparel ")
+    public ResponseEntity<ResponseDTO> selectProductListAboutApparel (
+            @RequestParam(name = "offset", defaultValue = "1") String offset) {
+
+        log.info("[ProductController] selectProductList 의류 리스트 전체 조회(페이징) : " + offset);
+
+        int apparelTotal = productService.selectProductPageApparel();
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+
+        pagingResponseDTO.setData(productService.selectProductApparelListPaging(cri));
+
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, apparelTotal));
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
+
 }
