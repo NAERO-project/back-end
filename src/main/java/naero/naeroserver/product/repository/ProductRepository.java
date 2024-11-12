@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
 
-    List<TblProduct> findByProductOrderable(String status);
+//    List<TblProduct> findByProductOrderable(String status);
 
-    Page<TblProduct> findByProductOrderablePage(String status, Pageable paging);
+//    Page<TblProduct> findByProductOrderablePage(String status, Pageable paging);
 }
