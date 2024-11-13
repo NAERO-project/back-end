@@ -27,14 +27,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    /* 판매자 상품 등록 */
-    @Operation(summary = "판매자 상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
-    @PostMapping(value = "/products")
-    public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
-    }
-
     /* 상품 리스트 전체 조회 (페이징) */
     @Operation(summary = "상품 리스트 전체 조회 (페이징)", description = "상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
     @GetMapping("/products/more")
@@ -140,5 +132,23 @@ public class ProductController {
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListAboutFashionPreview()));
     }
+
+    /* 전체 브랜드 페이지 상품 조회 */
+    @Operation(summary = "전체 브랜드 상품 리스트 미리보기 조회 요청", description = "브랜드별 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/producer/preview")
+    public ResponseEntity<ResponseDTO> selectProducerProductListPreview() {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProducerProductListPreview()));
+    }
+
+    /* 판매자 상품 등록 */
+    @Operation(summary = "판매자 상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
+    @PostMapping(value = "/products")
+    public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
+    }
+
+
 
 }
