@@ -79,6 +79,12 @@ CREATE TRIGGER before_insert_tbl_user
     FOR EACH ROW
     SET NEW.enroll_date = IFNULL(NEW.enroll_date, CURRENT_DATE);
 
+CREATE TRIGGER after_insert_tbl_user
+    AFTER INSERT ON `tbl_user`
+    FOR EACH ROW
+    INSERT INTO tbl_user_role (user_id, role_id) VALUE (NEW.user_id , 1);
+
+
 CREATE TABLE `tbl_producer` (
                                 `producer_id`	int PRIMARY KEY NOT NULL 	COMMENT '판매자 회원 번호',
                                 `busi_no`	varchar(20)	NULL	COMMENT '사업자 등록 번호',
