@@ -26,8 +26,7 @@ public class TblOrderDetail {
     @Column(name = "amount", nullable = false)
     private Integer amount;
 
-    @NotNull
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private Instant createdAt;
 
     @Column(name = "updated_at")
