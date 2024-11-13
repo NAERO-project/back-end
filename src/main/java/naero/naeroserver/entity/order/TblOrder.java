@@ -18,8 +18,7 @@ public class TblOrder {
     @Column(name = "order_id", nullable = false)
     private Integer id;
 
-    @NotNull
-    @Column(name = "order_datetime", nullable = false)
+    @Column(name = "order_datetime")
     private Instant orderDatetime;
 
     @NotNull
@@ -84,8 +83,7 @@ public class TblOrder {
     @Column(name = "tracking_number")
     private String trackingNumber;
 
-    @NotNull
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private Instant createdAt;
 
     @Column(name = "updated_at")
