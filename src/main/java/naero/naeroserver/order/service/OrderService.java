@@ -5,34 +5,32 @@ import naero.naeroserver.entity.order.TblOrderDetail;
 import naero.naeroserver.entity.order.TblPayment;
 import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.entity.user.TblUser;
-import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.repository.UserRepository;
 import naero.naeroserver.order.dto.OrderDTO;
-import naero.naeroserver.order.dto.OrderDetailDTO;
 import naero.naeroserver.order.dto.PaymentDTO;
 import naero.naeroserver.order.repository.OrderDetailRepository;
 import naero.naeroserver.order.repository.OrderRepository;
 import naero.naeroserver.order.repository.PaymentRepository;
-import naero.naeroserver.product.dto.ProductDTO;
+import naero.naeroserver.product.repository.OptionRepository;
 import naero.naeroserver.product.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class OrderService {
@@ -41,20 +39,32 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
-    private final PaymentService paymentService;
+//    private final PaymentService paymentService;
     private final OrderDetailRepository orderDetailRepository;
     private final PaymentRepository paymentRepository;
+    private final OptionRepository optionRepository;
+
+//    @Value("${image.image-dir}")
+    private String API_URL = "https://api.portone.io/v2/token";
+    private static final String API_KEY = "channel-key-e6a5937e-0f6b-422a-8748-c1f5f9c509f3";
+    private static final String API_SECRET = "PeEG91quIwIlClszpvUh6SDu2nbLLdTZVMdG0g7iYrfgg4bJwxT051fcOvJ8zHjshlnsaHZFnPgyVh3O";
+    private static final long TOKEN_EXPIRY_DURATION = 3600 * 1000; // 1시간
+
+    private final AtomicReference<String> cachedToken = new AtomicReference<>();
+    private long tokenFetchTime = 0;
+
+    private final WebClient webClient = WebClient.builder().baseUrl("https://api.portone.io").build();
 
     @Autowired
     public OrderService(ModelMapper modelMapper, OrderRepository orderRepository, UserRepository userRepository,
-                        ProductRepository productRepository, PaymentService paymentService, OrderDetailRepository orderDetailRepository, PaymentRepository paymentRepository) {
+                        ProductRepository productRepository, OrderDetailRepository orderDetailRepository, PaymentRepository paymentRepository, OptionRepository optionRepository) {
         this.modelMapper = modelMapper;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
-        this.paymentService = paymentService;
         this.orderDetailRepository = orderDetailRepository;
         this.paymentRepository = paymentRepository;
+        this.optionRepository = optionRepository;
     }
 
     @Transactional
@@ -64,28 +74,43 @@ public class OrderService {
 
         try {
             // 1. 결제 정보 검증
+            System.out.println("portoneToken() 시작");
             String portoneToken = getPortOneToken();
-            validatePayment(paymentDTO.getImp_uid(), orderDTO.getOrderTotalAmount(), portoneToken);
+            log.info(portoneToken);
+//            Map<String, Object> paymentInfo = validatePayment(paymentDTO.getImp_uid(), orderDTO.getOrderTotalAmount(), portoneToken);
+            // 결제 검증 후 응답에서 필요한 정보 추가
+//            paymentDTO.setCurrency((String) paymentInfo.get("currency"));
+            paymentDTO.setCurrency("KRW");
+            paymentDTO.setPaymentStatus("completed"); // 예: 결제 완료로 설정
+//            paymentDTO.setTransaction_id((String) paymentInfo.get("transaction_id"));
+            paymentDTO.setTransaction_id("transid_1223423423422");
+//            paymentDTO.setReceipt_url((String) paymentInfo.get("receipt_url"));
+            paymentDTO.setReceipt_url("sample_url");
 
             TblUser user = userRepository.findTblUserById(orderDTO.getUserId());
 
             // 2. 주문 정보 저장
-            TblOrder order = new TblOrder();
+//            TblOrder order = new TblOrder();
+//            order.setUser(user);
+//            order.setOrderDatetime(Instant.from(LocalDateTime.now()));
+//            order.setOrderTotalAmount(orderDTO.getOrderTotalAmount());
+//            order.setOrderTotalCount(orderDTO.getOrderTotalCount());
+//            order.setDeliveryStatus(orderDTO.getDeliveryStatus());
+//            order.setOrderStatus(orderDTO.getOrderStatus());
+//            order.setDeliveryFee(orderDTO.getDeliveryFee());
+//            order.setDiscountAmount(orderDTO.getDiscountAmount());
+//            order.setRecipientName(orderDTO.getRecipientName());
+//            order.setRecipientPhoneNumber(orderDTO.getRecipientPhoneNumber());
+//            order.setPostalCode(orderDTO.getPostalCode());
+//            order.setAddressRoad(orderDTO.getAddressRoad());
+//            order.setAddressDetail(orderDTO.getAddressDetail());
+//            order.setAddressName(orderDTO.getAddressName());
+//            order.setDeliveryNote(orderDTO.getDeliveryNote());
+
+            log.info(String.valueOf(orderDTO));
+            TblOrder order = modelMapper.map(orderDTO, TblOrder.class);
             order.setUser(user);
-            order.setOrderDatetime(Instant.from(LocalDateTime.now()));
-            order.setOrderTotalAmount(orderDTO.getOrderTotalAmount());
-            order.setOrderTotalCount(orderDTO.getOrderTotalCount());
-            order.setDeliveryStatus(orderDTO.getDeliveryStatus());
-            order.setOrderStatus(orderDTO.getOrderStatus());
-            order.setDeliveryFee(orderDTO.getDeliveryFee());
-            order.setDiscountAmount(orderDTO.getDiscountAmount());
-            order.setRecipientName(orderDTO.getRecipientName());
-            order.setRecipientPhoneNumber(orderDTO.getRecipientPhoneNumber());
-            order.setPostalCode(orderDTO.getPostalCode());
-            order.setAddressRoad(orderDTO.getAddressRoad());
-            order.setAddressDetail(orderDTO.getAddressDetail());
-            order.setAddressName(orderDTO.getAddressName());
-            order.setDeliveryNote(orderDTO.getDeliveryNote());
+            order.setOrderDatetime(Instant.now());
 
             orderRepository.save(order);
 
@@ -93,7 +118,7 @@ public class OrderService {
             TblPayment payment = new TblPayment();
             payment.setUserId(paymentDTO.getUserId());
             payment.setOrder(order); // 저장된 order의 ID 참조
-            payment.setAmount(paymentDTO.getAmount());
+            payment.setAmount(orderDTO.getOrderTotalAmount());
             payment.setCurrency(paymentDTO.getCurrency());
             payment.setPaymentMethod(paymentDTO.getPaymentMethod());
             payment.setPaymentStatus(paymentDTO.getPaymentStatus());
@@ -102,7 +127,8 @@ public class OrderService {
 
             paymentRepository.save(payment);
 
-            Integer optionId = optionRepository.findOptionIdByProductId(productId);
+            TblProduct product = productRepository.findByProductId(productId);
+            Integer optionId = optionRepository.findOptionIdByProduct(product);
             if (optionId == null) {
                 throw new IllegalStateException("해당 상품에 대한 옵션이 존재하지 않습니다.");
             }
@@ -114,18 +140,33 @@ public class OrderService {
             orderDetail.setOrder(order);
             orderDetail.setOptionId(optionId);
 
-            optionRepository.save(orderDetail);
+            orderDetailRepository.save(orderDetail);
 
-//            return modelMapper.map(order, OrderDTO.class);
-            return "주문 성공";
+            return modelMapper.map(order, OrderDTO.class);
         } catch (Exception e) {
             log.error("[OrderService] Exception: {}", e.getMessage());
-            return "주문 실패";
+            return null;
         }
     }
 
     // 결제 검증 메서드
-    private void validatePayment(String impUid, int orderAmount, String portoneToken) {
+//    public Mono<Map> validatePaymentAsync(String impUid, int orderTotalAmount, String portoneToken) {
+//        String url = "/v2/payments/" + impUid;
+//
+//        return webClient.get()
+//                .uri(url)
+//                .header(HttpHeaders.AUTHORIZATION, portoneToken)
+//                .retrieve()
+//                .bodyToMono(Map.class)
+//                .doOnSuccess(paymentData -> {
+//                    // 응답 후 로직 처리
+//                    int amount = (int) paymentData.get("amount");
+//                    if (orderTotalAmount != amount) {
+//                        throw new IllegalStateException("결제 금액 불일치");
+//                    }
+//                });
+//    }
+    private Map<String, Object> validatePayment(String impUid, int orderTotalAmount, String portoneToken) {
         RestTemplate restTemplate = new RestTemplate();
         String url = "https://api.portone.io/v2/payments/" + impUid;
 
@@ -139,23 +180,68 @@ public class OrderService {
                 Map.class
         );
 
-        int amount = (int) response.getBody().get("amount");
-        if (orderAmount != amount) {
+        Map<String, Object> paymentData = response.getBody();
+        int amount = (int) paymentData.get("amount");
+        if (orderTotalAmount != amount) {
             throw new IllegalStateException("결제 금액 불일치");
         }
+
+        return paymentData;
     }
 
     // 포트원 토큰 요청 메서드
+//    private String getPortOneToken() {
+//        if (isTokenValid()) {
+//            return cachedToken.get();
+//        }
+//
+//        String newToken = requestNewToken();
+//        cachedToken.set(newToken);
+//        tokenFetchTime = System.currentTimeMillis();
+//        return newToken;
+//    }
+//
+//    private boolean isTokenValid() {
+//        return cachedToken.get() != null && (System.currentTimeMillis() - tokenFetchTime < TOKEN_EXPIRY_DURATION);
+//    }
+//
+//    private String requestNewToken() {
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//
+//        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+//        body.add("api_key", API_KEY);
+//        body.add("api_secret", API_SECRET);
+//
+//        try {
+//            ResponseEntity<Map> response = restTemplate.postForEntity(
+//                    API_URL,
+//                    new HttpEntity<>(body, headers),
+//                    Map.class
+//            );
+//
+//            Map<String, Object> responseBody = response.getBody();
+//            if (responseBody == null || !responseBody.containsKey("access_token")) {
+//                throw new IllegalStateException("토큰 응답이 유효하지 않습니다: " + responseBody);
+//            }
+//
+//            return "Bearer " + responseBody.get("access_token").toString();
+//        } catch (Exception e) {
+//            throw new IllegalStateException("포트원 토큰 요청 실패", e);
+//        }
+//    }
     private String getPortOneToken() {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "https://api.portone.io/v2/token";
+        String url = "https://api.portone.io/login/api-secret";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String, String> body = new HashMap<>();
-        body.put("api_key", "channel-key-e6a5937e-0f6b-422a-8748-c1f5f9c509f3");
-        body.put("api_secret", "YOUR_API_SECRET"); // API Secret 설정 필요
+//        body.put("api_key", "channel-key-e6a5937e-0f6b-422a-8748-c1f5f9c509f3");
+        body.put("apiSecret", "OneKPxsSfPKywqxAdMEfVpg2FdALhdNXvxc9jLvmRp5Oa21y5wnDLgFys1RXeFSI6tFG7MkcDsX27Rto"); // API Secret key 유출주의!
 
         ResponseEntity<Map> response = restTemplate.postForEntity(
                 url,
@@ -163,6 +249,6 @@ public class OrderService {
                 Map.class
         );
 
-        return "Bearer " + response.getBody().get("access_token").toString();
+        return "Bearer " + response.getBody().get("accessToken").toString();
     }
 }

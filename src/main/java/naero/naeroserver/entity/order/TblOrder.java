@@ -16,7 +16,7 @@ public class TblOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", nullable = false)
-    private Integer id;
+    private Integer orderId;
 
     @NotNull
     @Column(name = "order_datetime", nullable = false)
@@ -84,8 +84,7 @@ public class TblOrder {
     @Column(name = "tracking_number")
     private String trackingNumber;
 
-    @NotNull
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private Instant createdAt;
 
     @Column(name = "updated_at")
@@ -105,12 +104,12 @@ public class TblOrder {
     @OneToMany(mappedBy = "order")
     private Set<TblShipping> tblShippings = new LinkedHashSet<>();
 
-    public Integer getId() {
-        return id;
+    public Integer getOrderId() {
+        return orderId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
     public Instant getOrderDatetime() {
