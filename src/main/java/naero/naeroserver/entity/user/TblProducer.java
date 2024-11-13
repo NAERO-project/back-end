@@ -17,15 +17,13 @@ import java.util.Set;
 @Table(name = "tbl_producer")
 public class TblProducer {
     @Id
-    @NotNull
-    @Column(name = "producer_id") // userId와 동일한 값을 가진 필드여야 합니다.
-    private Integer producerId;  // 기본 키로 사용할 필드 추가
+    @Column(name = "producer_id", nullable = false)
+    private Integer id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "producer_id", nullable = false)
     private TblUser producer;
-
 
     @Size(max = 20)
     @Column(name = "busi_no", length = 20)
@@ -70,20 +68,33 @@ public class TblProducer {
     @OneToMany(mappedBy = "producer")
     private Set<TblResponse> tblResponses = new LinkedHashSet<>();
 
-    public @NotNull Integer getProducerId() {
-        return producerId;
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "producer_id")
+    private TblProducer tblProducer;
+
+    public TblProducer getTblProducer() {
+        return tblProducer;
     }
 
-    public void setProducerId(@NotNull Integer producerId) {
-        this.producerId = producerId;
+    public void setTblProducer(TblProducer tblProducer) {
+        this.tblProducer = tblProducer;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public TblUser getProducer() {
         return producer;
     }
 
-    public void setProducer(TblUser producer) {
-        this.producer = producer;
+    public void setProducer(TblUser tblUser) {
+        this.producer = tblUser;
     }
 
     public String getBusiNo() {
