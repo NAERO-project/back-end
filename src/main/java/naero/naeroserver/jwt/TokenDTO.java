@@ -2,8 +2,9 @@ package naero.naeroserver.jwt;
 
 public class TokenDTO {
 
+	//토큰 안에 더 넣어야할 정보가 있을 수 있음
 	private String grantType;			// 토큰 타입
-	private String memberName; 			// 인증받은 회원 이름
+	private String memberName; 			// 인증받은 회원 이름? 아이디.(username)
 	private String accessToken; 		// 액세스 토큰
 	private Long accessTokenExpiresIn;	// Long 형의 만료 시간
 	
