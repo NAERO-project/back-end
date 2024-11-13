@@ -80,7 +80,7 @@ CREATE TRIGGER before_insert_tbl_user
     SET NEW.enroll_date = IFNULL(NEW.enroll_date, CURRENT_DATE);
 
 CREATE TABLE `tbl_producer` (
-                                `producer_id`	int	NOT NULL PRIMARY KEY	COMMENT '판매자 회원 번호',
+                                `producer_id`	int PRIMARY KEY NOT NULL 	COMMENT '판매자 회원 번호',
                                 `busi_no`	varchar(20)	NULL	COMMENT '사업자 등록 번호',
                                 `producer_add`	varchar(255)	NULL	COMMENT '판매자 주소',
                                 `producer_name`	varchar(20)	NULL	COMMENT '브랜드 명',
