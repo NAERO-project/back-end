@@ -41,48 +41,14 @@ public class ProductService {
     @Value("${image.image-url}")
     private String IMAGE_URL;
 
-    /* 판매자 상품 등록 */
-    @Transactional
-    public Object insertProduct(ProductDTO productDTO, MultipartFile productImage) {
-        log.info("[ProductService] insertProduct() 시작");
-        log.info("[ProductService] productDTO : {}", productDTO);
-
-        String imageName = UUID.randomUUID().toString().replace("-", "");
-        String replaceFileName = null;
-        String replaceThumbnailFileName = null;
-        int result = 0;
-
-        try {
-            replaceFileName = FileUploadUtils.saveFile(IMAGE_DIR, imageName, productImage);
-            replaceThumbnailFileName = FileUploadUtils.saveThumbnailFile(IMAGE_DIR, replaceFileName);
-
-            productDTO.setProductImg(replaceFileName);
-            productDTO.setProductThumbnail(replaceThumbnailFileName);
-
-            log.info("[ProductService] 등록 이미지명 : {}", replaceFileName);
-
-            TblProduct insertProduct = modelMapper.map(productDTO, TblProduct.class);
-
-            productRepository.save(insertProduct);
-
-            result = 1;
-        } catch (Exception e) {
-            FileUploadUtils.deleteFile(IMAGE_DIR, replaceFileName);
-            throw new RuntimeException(e);
-        }
-
-        return "상품 입력 성공";
-    }
-
+    /* 상품 리스트 전체 조회 (페이징) */
     public int selectProductPage() {
         log.info("[ProductService] selectProductPage 시작");
-
-//        List<TblProduct> productList = productRepository.findByProductOrderable("Y");
+        List<TblProduct> productList = productRepository.findByProductCheck();
 
         log.info("[ProductService] selectProductPage 종료");
 
-//        return productList.size();
-        return 0;
+        return productList.size();
     }
 
     public Object selectProductListPaging(Criteria cri) {
@@ -92,17 +58,103 @@ public class ProductService {
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-//        Page<TblProduct> result = productRepository.findByProductOrderablePage("Y", paging);
-//        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+        Page<TblProduct> result = productRepository.findByProductCheck(paging);
+        List<TblProduct> productList = (List<TblProduct>)result.getContent();
 
-//        for(int i = 0; i<productList.size(); i++){
-//            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
-//        }
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+        }
 
         log.info("[ProductService] selectProductListPaging() 종료");
 
-//        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
-        return null;
+        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    public int selectProductPageFood() {
+        log.info("[ProductService] selectProductPageFood() 시작");
+
+        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId(2);
+
+        log.info("[ProductService] selectProductPageFood() 종료");
+
+        return productList.size();
+    }
+
+    public Object selectProductFoodListPaging(Criteria cri) {
+        log.info("[ProductService] selectProductFoodListPaging() 시작");
+
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
+
+        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId(2, paging);
+        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+        }
+
+        log.info("[ProductService] selectProductFoodListPaging() 종료");
+
+        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    public int selectProductPageBeauty() {
+        log.info("[ProductService] selectProductPageBeauty() 시작");
+
+        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId(3);
+
+        log.info("[ProductService] selectProductPageBeauty() 종료");
+
+        return productList.size();
+    }
+
+    public Object selectProductBeautyListPaging(Criteria cri) {
+        log.info("[ProductService] selectProductBeautyListPaging() 시작");
+
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
+
+        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId(3, paging);
+        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+        }
+
+        log.info("[ProductService] selectProductBeautyListPaging() 종료");
+
+        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    public int selectProductPageFashion() {
+        log.info("[ProductService] selectProductPageFashion 시작");
+
+        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId(4);
+
+        log.info("[ProductService] selectProductPageFashion 종료");
+
+        return productList.size();
+    }
+
+    public Object selectProductFashionListPaging(Criteria cri) {
+        log.info("[ProductService] selectProductFashionListPaging() 시작");
+
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
+
+        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId(4, paging);
+        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+        }
+
+        log.info("[ProductService] selectProductFashionListPaging() 종료");
+
+        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
     }
 
     /* 상품 리스트 미리보기 조회 */
@@ -119,7 +171,7 @@ public class ProductService {
         log.info("[ProductService] selectProductListPreview() 종료");
 
         return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
-                                        .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     public Object selectProductListAboutFoodPreview() {
@@ -169,4 +221,54 @@ public class ProductService {
         return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
                 .collect(Collectors.toList());
     }
+
+    /* 전체 브랜드 페이지 상품 조회 */
+    public Object selectProducerProductListPreview() {
+        log.info("[ProductService] selectProducerProductListPreview() 시작");
+
+        Pageable pageable = PageRequest.of(0, 4);
+        List<TblProduct> producerProductListPreview = productRepository.findByProductIdWithLimit(1, pageable);
+
+        for (TblProduct tblProduct : producerProductListPreview) {
+            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
+        }
+
+        log.info("[ProductService] selectProducerProductListPreview() 종료");
+
+        return producerProductListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    /* 판매자 상품 등록 */
+    @Transactional
+    public Object insertProduct(ProductDTO productDTO, MultipartFile productImage) {
+        log.info("[ProductService] insertProduct() 시작");
+        log.info("[ProductService] productDTO : {}", productDTO);
+
+        String imageName = UUID.randomUUID().toString().replace("-", "");
+        String replaceFileName = null;
+        String replaceThumbnailFileName = null;
+        int result = 0;
+
+        try {
+            replaceFileName = FileUploadUtils.saveFile(IMAGE_DIR, imageName, productImage);
+            replaceThumbnailFileName = FileUploadUtils.saveThumbnailFile(IMAGE_DIR, replaceFileName);
+
+            productDTO.setProductImg(replaceFileName);
+            productDTO.setProductThumbnail(replaceThumbnailFileName);
+
+            log.info("[ProductService] 등록 이미지명 : {}", replaceFileName);
+
+            TblProduct insertProduct = modelMapper.map(productDTO, TblProduct.class);
+
+            productRepository.save(insertProduct);
+
+            result = 1;
+        } catch (Exception e) {
+            FileUploadUtils.deleteFile(IMAGE_DIR, replaceFileName);
+            throw new RuntimeException(e);
+        }
+
+        return "상품 입력 성공";
+    }
+
 }
