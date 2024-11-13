@@ -32,17 +32,19 @@ public class AuthController {
     }
 
     @Operation(summary = "아이디 중복 확인", tags = {"AuthController"})
-    @GetMapping("/dupul/id")
-    public ResponseEntity<ResponseDTO> dupulicateIdCheck(@RequestBody String username){
-        authService.dupulicateIdCheck(username);
+    @GetMapping("/dupul/id/{id}")
+    public ResponseEntity<ResponseDTO> dupulicateIdCheck(@PathVariable String id){
+        System.out.println("아이디"+id);
+        authService.dupulicateIdCheck(id);
         return ResponseEntity
                 .ok()
                 .body(new ResponseDTO(HttpStatus.OK, "아이디 중복 체크 성공", null));
     }
 
+    //이거 안 쓸 듯 ?
     @Operation(summary = "이메일 중복 확인", tags = {"AuthController"})
-    @GetMapping("/dupul/email")
-    public ResponseEntity<ResponseDTO> dupulicateEmailCheck(@RequestBody String email){
+    @GetMapping("/dupul/email/{email}")
+    public ResponseEntity<ResponseDTO> dupulicateEmailCheck(@PathVariable String email){
         authService.dupulicateEmailCheck(email);
         return ResponseEntity
                 .ok()

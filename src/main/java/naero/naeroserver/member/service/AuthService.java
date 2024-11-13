@@ -73,10 +73,10 @@ public class AuthService {
         newUser.setGrade(userGradeRepository.findById(1));
 
         TblUser result = userRepository.save(newUser);
-        System.out.println(result);
+//        System.out.println(modelMapper.map(result,UserDTO.class));
         //DB 트리거로 자동으로 tbl_user_role 에 기본 권한 (ROLE_USER) 가 들어가도록 함
 
-        return null;
+        return result;
     }
 
     public void dupulicateIdCheck(String username) {
