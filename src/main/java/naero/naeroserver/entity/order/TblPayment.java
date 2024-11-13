@@ -62,8 +62,7 @@ public class TblPayment {
     @Column(name = "receipt_url", nullable = false)
     private String receiptUrl;
 
-    @NotNull
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private Instant createdAt;
 
     @Column(name = "updated_at")

@@ -18,8 +18,7 @@ public class TblOrder {
     @Column(name = "order_id", nullable = false)
     private Integer orderId;
 
-    @NotNull
-    @Column(name = "order_datetime", nullable = false)
+    @Column(name = "order_datetime")
     private Instant orderDatetime;
 
     @NotNull
