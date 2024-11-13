@@ -47,107 +47,99 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
     }
 
-    @Operation(summary = "식품과 음료 리스트 조회 요청", description = "식품과 음료 카테고리에 해당하는 상품 리스트 조회 및 페이징 처리가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/more/food")
-    public ResponseEntity<ResponseDTO> selectProductListAboutFood(
-            @RequestParam(name = "offset", defaultValue = "1") String offset) {
-
-        log.info("[ProductController] selectProductList 식품과 음식 리스트 전체 조회(페이징) : " + offset);
-
-        int foodTotal = productService.selectProductPageFood();
-
-        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
-        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
-
-        pagingResponseDTO.setData(productService.selectProductFoodListPaging(cri));
-
-        pagingResponseDTO.setPageInfo(new PageDTO(cri, foodTotal));
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
-    }
-
-    @Operation(summary = "건강과 뷰티 리스트 조회 요청", description = "건강과 뷰티 카테고리에 해당하는 상품 리스트 조회 및 페이징 처리가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/more/beauty")
-    public ResponseEntity<ResponseDTO> selectProductListAboutBeauty(
-            @RequestParam(name = "offset", defaultValue = "1") String offset) {
-
-        log.info("[ProductController] selectProductListAboutBeauty 건강과 뷰티 리스트 전체 조회(페이징) : " + offset);
-
-        int healthTotal = productService.selectProductPageBeauty();
-
-        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
-        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
-
-        pagingResponseDTO.setData(productService.selectProductBeautyListPaging(cri));
-
-        pagingResponseDTO.setPageInfo(new PageDTO(cri, healthTotal));
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
-    }
-
-    @Operation(summary = "의류 리스트 조회 요청", description = "의류 카테고리에 해당하는 상품 리스트 조회 및 페이징 처리가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/more/fashion")
-    public ResponseEntity<ResponseDTO> selectProductListAboutFashion (
-            @RequestParam(name = "offset", defaultValue = "1") String offset) {
-
-        log.info("[ProductController] selectProductListAboutFashion 의류 리스트 전체 조회(페이징) : " + offset);
-
-        int apparelTotal = productService.selectProductPageFashion();
-
-        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
-        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
-
-        pagingResponseDTO.setData(productService.selectProductFashionListPaging(cri));
-
-        pagingResponseDTO.setPageInfo(new PageDTO(cri, apparelTotal));
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
-    }
-
-    /* 상품 리스트 미리보기 조회 */
-    @Operation(summary = "전체 상품 리스트 미리보기 조회 요청", description = "전체 카테고리에 해당하는 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/preview")
-    public ResponseEntity<ResponseDTO> selectProductListPreview() {
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListPreview()));
-    }
-
-    @Operation(summary = "식품 상품 리스트 미리보기 조회 요청", description = "식품 카테고리에 해당하는 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/preview/food")
-    public ResponseEntity<ResponseDTO> selectProductListAboutFoodPreview() {
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListAboutFoodPreview()));
-    }
-
-    @Operation(summary = "건강&뷰티 상품 리스트 미리보기 조회 요청", description = "건강&뷰티 카테고리에 해당하는 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/preview/beauty")
-    public ResponseEntity<ResponseDTO> selectProductListAboutCosmeticsPreview() {
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListAboutCosmeticsPreview()));
-    }
-
-    @Operation(summary = "의류 상품 리스트 미리보기 조회 요청", description = "의류 카테고리에 해당하는 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/preview/fashion")
-    public ResponseEntity<ResponseDTO> selectProductListAboutFashionPreview() {
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListAboutFashionPreview()));
-    }
-
-    /* 전체 브랜드 페이지 상품 조회 */
-    @Operation(summary = "전체 브랜드 상품 리스트 미리보기 조회 요청", description = "브랜드별 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/producer/preview")
-    public ResponseEntity<ResponseDTO> selectProducerProductListPreview() {
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProducerProductListPreview()));
-    }
-
-    /* 판매자 상품 등록 */
-    @Operation(summary = "판매자 상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
-    @PostMapping(value = "/products")
-    public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
-    }
+//    @Operation(summary = "식품과 음료 리스트 조회 요청", description = "식품과 음료 카테고리에 해당하는 상품 리스트 조회 및 페이징 처리가 진행됩니다.", tags = { "ProductController" })
+//    @GetMapping("/products/more/food")
+//    public ResponseEntity<ResponseDTO> selectProductListAboutFood(
+//            @RequestParam(name = "offset", defaultValue = "1") String offset) {
+//
+//        log.info("[ProductController] selectProductList 식품과 음식 리스트 전체 조회(페이징) : " + offset);
+//
+//        int foodTotal = productService.selectProductPageFood();
+//
+//        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+//        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+//
+//        pagingResponseDTO.setData(productService.selectProductFoodListPaging(cri));
+//
+//        pagingResponseDTO.setPageInfo(new PageDTO(cri, foodTotal));
+//
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+//    }
+//
+//    @Operation(summary = "건강과 뷰티 리스트 조회 요청", description = "건강과 뷰티 카테고리에 해당하는 상품 리스트 조회 및 페이징 처리가 진행됩니다.", tags = { "ProductController" })
+//    @GetMapping("/products/more/beauty")
+//    public ResponseEntity<ResponseDTO> selectProductListAboutBeauty(
+//            @RequestParam(name = "offset", defaultValue = "1") String offset) {
+//
+//        log.info("[ProductController] selectProductListAboutBeauty 건강과 뷰티 리스트 전체 조회(페이징) : " + offset);
+//
+//        int healthTotal = productService.selectProductPageBeauty();
+//
+//        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+//        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+//
+//        pagingResponseDTO.setData(productService.selectProductBeautyListPaging(cri));
+//
+//        pagingResponseDTO.setPageInfo(new PageDTO(cri, healthTotal));
+//
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+//    }
+//
+//    @Operation(summary = "의류 리스트 조회 요청", description = "의류 카테고리에 해당하는 상품 리스트 조회 및 페이징 처리가 진행됩니다.", tags = { "ProductController" })
+//    @GetMapping("/products/more/fashion")
+//    public ResponseEntity<ResponseDTO> selectProductListAboutFashion (
+//            @RequestParam(name = "offset", defaultValue = "1") String offset) {
+//
+//        log.info("[ProductController] selectProductListAboutFashion 의류 리스트 전체 조회(페이징) : " + offset);
+//
+//        int apparelTotal = productService.selectProductPageFashion();
+//
+//        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+//        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+//
+//        pagingResponseDTO.setData(productService.selectProductFashionListPaging(cri));
+//
+//        pagingResponseDTO.setPageInfo(new PageDTO(cri, apparelTotal));
+//
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+//    }
+//
+//    /* 상품 리스트 미리보기 조회 */
+//    @Operation(summary = "전체 상품 리스트 미리보기 조회 요청", description = "전체 카테고리에 해당하는 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
+//    @GetMapping("/products/preview")
+//    public ResponseEntity<ResponseDTO> selectProductListPreview() {
+//
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListPreview()));
+//    }
+//
+//    @Operation(summary = "식품 상품 리스트 미리보기 조회 요청", description = "식품 카테고리에 해당하는 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
+//    @GetMapping("/products/preview/food")
+//    public ResponseEntity<ResponseDTO> selectProductListAboutFoodPreview() {
+//
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListAboutFoodPreview()));
+//    }
+//
+//    @Operation(summary = "건강&뷰티 상품 리스트 미리보기 조회 요청", description = "건강&뷰티 카테고리에 해당하는 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
+//    @GetMapping("/products/preview/beauty")
+//    public ResponseEntity<ResponseDTO> selectProductListAboutCosmeticsPreview() {
+//
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListAboutCosmeticsPreview()));
+//    }
+//
+//    @Operation(summary = "의류 상품 리스트 미리보기 조회 요청", description = "의류 카테고리에 해당하는 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
+//    @GetMapping("/products/preview/fashion")
+//    public ResponseEntity<ResponseDTO> selectProductListAboutFashionPreview() {
+//
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListAboutFashionPreview()));
+//    }
+//
+//    /* 판매자 상품 등록 */
+//    @Operation(summary = "판매자 상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
+//    @PostMapping(value = "/products")
+//    public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
+//
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
+//    }
 
 
 
