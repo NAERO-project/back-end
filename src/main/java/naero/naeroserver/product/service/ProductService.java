@@ -222,12 +222,12 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    /* 전체 브랜드 페이지 상품 조회 */
+    /* 브랜드 전체 페이지 상품 조회 */
     public Object selectProducerProductListPreview() {
         log.info("[ProductService] selectProducerProductListPreview() 시작");
 
         Pageable pageable = PageRequest.of(0, 4);
-        List<TblProduct> producerProductListPreview = productRepository.findByProductIdWithLimit(2, pageable);
+        List<TblProduct> producerProductListPreview = productRepository.findByProductIdWithLimit(1, pageable);
 
         for (TblProduct tblProduct : producerProductListPreview) {
             tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
@@ -236,6 +236,123 @@ public class ProductService {
         log.info("[ProductService] selectProducerProductListPreview() 종료");
 
         return producerProductListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    /* 브랜드별 페이지 전체 상품 조회 (페이징) */
+    public int selectProducerProductListPage() {
+        log.info("[ProductService] selectProducerProductPage 시작");
+
+        List<TblProduct> productList = productRepository.findByProductCheckAndProducerId(2);
+
+        log.info("[ProductService] selectProducerProductPage 종료");
+
+        return productList.size();
+    }
+
+    public Object selectProducerProductListPaging(Criteria cri) {
+        log.info("[ProductService] selectProducerProductListPaging() 시작");
+
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
+
+        Page<TblProduct> result = productRepository.findByProductCheckAndProducerId(2, paging);
+        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+        }
+
+        log.info("[ProductService] selectProducerProductListPaging() 종료");
+
+        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    public int selectProducerProductFoodList() {
+        log.info("[ProductService] selectProducerProductFoodList 시작");
+
+        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryIdAndProducerId(2, 1);
+
+        log.info("[ProductService] selectProducerProductFoodList 종료");
+
+        return productList.size();
+    }
+
+    public Object selectProducerProductFoodListPaging(Criteria cri) {
+        log.info("[ProductService] selectProducerProductFoodListPaging() 시작");
+
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
+
+        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryIdAndProducerId(2, 1, paging);
+        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+        }
+
+        log.info("[ProductService] selectProducerProductFoodListPaging() 종료");
+
+        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    public int selectProducerProductBeautyList() {
+        log.info("[ProductService] selectProducerProductBeautyList 시작");
+
+        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryIdAndProducerId(3, 1);
+
+        log.info("[ProductService] selectProducerProductBeautyList 종료");
+
+        return productList.size();
+    }
+
+    public Object selectProducerProductBeautyListPaging(Criteria cri) {
+        log.info("[ProductService] selectProducerProductBeautyListPaging() 시작");
+
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
+
+        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryIdAndProducerId(3, 1, paging);
+        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+        }
+
+        log.info("[ProductService] selectProducerProductBeautyListPaging() 종료");
+
+        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    public int selectProducerProductFashionList() {
+        log.info("[ProductService] selectProducerProductFashionList 시작");
+
+        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryIdAndProducerId(4, 1);
+
+        log.info("[ProductService] selectProducerProductFashionList 종료");
+
+        return productList.size();
+    }
+
+    public Object selectProducerProductFashionListPaging(Criteria cri) {
+        log.info("[ProductService] selectProducerProductFashionListPaging() 시작");
+
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
+
+        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryIdAndProducerId(4, 1, paging);
+        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+        }
+
+        log.info("[ProductService] selectProducerProductFashionListPaging() 종료");
+
+        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
     }
 
     /* 판매자 상품 등록 */

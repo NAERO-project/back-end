@@ -141,6 +141,83 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProducerProductListPreview()));
     }
 
+    /* 브랜드별 페이지 전체 상품 조회 (페이징) */
+    @Operation(summary = "브랜드별 페이지 상품 리스트 전체 조회 (페이징)", description = "브랜드별 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
+    @GetMapping("/products/producer")
+    public ResponseEntity<ResponseDTO> selectProducerProductListPage(
+            @RequestParam(name = "offset", defaultValue = "1") String offset){
+
+        log.info("[ProductController] selectProducerProductListPage 상품 리스트 전체 조회(페이징) : " + offset);
+
+        int total = productService.selectProducerProductListPage();
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+
+        pagingResponseDTO.setData(productService.selectProducerProductListPaging(cri));
+
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
+
+    @Operation(summary = "브랜드별 페이지 식품 상품 리스트 전체 조회 (페이징)", description = "브랜드별 식품 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
+    @GetMapping("/products/producer/food")
+    public ResponseEntity<ResponseDTO> selectProducerProductFoodList(
+            @RequestParam(name = "offset", defaultValue = "1") String offset){
+
+        log.info("[ProductController] selectProducerProductFoodList 상품 리스트 전체 조회(페이징) : " + offset);
+
+        int total = productService.selectProducerProductFoodList();
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+
+        pagingResponseDTO.setData(productService.selectProducerProductFoodListPaging(cri));
+
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
+
+    @Operation(summary = "브랜드별 페이지 건강&뷰티 상품 리스트 전체 조회 (페이징)", description = "브랜드별 건강&뷰티 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
+    @GetMapping("/products/producer/beauty")
+    public ResponseEntity<ResponseDTO> selectProducerProductBeautyList(
+            @RequestParam(name = "offset", defaultValue = "1") String offset){
+
+        log.info("[ProductController] selectProducerProductBeautyList 상품 리스트 전체 조회(페이징) : " + offset);
+
+        int total = productService.selectProducerProductBeautyList();
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+
+        pagingResponseDTO.setData(productService.selectProducerProductBeautyListPaging(cri));
+
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
+
+    @Operation(summary = "브랜드별 페이지 의류 상품 리스트 전체 조회 (페이징)", description = "브랜드별 의류 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
+    @GetMapping("/products/producer/fashion")
+    public ResponseEntity<ResponseDTO> selectProducerProductFashionList(
+            @RequestParam(name = "offset", defaultValue = "1") String offset){
+
+        log.info("[ProductController] selectProducerProductFashionList 상품 리스트 전체 조회(페이징) : " + offset);
+
+        int total = productService.selectProducerProductFashionList();
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+
+        pagingResponseDTO.setData(productService.selectProducerProductFashionListPaging(cri));
+
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
+
     /* 판매자 상품 등록 */
     @Operation(summary = "판매자 상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
     @PostMapping(value = "/products")
