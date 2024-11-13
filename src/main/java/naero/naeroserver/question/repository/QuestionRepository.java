@@ -1,14 +1,23 @@
 package naero.naeroserver.question.repository;
 
+import naero.naeroserver.entity.inquiry.TblQuestion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface QuestionRepository extends JpaRepository<Question, Integer> {
+@Repository
+public interface QuestionRepository extends JpaRepository<TblQuestion, Integer> {
 
-    // userId로 1:1 문의 전체 조회 (페이징 처리)
-    Page<Question> findByUserId(int userId, Pageable pageable);
+    // 특정 사용자의 모든 문의를 페이징 처리하여 조회
+    Page<TblQuestion> findByUserId(Integer userId, Pageable pageable);
 
-    // 1:1 문의 상세 조회
-    Question findByIdAndUserId(int questionId, int userId);
+    // 특정 사용자의 특정 문의 조회
+    TblQuestion findByQuestionIdAndUserId(Integer questionId, Integer userId);
+
+    // 문의개수 - 페이징
+    long countByUserId(Integer userId);
 }
+
+
+

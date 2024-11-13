@@ -27,8 +27,7 @@ public class TblInquiry {
     @Column(name = "inquiry_content", nullable = false)
     private String inquiryContent;
 
-    @NotNull
-    @Column(name = "inquiry_date", nullable = false)
+    @Column(name = "inquiry_date")
     private Instant inquiryDate;
 
     @Column(name = "inquiry_update")

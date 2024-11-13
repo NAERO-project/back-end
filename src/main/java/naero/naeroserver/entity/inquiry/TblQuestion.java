@@ -16,7 +16,7 @@ public class TblQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_id", nullable = false)
-    private Integer id;
+    private Integer questionId;
 
     @Size(max = 50)
     @NotNull
@@ -28,8 +28,7 @@ public class TblQuestion {
     @Column(name = "question_content", nullable = false)
     private String questionContent;
 
-    @NotNull
-    @Column(name = "question_date", nullable = false)
+    @Column(name = "question_date")
     private Instant questionDate;
 
     @Column(name = "question_update")
@@ -52,12 +51,12 @@ public class TblQuestion {
     @OneToMany(mappedBy = "question")
     private Set<TblAnswer> tblAnswers = new LinkedHashSet<>();
 
-    public Integer getId() {
-        return id;
+    public Integer getQuestionId() {
+        return questionId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setQuestionId(Integer questionId) {
+        this.questionId = questionId;
     }
 
     public String getQuestionTitle() {

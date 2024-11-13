@@ -1,23 +1,20 @@
 package naero.naeroserver.question.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
+import naero.naeroserver.common.Criteria;
 import naero.naeroserver.common.PageDTO;
 import naero.naeroserver.common.PagingResponseDTO;
 import naero.naeroserver.common.ResponseDTO;
+import naero.naeroserver.question.dto.QuestionDTO;
 import naero.naeroserver.question.service.QuestionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.attribute.UserPrincipal;
-
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/v1/questions")
 public class QuestionController {
 
     private static final Logger log = LoggerFactory.getLogger(QuestionController.class);
@@ -28,40 +25,54 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
-    // 1:1 문의 전체 조회
-    @Operation(summary = "1:1 문의 목록 조회 요청", description = "1:1문의 목록 조회 및 페이징 처리가 진행됩니다.", tags = { "QuestionController" })
-    @GetMapping("/questions")
-    public ResponseEntity<ResponseDTO> selectQuestionListWithPaging(
-            @RequestParam(name = "offset", defaultValue = "1") int offset,
-            @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    // 1:1 문의 등록
+    @PostMapping("/")
+    public ResponseEntity<ResponseDTO> createQuestion(@RequestBody QuestionDTO questionDTO) {
 
-        int userId = userPrincipal.getUserId();
+        String result = questionService.createQuestion(questionDTO);
 
-        log.info("[QuestionController] selectQuestionListWithPaging : offset={}, pageSize={}", offset, pageSize);
-
-        Page<Question> questionPage = questionService.selectQuestionListWithPaging(userId, offset, pageSize);
-
-        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
-        pagingResponseDTO.setData(questionPage.getContent());
-        pagingResponseDTO.setPageInfo(new PageDTO(offset, pageSize, (int) questionPage.getTotalElements()));
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "등록 성공", result));
     }
 
-    // 1:1 문의 상세 조회
-    @Operation(summary = "1:1 문의 상세 조회 요청", description = "특정 1:1 문의의 상세 정보를 조회합니다.", tags = { "QuestionController" })
-    @GetMapping("/questions/{questionId}")
-    public ResponseEntity<ResponseDTO> selectQuestionDetail(
-            @PathVariable int questionId,
-            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    // 1:1 문의 목록 조회 (페이징 처리)
+    @GetMapping
+    public ResponseEntity<ResponseDTO> getUserQuestions(
+            @RequestParam Integer userId,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        int userId = userPrincipal.getUserId();
+        Criteria criteria = new Criteria(page, size);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+        pagingResponseDTO.setPageInfo(new PageDTO(criteria, questionService.getTotalQuestions(userId)));
+        pagingResponseDTO.setData(questionService.getUserQuestions(userId, page - 1, size));
 
-        log.info("[QuestionController] selectQuestionDetail : questionId={}, userId={}", questionId, userId);
+        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
 
-        Question question = questionService.selectQuestionDetail(questionId, userId);
+    // 특정 문의 상세 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDTO> getUserQuestionById(@RequestParam Integer userId, @PathVariable Integer id) {
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", question));
+        QuestionDTO question = questionService.getUserQuestionById(userId, id);
+
+        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "상세 조회 성공", question));
+    }
+
+    // 1:1 문의 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDTO> updateQuestion(@RequestParam Integer userId, @PathVariable Integer id, @RequestBody QuestionDTO questionDTO) {
+
+        String result = questionService.updateQuestion(userId, id, questionDTO);
+
+        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "수정 성공", result));
+    }
+
+    // 1:1 문의 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDTO> deleteQuestion(@RequestParam Integer userId, @PathVariable Integer id) {
+
+        String result = questionService.deleteQuestion(userId, id);
+
+        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "삭제 성공", result));
     }
 }

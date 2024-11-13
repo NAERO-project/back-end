@@ -13,7 +13,7 @@ public class TblAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id", nullable = false)
-    private Integer id;
+    private Integer answerId;
 
     @Size(max = 50)
     @NotNull
@@ -25,8 +25,7 @@ public class TblAnswer {
     @Column(name = "answer_content", nullable = false)
     private String answerContent;
 
-    @NotNull
-    @Column(name = "answer_date", nullable = false)
+    @Column(name = "answer_date")
     private Instant answerDate;
 
     @Column(name = "answer_update")
@@ -42,12 +41,12 @@ public class TblAnswer {
     @JoinColumn(name = "answer_emp_id", nullable = false)
     private TblUser answerEmp;
 
-    public Integer getId() {
-        return id;
+    public Integer getAnswerId() {
+        return answerId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setAnswerId(Integer answerId) {
+        this.answerId = answerId;
     }
 
     public String getAnswerTitle() {

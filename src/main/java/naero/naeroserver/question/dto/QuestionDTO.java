@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public class QuestionDTO {
 
-    private int questionId;
+    private Integer questionId;
     private String questionTitle;
     private String questionContent;
     private LocalDateTime questionDate;
@@ -14,12 +14,12 @@ public class QuestionDTO {
     private Boolean questionStatus;
     private String questionImage;
 
-    private int userId;
+    private Integer userId;
 
     public QuestionDTO() {
     }
 
-    public QuestionDTO(int questionId, String questionTitle, String questionContent, LocalDateTime questionDate, LocalDateTime questionUpdate, Boolean questionStatus, String questionImage, int userId) {
+    public QuestionDTO(Integer questionId, String questionTitle, String questionContent, LocalDateTime questionDate, LocalDateTime questionUpdate, Boolean questionStatus, String questionImage, int userId) {
         this.questionId = questionId;
         this.questionTitle = questionTitle;
         this.questionContent = questionContent;
@@ -30,11 +30,11 @@ public class QuestionDTO {
         this.userId = userId;
     }
 
-    public int getQuestionId() {
+    public Integer getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(int questionId) {
+    public void setQuestionId(Integer questionId) {
         this.questionId = questionId;
     }
 
@@ -86,11 +86,11 @@ public class QuestionDTO {
         this.questionImage = questionImage;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
