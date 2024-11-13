@@ -80,7 +80,7 @@ CREATE TRIGGER before_insert_tbl_user
     SET NEW.enroll_date = IFNULL(NEW.enroll_date, CURRENT_DATE);
 
 CREATE TABLE `tbl_producer` (
-                                `producer_id`	int	NOT NULL 	COMMENT '판매자 회원 번호',
+                                `producer_id`	int PRIMARY KEY NOT NULL 	COMMENT '판매자 회원 번호',
                                 `busi_no`	varchar(20)	NULL	COMMENT '사업자 등록 번호',
                                 `producer_add`	varchar(255)	NULL	COMMENT '판매자 주소',
                                 `producer_name`	varchar(20)	NULL	COMMENT '브랜드 명',
@@ -122,6 +122,12 @@ CREATE TRIGGER before_insert_tbl_question
     FOR EACH ROW
     SET NEW.question_date = IFNULL(NEW.question_date, CURRENT_TIMESTAMP);
 
+CREATE TRIGGER updated_tbl_question
+    BEFORE UPDATE ON `tbl_question`
+    FOR EACH ROW
+    SET NEW.question_update = CURRENT_TIMESTAMP;
+
+
 CREATE TABLE `tbl_answer` (
                               `answer_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '1:1문의 답변 번호',
                               `answer_title`	varchar(50)	NOT NULL	COMMENT '1:1문의 답변 제목',
@@ -137,16 +143,26 @@ CREATE TRIGGER before_insert_tbl_answer
     FOR EACH ROW
     SET NEW.answer_date = IFNULL(NEW.answer_date, CURRENT_TIMESTAMP);
 
+CREATE TRIGGER updated_tbl_answer
+    BEFORE UPDATE ON `tbl_answer`
+    FOR EACH ROW
+    SET NEW.answer_update = CURRENT_TIMESTAMP
+;
 
 
 CREATE TABLE `tbl_alarm` (
                              `alarm_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '알림 번호',
                              `alarm_url`	varchar(255)	NULL	COMMENT '이동 url',
                              `alarm_detail`	varchar(255)	NULL	COMMENT '알림 내용',
-                             `check_status`	boolean	NULL	COMMENT '확인 여부',
+                             `check_status`	boolean	NULL DEFAULT false	COMMENT '확인 여부',
                              `alarm_send_date`	DateTime	NULL	COMMENT '알림 송신 날짜',
                              `user_id`	int	NOT NULL	COMMENT '수신자 회원 번호'
 );
+
+CREATE TRIGGER before_insert_tbl_alarm
+    BEFORE INSERT ON `tbl_alarm`
+    FOR EACH ROW
+    SET NEW.alarm_send_date = IFNULL(NEW.alarm_send_date, CURRENT_TIMESTAMP);
 
 
 CREATE TABLE `tbl_category_large` (
@@ -179,11 +195,18 @@ CREATE TABLE `tbl_product` (
                                `product_desc`	varchar(255)	NULL	COMMENT '상품 설명',
                                `product_create_at`	DateTime	NULL	COMMENT '등록일',
                                `product_delete_at`	DateTime	NULL	COMMENT '삭제일',
-                               `product_check`	varchar(1)	NULL	COMMENT '판매여부',
+                               `product_check`	varchar(1)	NULL DEFAULT 'Y'	COMMENT '판매여부',
                                `product_quantity`	int	NULL	COMMENT '재고',
                                `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
                                `small_category_id`	int	NOT NULL	COMMENT '카테고리 번호'
 );
+
+CREATE TRIGGER before_insert_tbl_product
+    BEFORE INSERT ON `tbl_product`
+    FOR EACH ROW
+    SET NEW.product_create_at = IFNULL(NEW.product_create_at, CURRENT_TIMESTAMP);
+
+
 
 CREATE TABLE `tbl_review` (
                               `review_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '리뷰번호',
@@ -211,29 +234,43 @@ CREATE TABLE `tbl_inquiry` (
                                `inquiry_date`	DateTime	NOT NULL	COMMENT '문의 작성일자',
                                `inquiry_update`	DateTime	NULL	COMMENT '문의 수정 일자',
                                `inquiry_lock`	boolean	NOT NULL	COMMENT '문의 잠금 여부',
-                               `inquiry_status`	boolean	NOT NULL	COMMENT '문의 답변 상태',
-                               `user_id`	int	NOT NULL	COMMENT '회원 번호'
+                               `inquiry_status`	boolean	NOT NULL DEFAULT FALSE	COMMENT '문의 답변 상태',
+                               `user_id`	int	NOT NULL	COMMENT '회원 번호',
+                               `product_id`	int	NOT NULL	COMMENT '상품 번호'
 );
 CREATE TRIGGER before_insert_tbl_inquiry
     BEFORE INSERT ON `tbl_inquiry`
     FOR EACH ROW
     SET NEW.inquiry_date = IFNULL(NEW.inquiry_date, CURRENT_TIMESTAMP);
 
+CREATE TRIGGER updated_tbl_inquiry
+    BEFORE UPDATE ON `tbl_inquiry`
+    FOR EACH ROW
+    SET NEW.inquiry_update = CURRENT_TIMESTAMP
+;
+
 
 
 CREATE TABLE tbl_response (
-                               `response_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '답변 번호',
-                               `response_title`	varchar(50)	NOT NULL	COMMENT '답변 제목',
-                               `response_content`	text	NOT NULL	COMMENT '답변 내용',
-                               `response_date`	DateTime	NOT NULL	COMMENT '답변 작성 일자',
-                               `response_update`	DateTime	NULL	COMMENT '답변 수정 일자',
-                               `inquiry_id`	int	NOT NULL	COMMENT '문의 번호',
-                               `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호'
+                              `response_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '답변 번호',
+                              `response_title`	varchar(50)	NOT NULL	COMMENT '답변 제목',
+                              `response_content`	text	NOT NULL	COMMENT '답변 내용',
+                              `response_date`	DateTime	NOT NULL	COMMENT '답변 작성 일자',
+                              `response_update`	DateTime	NULL	COMMENT '답변 수정 일자',
+                              `inquiry_id`	int	NOT NULL	COMMENT '문의 번호',
+                              `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호'
 );
 CREATE TRIGGER before_insert_tbl_response
     BEFORE INSERT ON `tbl_response`
     FOR EACH ROW
     SET NEW.response_date = IFNULL(NEW.response_date, CURRENT_TIMESTAMP);
+
+CREATE TRIGGER updated_tbl_response
+    BEFORE UPDATE ON `tbl_response`
+    FOR EACH ROW
+    SET NEW.response_update = CURRENT_TIMESTAMP
+;
+
 
 
 CREATE TABLE `tbl_address` (
@@ -278,11 +315,16 @@ CREATE TABLE `tbl_magazine` (
 
 
 CREATE TABLE tbl_liked_seller (
-                              `likeSeller_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '찜번호',
-                              `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
-                              `user_id`	int	NOT NULL	COMMENT '회원 번호',
-                              `brand_like_date`	DateTime	NOT NULL	COMMENT '등록일시'
+                                  `likeSeller_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '찜번호',
+                                  `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
+                                  `user_id`	int	NOT NULL	COMMENT '회원 번호',
+                                  `brand_like_date`	DateTime	NOT NULL	COMMENT '등록일시'
 );
+
+CREATE TRIGGER before_insert_tbl_liked_seller
+    BEFORE INSERT ON `tbl_liked_seller`
+    FOR EACH ROW
+    SET NEW.brand_like_date = IFNULL(NEW.brand_like_date, CURRENT_TIMESTAMP);
 
 
 CREATE TABLE `tbl_liked_product` (
@@ -319,7 +361,7 @@ CREATE TRIGGER before_insert_tbl_coupon
 
 
 CREATE TABLE `tbl_coupon_list` (
-                                   `Key`	int	NOT NULL  PRIMARY KEY AUTO_INCREMENT	COMMENT '쿠폰 수령 번호',
+                                   `coupon_get_id`	int	NOT NULL  PRIMARY KEY AUTO_INCREMENT	COMMENT '쿠폰 수령 번호',
                                    `use_status`	varchar(1)	NULL DEFAULT 'N'	COMMENT '사용 여부',
                                    `user_id`	int	NOT NULL	COMMENT '수령자',
                                    `coupon_id`	int	NOT NULL	COMMENT '쿠폰번호'
@@ -328,15 +370,15 @@ CREATE TABLE `tbl_coupon_list` (
 
 CREATE TABLE `tbl_option` (
                               `option_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '옵션번호',
-                              `option_desc`	varchar(255)	NULL	COMMENT '옵션 내용',
-                              `add_price`	int	NULL	COMMENT '추가금액',
-                              `product_id`	int	NOT NULL	COMMENT '상품 번호'
+                              `option_desc`	varchar(255)	NULL DEFAULT NULL	COMMENT '옵션 내용',
+                              `add_price`	int	NULL	DEFAULT NULL COMMENT '추가금액',
+                              `product_id`	int	NOT NULL COMMENT '상품 번호',
+                              `option_quantity` int NOT NULL COMMENT '옵션에 따른 재고'
 );
 
 
 CREATE TABLE `tbl_cart` (
                             `cart_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '장바구니 번호',
-                            `product_id`	int	NOT NULL	COMMENT '상품 번호',
                             `option_id`	int	NOT NULL	COMMENT '옵션 번호',
                             `count`	int	NOT NULL	COMMENT '상품 개수',
                             `price`	int	NOT NULL	COMMENT '상품 가격',
@@ -367,7 +409,33 @@ CREATE TABLE `tbl_order` (
 CREATE TRIGGER before_insert_tbl_order
     BEFORE INSERT ON `tbl_order`
     FOR EACH ROW
+    SET NEW.order_datetime = IFNULL(NEW.order_datetime, CURRENT_TIMESTAMP)
+        , NEW.created_at = IFNULL(NEW.created_at, CURRENT_TIMESTAMP);
+;
+
+CREATE TABLE `tbl_order_detail` (
+                                    `order_detail_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '주문 상세 번호',
+                                    `option_id`	int	NOT NULL	COMMENT '상품 번호(옵션번호로)',
+                                    `count`	int	NOT NULL	COMMENT '주문 상품 수량',
+                                    `amount`	int	NOT NULL	COMMENT '주문 상품 금액',
+                                    `created_at`	DateTime	NOT NULL	COMMENT '주문 상세 정보 생성 일시',
+                                    `updated_at`	DateTime	NULL	COMMENT '주문 상세 정보 수정 일시',
+                                    `shipping_id`	int	NULL	COMMENT '배송 번호',
+                                    `order_id`	int	NOT NULL	COMMENT '주문 번호'
+);
+
+
+
+CREATE TRIGGER before_insert_tbl_order_detail
+    BEFORE INSERT ON `tbl_order_detail`
+    FOR EACH ROW
     SET NEW.created_at = IFNULL(NEW.created_at, CURRENT_TIMESTAMP);
+
+CREATE TRIGGER updated_tbl_order_detail
+    BEFORE UPDATE ON `tbl_order_detail`
+    FOR EACH ROW
+    SET NEW.updated_at = CURRENT_TIMESTAMP
+;
 
 
 
@@ -403,25 +471,6 @@ CREATE TABLE `tbl_payment` (
                                `updated_at`	DateTime	NULL	COMMENT '결제 업데이트 일시',
                                `order_id`	int	NOT NULL	COMMENT '주문번호'
 );
-
-
-CREATE TABLE `tbl_order_detail` (
-                                    `order_detail_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '주문 상세 번호',
-                                    `product_id`	int	NOT NULL	COMMENT '상품 번호',
-                                    `count`	int	NOT NULL	COMMENT '주문 상품 수량',
-                                    `amount`	int	NOT NULL	COMMENT '주문 상품 금액',
-                                    `created_at`	DateTime	NOT NULL	COMMENT '주문 상세 정보 생성 일시',
-                                    `updated_at`	DateTime	NULL	COMMENT '주문 상세 정보 수정 일시',
-                                    `shipping_id`	int	NULL	COMMENT '배송 번호',
-                                    `order_id`	int	NOT NULL	COMMENT '주문 번호'
-);
-
-CREATE TRIGGER before_insert_tbl_order_detail
-    BEFORE INSERT ON `tbl_order_detail`
-    FOR EACH ROW
-    SET NEW.created_at = IFNULL(NEW.created_at, CURRENT_TIMESTAMP);
-
-
 
 
 CREATE TABLE `tbl_auth` (
@@ -594,6 +643,12 @@ ALTER TABLE `tbl_order_detail` ADD CONSTRAINT `FK_tbl_order_TO_tbl_order_detail_
     REFERENCES `tbl_order` (
                             `order_id`
         );
+ALTER TABLE `tbl_order_detail` ADD CONSTRAINT `FK_tbl_option_TO_tbl_order_detail_1` FOREIGN KEY (
+                                                                                                 `option_id`
+    )
+    REFERENCES `tbl_option` (
+                             `option_id`
+        );
 
 ALTER TABLE `tbl_banner` ADD CONSTRAINT `FK_tbl_producer_TO_tbl_banner_1` FOREIGN KEY (
                                                                                        `producer_id`
@@ -610,14 +665,14 @@ ALTER TABLE `tbl_banner` ADD CONSTRAINT `FK_tbl_user_TO_tbl_banner_1` FOREIGN KE
         );
 
 ALTER TABLE tbl_liked_seller ADD CONSTRAINT `FK_tbl_producer_TO_tbl_seller_1` FOREIGN KEY (
-                                                                                       `producer_id`
+                                                                                           `producer_id`
     )
     REFERENCES `tbl_producer` (
                                `producer_id`
         );
 
 ALTER TABLE tbl_liked_seller ADD CONSTRAINT `FK_tbl_user_TO_tbl_seller_1` FOREIGN KEY (
-                                                                                   `user_id`
+                                                                                       `user_id`
     )
     REFERENCES `tbl_user` (
                            `user_id`
@@ -679,6 +734,7 @@ ALTER TABLE `tbl_cart` ADD CONSTRAINT `FK_tbl_user_TO_tbl_cart_1` FOREIGN KEY (
                            `user_id`
         );
 
+
 ALTER TABLE `tbl_shipping` ADD CONSTRAINT `FK_tbl_order_TO_tbl_shipping_1` FOREIGN KEY (
                                                                                         `order_id`
     )
@@ -692,4 +748,3 @@ ALTER TABLE `tbl_shipping` ADD CONSTRAINT `FK_tbl_ship_com_TO_tbl_shipping_1` FO
     REFERENCES `tbl_ship_com` (
                                `ship_com_id`
         );
-
