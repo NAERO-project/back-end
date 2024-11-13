@@ -72,14 +72,6 @@ public class TblUser {
     @JoinColumn(name = "grade_id", nullable = false)
     private TblGrade grade;
 
-    @OneToOne(mappedBy = "producer")
-    private TblProducer tblProducer ;
-/*
-@OneToMany(mappedBy = "producer")
-private Set<TblProducer> tblProducers = new LinkedHashSet<>();
-*/
-
-
     @OneToMany(mappedBy = "user")
     private Set<TblAddress> tblAddresses = new LinkedHashSet<>();
 
@@ -110,6 +102,8 @@ private Set<TblProducer> tblProducers = new LinkedHashSet<>();
     @OneToMany(mappedBy = "user")
     private Set<TblOrder> tblOrders = new LinkedHashSet<>();
 
+    @OneToOne(mappedBy = "producer")
+    private TblProducer tblProducers;
 
     @OneToMany(mappedBy = "user")
     private Set<TblQuestion> tblQuestions = new LinkedHashSet<>();
@@ -280,12 +274,12 @@ private Set<TblProducer> tblProducers = new LinkedHashSet<>();
         this.tblOrders = tblOrders;
     }
 
-    public TblProducer getTblProducer() {
-        return tblProducer;
+    public TblProducer getTblProducers() {
+        return tblProducers;
     }
 
-    public void setTblProducer(TblProducer tblProducer) {
-        this.tblProducer = tblProducer;
+    public void setTblProducers(TblProducer tblProducers) {
+        this.tblProducers = tblProducers;
     }
 
     public Set<TblQuestion> getTblQuestions() {
