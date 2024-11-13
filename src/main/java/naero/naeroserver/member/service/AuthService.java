@@ -1,5 +1,6 @@
 package naero.naeroserver.member.service;
 
+import jakarta.transaction.Transactional;
 import naero.naeroserver.common.ResponseDTO;
 import naero.naeroserver.entity.user.TblUser;
 import naero.naeroserver.exception.DuplicatedMemberEmailException;
@@ -8,6 +9,7 @@ import naero.naeroserver.exception.LoginFailedException;
 import naero.naeroserver.jwt.TokenDTO;
 import naero.naeroserver.jwt.TokenProvider;
 import naero.naeroserver.member.dto.UserDTO;
+import naero.naeroserver.member.repository.UserGradeRepository;
 import naero.naeroserver.member.repository.UserRepository;
 import naero.naeroserver.member.repository.UserRoleRepository;
 import org.modelmapper.ModelMapper;
@@ -19,17 +21,19 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userDao;
     private final UserRoleRepository userRoleRepository;
+    private final UserGradeRepository userGradeRepository;
     private final TokenProvider tokenProvider;
     private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
 
-    public AuthService(PasswordEncoder passwordEncoder,
-                       UserRepository userDao, UserRoleRepository userRoleRepository,
-                       TokenProvider tokenProvider, ModelMapper modelMapper) {
+    public AuthService(PasswordEncoder passwordEncoder, UserRepository userDao, UserRoleRepository userRoleRepository, UserGradeRepository userGradeRepository, TokenProvider tokenProvider, ModelMapper modelMapper, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
         this.userRoleRepository = userRoleRepository;
+        this.userGradeRepository = userGradeRepository;
         this.tokenProvider = tokenProvider;
         this.modelMapper = modelMapper;
+        this.userRepository = userRepository;
     }
 
     public Object signin(UserDTO user) {
@@ -59,7 +63,18 @@ public class AuthService {
         return tokenProvider.generateTokenDTO(getuser);
     }
 
+    @Transactional
     public Object signup(UserDTO user) {
+        dupulicateIdCheck(user.getUsername());
+        dupulicateEmailCheck(user.getUserEmail());
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        TblUser newUser = modelMapper.map(user, TblUser.class);
+        newUser.setGrade(userGradeRepository.findById(1));
+
+        TblUser result = userRepository.save(newUser);
+        System.out.println(result);
+        //DB 트리거로 자동으로 tbl_user_role 에 기본 권한 (ROLE_USER) 가 들어가도록 함
 
         return null;
     }

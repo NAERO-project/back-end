@@ -23,6 +23,8 @@ INSERT INTO tbl_user (user_fullname, username, password, user_email, user_phone)
     ('리간자', 'admin002'   , '$2a$10$RmQLLj/nagiSykiYpq5yQuAXAE/lkuqvxPlHEOKv9/JL249d3oI3e', 'admin002@mail.com',    NULL), #비밀번호 admin002
     ('cs직원', 'admin003'   ,'$2a$10$R06k1HxbCF0n7Ve9ZFPPC.D8PHjPQsayjjXN58GGAaZdpEsYM0.4G' , 'admin003@mail.com',   NULL) #비밀번호 admin003
 ;
+INSERT INTO tbl_user(user_fullname, username, password, user_email, user_phone) value
+    ('확인용', 'test01','$2a$10$HP4FtkWmgmdyMcO26OQA4uo5oKiPhcNCEwTtRMlcaWzvWTPn6ahRS', 'test01@email.com',NULL);
 
 INSERT INTO tbl_producer (producer_id, busi_no, producer_add, producer_name, producer_phone, delivery_fee, delivery_crit) VALUES
     (1,'1234578910', '서울특별시 구로구 ㅇㅇ동 ㅇㅇ건물 ㅇㅇ호', 'ㅇㅇ상회', '02-0000-1111', 1000, 30000),

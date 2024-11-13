@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/auth")
@@ -55,8 +52,11 @@ public class AuthController {
     @Operation(summary = "회원 가입 요청", tags = {"AuthController"})
     @PostMapping("/signup")
     public ResponseEntity<ResponseDTO> singnup(@RequestBody UserDTO user){
+        //여기서 이메일 인증 ID 확인해도 될 듯
         return ResponseEntity
                 .ok()
                 .body(new ResponseDTO(HttpStatus.OK, "회원 가입 성공", authService.signup(user)));
     }
+
+
 }
