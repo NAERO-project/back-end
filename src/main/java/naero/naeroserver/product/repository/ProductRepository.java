@@ -48,7 +48,8 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
 
     @Query("SELECT p, pi.producer FROM TblProduct p " +
             "JOIN p.producer pi " +
-            "WHERE pi.producer = :producerId AND p.productCheck = 'Y' " +
+            "JOIN pi.producer tu " +
+            "WHERE tu.id = :id AND p.productCheck = 'Y' " +
             "ORDER BY p.productId DESC")
-    List<TblProduct> findByProductIdWithLimit(@Param("producerId") Integer producerId, Pageable pageable);
+    List<TblProduct> findByProductIdWithLimit(@Param("id") Integer producerId, Pageable pageable);
 }
