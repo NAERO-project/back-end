@@ -25,8 +25,7 @@ public class TblAnswer {
     @Column(name = "answer_content", nullable = false)
     private String answerContent;
 
-    @NotNull
-    @Column(name = "answer_date", nullable = false)
+    @Column(name = "answer_date")
     private Instant answerDate;
 
     @Column(name = "answer_update")
