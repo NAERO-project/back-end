@@ -33,9 +33,9 @@ public class TblOrderDetail {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shipping_id")
-    private TblShipping shipping;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "shipping_id")
+//    private TblShipping shipping;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -90,13 +90,13 @@ public class TblOrderDetail {
         this.updatedAt = updatedAt;
     }
 
-    public TblShipping getShipping() {
-        return shipping;
-    }
+//    public TblShipping getShipping() {
+//        return shipping;
+//    }
 
-    public void setShipping(TblShipping shipping) {
-        this.shipping = shipping;
-    }
+//    public void setShipping(TblShipping shipping) {
+//        this.shipping = shipping;
+//    }
 
     public TblOrder getOrder() {
         return order;

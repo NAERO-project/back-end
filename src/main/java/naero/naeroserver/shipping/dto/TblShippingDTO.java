@@ -2,21 +2,23 @@ package naero.naeroserver.shipping.dto;
 
 public class TblShippingDTO {
 
-    int shippingId;
-    String trackingNumber;
-    String shippingStatus;
-    OrderDTO order;
-    TblShipComDTO shipCom;
+    private int shippingId;
+    private String trackingNumber;
+    private String shippingStatus;
+    //    OrderDTO order;
+    /* 일단, OrderDTO 없이 dummy 데이터로 진행, 즉 orderId에 연결이 없는 것을 가정 */
+    private int orderId;
+    private TblShipComDTO shipCom;
 
     public TblShippingDTO() {
     }
 
     public TblShippingDTO(int shippingId, String trackingNumber,
-                          String shippingStatus, OrderDTO order, TblShipComDTO shipCom) {
+                          String shippingStatus, int orderId, TblShipComDTO shipCom) {
         this.shippingId = shippingId;
         this.trackingNumber = trackingNumber;
         this.shippingStatus = shippingStatus;
-        this.order = order;
+        this.orderId = orderId;
         this.shipCom = shipCom;
     }
 
@@ -44,12 +46,12 @@ public class TblShippingDTO {
         this.shippingStatus = shippingStatus;
     }
 
-    public OrderDTO getOrder() {
-        return order;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setOrder(OrderDTO order) {
-        this.order = order;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     public TblShipComDTO getShipCom() {
@@ -66,7 +68,7 @@ public class TblShippingDTO {
                 "shippingId=" + shippingId +
                 ", trackingNumber='" + trackingNumber + '\'' +
                 ", shippingStatus='" + shippingStatus + '\'' +
-                ", order=" + order +
+                ", orderId=" + orderId +
                 ", shipCom=" + shipCom +
                 '}';
     }

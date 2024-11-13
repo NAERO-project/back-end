@@ -102,8 +102,8 @@ public class TblOrder {
     @OneToMany(mappedBy = "order")
     private Set<TblPayment> tblPayments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "order")
-    private Set<TblShipping> tblShippings = new LinkedHashSet<>();
+//    @OneToMany(mappedBy = "order")
+//    private Set<TblShipping> tblShippings = new LinkedHashSet<>();
 
     public Integer getId() {
         return id;
@@ -273,12 +273,12 @@ public class TblOrder {
         this.tblPayments = tblPayments;
     }
 
-    public Set<TblShipping> getTblShippings() {
-        return tblShippings;
-    }
+//    public Set<TblShipping> getTblShippings() {
+//        return tblShippings;
+//    }
 
-    public void setTblShippings(Set<TblShipping> tblShippings) {
-        this.tblShippings = tblShippings;
-    }
+//    public void setTblShippings(Set<TblShipping> tblShippings) {
+//        this.tblShippings = tblShippings;
+//    }
 
 }

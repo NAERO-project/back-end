@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -31,7 +32,7 @@ public class TblShipCom {
     private String shipComContact;
 
     @OneToMany(mappedBy = "shipCom")
-    private Set<TblShipping> tblShippings = new LinkedHashSet<>();
+    private Set<TblShipping> tblShippings;
 
     public Integer getId() {
         return id;
