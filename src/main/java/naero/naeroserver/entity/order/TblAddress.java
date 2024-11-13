@@ -24,8 +24,7 @@ public class TblAddress {
     private String addressRoad;
 
     @Size(max = 255)
-    @NotNull
-    @Column(name = "address_detail", nullable = false)
+    @Column(name = "address_detail")
     private String addressDetail;
 
     @Size(max = 255)

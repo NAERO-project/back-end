@@ -19,7 +19,6 @@ public class TblCategorySmall {
     @Column(name = "small_category_name", length = 50)
     private String smallCategoryName;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "medium_category_id", nullable = false)
     private TblCategoryMedium mediumCategory;

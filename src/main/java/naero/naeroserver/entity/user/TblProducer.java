@@ -41,10 +41,9 @@ public class TblProducer {
     @Column(name = "producer_phone", length = 20)
     private String producerPhone;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @ColumnDefault("1")
-    @JoinColumn(name = "pgrade_id", nullable = false)
+    @JoinColumn(name = "pgrade_id")
     private TblProducerGrade pgrade;
 
     @Column(name = "delivery_fee")
