@@ -102,8 +102,8 @@ public class TblUser {
     @OneToMany(mappedBy = "user")
     private Set<TblOrder> tblOrders = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "producer")
-    private Set<TblProducer> tblProducers = new LinkedHashSet<>();
+    @OneToOne(mappedBy = "producer")
+    private TblProducer tblProducers;
 
     @OneToMany(mappedBy = "user")
     private Set<TblQuestion> tblQuestions = new LinkedHashSet<>();
@@ -274,11 +274,11 @@ public class TblUser {
         this.tblOrders = tblOrders;
     }
 
-    public Set<TblProducer> getTblProducers() {
+    public TblProducer getTblProducers() {
         return tblProducers;
     }
 
-    public void setTblProducers(Set<TblProducer> tblProducers) {
+    public void setTblProducers(TblProducer tblProducers) {
         this.tblProducers = tblProducers;
     }
 

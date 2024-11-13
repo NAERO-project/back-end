@@ -17,8 +17,11 @@ import java.util.Set;
 @Table(name = "tbl_producer")
 public class TblProducer {
     @Id
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Column(name = "producer_id", nullable = false)
+    private Integer id;
+
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "producer_id", nullable = false)
     private TblUser producer;
 
@@ -65,12 +68,33 @@ public class TblProducer {
     @OneToMany(mappedBy = "producer")
     private Set<TblResponse> tblResponses = new LinkedHashSet<>();
 
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "producer_id")
+    private TblProducer tblProducer;
+
+    public TblProducer getTblProducer() {
+        return tblProducer;
+    }
+
+    public void setTblProducer(TblProducer tblProducer) {
+        this.tblProducer = tblProducer;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public TblUser getProducer() {
         return producer;
     }
 
-    public void setProducer(TblUser producer) {
-        this.producer = producer;
+    public void setProducer(TblUser tblUser) {
+        this.producer = tblUser;
     }
 
     public String getBusiNo() {
