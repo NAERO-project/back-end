@@ -7,5 +7,4 @@ public class AuthDTO {
     String authKey;
     Time startTime;
 
-
 }

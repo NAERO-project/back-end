@@ -93,7 +93,7 @@ CREATE TABLE `tbl_producer` (
 
 CREATE TABLE `tbl_role` (
                             `role_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '권한 번호',
-                            `role_name`	varchar(20)	NULL	COMMENT '권한 이름'
+                            `role_name`	varchar(30)	NULL	COMMENT '권한 이름'
 );
 
 CREATE TABLE `tbl_user_role` (

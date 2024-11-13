@@ -1,13 +1,13 @@
 package naero.naeroserver.auth.DTO;
 
-public class Role {
+public class RoleDTO {
     private int roleId;
     private String roleName;
 
-    public Role() {
+    public RoleDTO() {
     }
 
-    public Role(int roleId, String roleName) {
+    public RoleDTO(int roleId, String roleName) {
         this.roleId = roleId;
         this.roleName = roleName;
     }

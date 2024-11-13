@@ -13,15 +13,15 @@ INSERT INTO tbl_producer_grade (pgrade_name, crit_sales, crit_review) VALUES
 
 #유저데이터에 들어가는 평문 패스워드 더미는 로그인 되지 않습니다
 INSERT INTO tbl_user (user_fullname, username, password, user_email, user_phone) VALUES
-    ('김민수', 'producer001', 'pass001', 'user001@mail.com',   '010-1111-1111'),
-    ('이영희', 'producer002', 'pass002', 'user002@mail.com',   '010-2222-2222'),
-    ('박민지', 'user003', 'pass003', 'user003@mail.com',       '010-3333-3333'),
-    ('최수지', 'user004', 'pass004', 'user004@mail.com',       '010-4444-4444'),
-    ('제갈명진', 'user005', 'pass005', 'user005@mail.com',       '010-5555-5555'),
-    ('감유진', 'user006', 'pass006', 'user006@mail.com',       '010-6666-6666'),
-    ('간리자', 'admin001', 'admin001', 'admin001@mail.com',    NULL),
-    ('리간자', 'admin002', 'admin002', 'admin002@mail.com',    NULL),
-    ('cs직원', 'admin003', 'admin003', 'admin003@mail.com',   NULL)
+    ('김민수', 'producer001', '$2a$10$HP4FtkWmgmdyMcO26OQA4uo5oKiPhcNCEwTtRMlcaWzvWTPn6ahRS', 'user001@mail.com',   '010-1111-1111'), #비밀번호: pass001
+    ('이영희', 'producer002', '$2a$10$tQW/8wT3l6c6eN6BOAO6ye1LHbR35rEEwCOGNhzq/vtcXCPLm9NCS', 'user002@mail.com',   '010-2222-2222'),#비밀번호: pass002
+    ('박민지', 'user003'    , '$2a$10$b7TscGZWX6qgqFGUME2gVe2H.1dmPPO77fqnH7KILi3uqIPE.Qih6', 'user003@mail.com',       '010-3333-3333'),#비밀번호: pass003
+    ('최수지', 'user004'    , '$2a$10$5CTB9ZpEMcuqtLuEXs4AAuM/45EtmF9SpRjgPCvW1M0Os9MjMxYwG', 'user004@mail.com',       '010-4444-4444'),#비밀번호: pass004
+    ('제갈명진', 'user005'  ,  '$2a$10$kj5/L3Yyu6mEQWuM8K8QHujAJXssAPkpsTpzbmhn9qZYWSbc2e/fS', 'user005@mail.com',       '010-5555-5555'),#비밀번호: pass005
+    ('감유진', 'user006'    , '$2a$10$MeMKaVZF3yYX./sVeVA6o.BcAqBbKySGc.zhVJel/zM73HLiIwN2e'  , 'user006@mail.com',       '010-6666-6666'),#비밀번호: pass006
+    ('간리자', 'admin001'   , '$2a$10$hYDStBt17vWyNFtsTBymqu2o0xloLARtc96hftXJDMr0ng9eAqoUK', 'admin001@mail.com',    NULL), #비밀번호 admin001
+    ('리간자', 'admin002'   , '$2a$10$RmQLLj/nagiSykiYpq5yQuAXAE/lkuqvxPlHEOKv9/JL249d3oI3e', 'admin002@mail.com',    NULL), #비밀번호 admin002
+    ('cs직원', 'admin003'   ,'$2a$10$R06k1HxbCF0n7Ve9ZFPPC.D8PHjPQsayjjXN58GGAaZdpEsYM0.4G' , 'admin003@mail.com',   NULL) #비밀번호 admin003
 ;
 
 INSERT INTO tbl_producer (producer_id, busi_no, producer_add, producer_name, producer_phone, delivery_fee, delivery_crit) VALUES
@@ -29,12 +29,12 @@ INSERT INTO tbl_producer (producer_id, busi_no, producer_add, producer_name, pro
     (2,'1234578960', '인천광역시  ㅇㅇ호', 'ㅇㅇ푸드', '032-0000-1111', 0, 0);
 
 INSERT INTO tbl_role (role_name)VALUES
-    ('user'),
-    ('producer'),
-    ('product_admin'),
-    ('user_admin'),
-    ('monitoring_admin'),
-    ('cs_admin')
+    ('ROLE_USER'),
+    ('ROLE_PRODUCER'),
+    ('ROLE_PRODUCT_ADMIN'),
+    ('ROLE_USER_ADMIN'),
+    ('ROLE_MONITORING_ADMIN'),
+    ('ROLE_CS_ADMIN')
 ;
 INSERT INTO tbl_user_role (user_id, role_id)VALUES
     (1,1),

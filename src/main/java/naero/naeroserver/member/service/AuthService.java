@@ -9,18 +9,27 @@ import naero.naeroserver.jwt.TokenDTO;
 import naero.naeroserver.jwt.TokenProvider;
 import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import naero.naeroserver.member.repository.UserRoleRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userDao;
+    private final UserRoleRepository userRoleRepository;
     private final TokenProvider tokenProvider;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    public AuthService(UserRepository userDao, TokenProvider tokenProvider) {
+    public AuthService(PasswordEncoder passwordEncoder,
+                       UserRepository userDao, UserRoleRepository userRoleRepository,
+                       TokenProvider tokenProvider, ModelMapper modelMapper) {
+        this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
+        this.userRoleRepository = userRoleRepository;
         this.tokenProvider = tokenProvider;
+        this.modelMapper = modelMapper;
     }
 
     public Object signin(UserDTO user) {
@@ -36,15 +45,18 @@ public class AuthService {
         }
 
         //플레인 텍스트 임시 로직 확인
-        if (!getuser.getPassword().equals(user.getPassword())){
+        /*if (!getuser.getPassword().equals(user.getPassword())){
+            System.out.println("비밀번호 오류");
+            throw new LoginFailedException("비밀번호가 일지하지 않습니다.");
+        }*/
+
+        if(!passwordEncoder.matches(user.getPassword(), getuser.getPassword())){
             System.out.println("비밀번호 오류");
             throw new LoginFailedException("비밀번호가 일지하지 않습니다.");
         }
 
         //인증 토큰 발급
-        TokenDTO newToken = tokenProvider.generateTokenDTO(getuser);
-
-        return null;
+        return tokenProvider.generateTokenDTO(getuser);
     }
 
     public Object signup(UserDTO user) {
