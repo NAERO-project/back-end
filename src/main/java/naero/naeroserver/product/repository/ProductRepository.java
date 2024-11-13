@@ -93,4 +93,5 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             @Param("largeCategoryId") Integer largeCategoryId,
             @Param("id") Integer producerId,
             Pageable paging);
+
 }

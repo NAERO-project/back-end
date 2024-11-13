@@ -218,6 +218,14 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
     }
 
+    /* 상품별 상세 조회 */
+    @Operation(summary = "상품별 상세 조회 요청", description = "상품별로 상세 내용이 담긴 페이지 처리가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/{productId}")
+    public ResponseEntity<ResponseDTO> selectProductDetail(@PathVariable int productId){
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 상세정보 조회 성공", productService.selectProductDetail(productId)));
+    }
+
     /* 판매자 상품 등록 */
     @Operation(summary = "판매자 상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
     @PostMapping(value = "/products")
@@ -225,7 +233,4 @@ public class ProductController {
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
     }
-
-
-
 }
