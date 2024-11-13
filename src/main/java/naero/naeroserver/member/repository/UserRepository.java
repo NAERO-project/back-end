@@ -4,6 +4,9 @@ import naero.naeroserver.entity.user.TblUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<TblUser, Integer> {
-    public TblUser findByIdAndWithStatus(int Id, String status);
+    TblUser findById(int Id);
+    TblUser findByUsername(String username);
+    boolean existsByUsername(String username);
+    boolean existsByUserEmail(String email);
 
 }
