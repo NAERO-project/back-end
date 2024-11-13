@@ -55,6 +55,7 @@ public class TokenProvider {
     private static final Logger log = LoggerFactory.getLogger(TokenProvider.class);
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "bearer";
+    //ms 기준
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60;
 
     private final UserDetailsService userDetailsService;
@@ -149,6 +150,8 @@ public class TokenProvider {
         // 클레임에서 권한 정보(auth) 추출
         Collection<? extends GrantedAuthority> authorities =
                 // ex: "ROLE_ADMIN"이랑 "ROLE_MEMBER"같은 문자열이 들어있는 문자열 배열
+                //우리 DB 에서는 tbl_role의 정보값
+
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(role -> new SimpleGrantedAuthority(role))
                         // List<SimpleGrantedAuthority>로 수집.
