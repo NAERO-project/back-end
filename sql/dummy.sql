@@ -17,8 +17,8 @@ INSERT INTO tbl_user (user_fullname, username, password, user_email, user_phone)
     ('이영희', 'producer002', 'pass002', 'user002@mail.com',   '010-2222-2222'),
     ('박민지', 'user003', 'pass003', 'user003@mail.com',       '010-3333-3333'),
     ('최수지', 'user004', 'pass004', 'user004@mail.com',       '010-4444-4444'),
-    ('제갈명진', 'user003', 'pass005', 'user005@mail.com',       '010-5555-5555'),
-    ('감유진', 'user004', 'pass006', 'user006@mail.com',       '010-6666-6666'),
+    ('제갈명진', 'user005', 'pass005', 'user005@mail.com',       '010-5555-5555'),
+    ('감유진', 'user006', 'pass006', 'user006@mail.com',       '010-6666-6666'),
     ('간리자', 'admin001', 'admin001', 'admin001@mail.com',    NULL),
     ('리간자', 'admin002', 'admin002', 'admin002@mail.com',    NULL),
     ('cs직원', 'admin003', 'admin003', 'admin003@mail.com',   NULL)
