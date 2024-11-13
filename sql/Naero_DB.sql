@@ -252,13 +252,13 @@ CREATE TRIGGER updated_tbl_inquiry
 
 
 CREATE TABLE tbl_response (
-                              `response_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '답변 번호',
-                              `response_title`	varchar(50)	NOT NULL	COMMENT '답변 제목',
-                              `response_content`	text	NOT NULL	COMMENT '답변 내용',
-                              `response_date`	DateTime	NOT NULL	COMMENT '답변 작성 일자',
-                              `response_update`	DateTime	NULL	COMMENT '답변 수정 일자',
-                              `inquiry_id`	int	NOT NULL	COMMENT '문의 번호',
-                              `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호'
+                               `response_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '답변 번호',
+                               `response_title`	varchar(50)	NOT NULL	COMMENT '답변 제목',
+                               `response_content`	text	NOT NULL	COMMENT '답변 내용',
+                               `response_date`	DateTime	NOT NULL	COMMENT '답변 작성 일자',
+                               `response_update`	DateTime	NULL	COMMENT '답변 수정 일자',
+                               `inquiry_id`	int	NOT NULL	COMMENT '문의 번호',
+                               `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호'
 );
 CREATE TRIGGER before_insert_tbl_response
     BEFORE INSERT ON `tbl_response`
@@ -315,10 +315,10 @@ CREATE TABLE `tbl_magazine` (
 
 
 CREATE TABLE tbl_liked_seller (
-                                  `likeSeller_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '찜번호',
-                                  `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
-                                  `user_id`	int	NOT NULL	COMMENT '회원 번호',
-                                  `brand_like_date`	DateTime	NOT NULL	COMMENT '등록일시'
+                              `likeSeller_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '찜번호',
+                              `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
+                              `user_id`	int	NOT NULL	COMMENT '회원 번호',
+                              `brand_like_date`	DateTime	NOT NULL	COMMENT '등록일시'
 );
 
 CREATE TRIGGER before_insert_tbl_liked_seller
@@ -410,7 +410,7 @@ CREATE TRIGGER before_insert_tbl_order
     BEFORE INSERT ON `tbl_order`
     FOR EACH ROW
     SET NEW.order_datetime = IFNULL(NEW.order_datetime, CURRENT_TIMESTAMP)
-        , NEW.created_at = IFNULL(NEW.created_at, CURRENT_TIMESTAMP);
+    , NEW.created_at = IFNULL(NEW.created_at, CURRENT_TIMESTAMP);
 ;
 
 CREATE TABLE `tbl_order_detail` (
@@ -644,7 +644,7 @@ ALTER TABLE `tbl_order_detail` ADD CONSTRAINT `FK_tbl_order_TO_tbl_order_detail_
                             `order_id`
         );
 ALTER TABLE `tbl_order_detail` ADD CONSTRAINT `FK_tbl_option_TO_tbl_order_detail_1` FOREIGN KEY (
-                                                                                                 `option_id`
+                                                                                               `option_id`
     )
     REFERENCES `tbl_option` (
                              `option_id`
@@ -665,14 +665,14 @@ ALTER TABLE `tbl_banner` ADD CONSTRAINT `FK_tbl_user_TO_tbl_banner_1` FOREIGN KE
         );
 
 ALTER TABLE tbl_liked_seller ADD CONSTRAINT `FK_tbl_producer_TO_tbl_seller_1` FOREIGN KEY (
-                                                                                           `producer_id`
+                                                                                       `producer_id`
     )
     REFERENCES `tbl_producer` (
                                `producer_id`
         );
 
 ALTER TABLE tbl_liked_seller ADD CONSTRAINT `FK_tbl_user_TO_tbl_seller_1` FOREIGN KEY (
-                                                                                       `user_id`
+                                                                                   `user_id`
     )
     REFERENCES `tbl_user` (
                            `user_id`
@@ -748,3 +748,4 @@ ALTER TABLE `tbl_shipping` ADD CONSTRAINT `FK_tbl_ship_com_TO_tbl_shipping_1` FO
     REFERENCES `tbl_ship_com` (
                                `ship_com_id`
         );
+
