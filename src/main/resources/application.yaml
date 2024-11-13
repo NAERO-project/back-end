@@ -1,7 +1,16 @@
-# 로그인 기능 막아둠
+# server config
+server:
+  port: 8080
+
 spring:
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  # DB config
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # Local Dev & Docker(Local) deploy
+    #    url: jdbc:mysql://database-server:3306/naerodb
+    url: jdbc:mysql://localhost:3306/naerodb
+    username: naero
+    password: naero
 
   # fileupload config
   servlet:
@@ -25,8 +34,27 @@ spring:
 # static resource(image media file) config
 ## 이미지를 저장할 위치와 응답할 때 이미지 주소 세팅
 image:
-  add-resource-locations: file:///springboot-app/naeroimgs/
+  # Local Dev
+  add-resource-locations: classpath:/static/naeroimgs/
   add-resource-handler: /naeroimgs/**
-  # Docker(Local)
-  image-dir: /springboot-app/naeroimgs
+  # Local Dev
+  image-dir: src/main/resources/static/naeroimgs
   image-url: http://localhost:8080/naeroimgs/
+  # Docker(Local)
+  #  add-resource-locations: file:///springboot-app/naeroimgs/
+  #  add-resource-handler: /naeroimgs/**
+  # Docker(Local)
+#  image-dir: /springboot-app/naeroimgs
+#  image-url: http://localhost:8080/naeroimgs/
+
+# springdoc open-api config
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+# logging config
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
