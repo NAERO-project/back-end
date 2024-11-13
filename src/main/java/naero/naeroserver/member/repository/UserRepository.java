@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserRepository extends JpaRepository<TblUser, Integer> {
     public TblUser findByIdAndWithStatus(int Id, String status);
 
+    TblUser findTblUserById(int userId);
 }
