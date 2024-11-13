@@ -355,6 +355,17 @@ public class ProductService {
         return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
     }
 
+    public Object selectProductDetail(int productId) {
+        log.info("[ProductService] selectProductDetail() 시작");
+
+        TblProduct product = productRepository.findById(productId).get();
+        product.setProductThumbnail(IMAGE_URL + product.getProductThumbnail());
+
+        log.info("[ProductService] selectProductDetail() 종료");
+
+        return modelMapper.map(product, TblProduct.class);
+    }
+
     /* 판매자 상품 등록 */
     @Transactional
     public Object insertProduct(ProductDTO productDTO, MultipartFile productImage) {
@@ -387,5 +398,6 @@ public class ProductService {
 
         return "상품 입력 성공";
     }
+
 
 }
