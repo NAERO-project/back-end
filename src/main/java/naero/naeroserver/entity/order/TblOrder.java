@@ -16,7 +16,7 @@ public class TblOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", nullable = false)
-    private Integer orderId;
+    private Integer id;
 
     @Column(name = "order_datetime")
     private Instant orderDatetime;
@@ -103,12 +103,12 @@ public class TblOrder {
     @OneToMany(mappedBy = "order")
     private Set<TblShipping> tblShippings = new LinkedHashSet<>();
 
-    public Integer getOrderId() {
-        return orderId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Instant getOrderDatetime() {

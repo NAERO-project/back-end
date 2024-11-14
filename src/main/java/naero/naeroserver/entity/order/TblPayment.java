@@ -52,9 +52,8 @@ public class TblPayment {
     @Column(name = "transaction_id", nullable = false, length = 50)
     private String transactionId;
 
-    @NotNull
     @Lob
-    @Column(name = "fail_reason", nullable = false)
+    @Column(name = "fail_reason")
     private String failReason;
 
     @Size(max = 255)

@@ -3,10 +3,12 @@ package naero.naeroserver.order.service;
 import naero.naeroserver.entity.order.TblOrder;
 import naero.naeroserver.entity.order.TblOrderDetail;
 import naero.naeroserver.entity.order.TblPayment;
+import naero.naeroserver.entity.product.TblOption;
 import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.entity.user.TblUser;
 import naero.naeroserver.member.repository.UserRepository;
 import naero.naeroserver.order.dto.OrderDTO;
+import naero.naeroserver.order.dto.OrderDetailDTO;
 import naero.naeroserver.order.dto.PaymentDTO;
 import naero.naeroserver.order.repository.OrderDetailRepository;
 import naero.naeroserver.order.repository.OrderRepository;
@@ -21,16 +23,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -44,10 +45,10 @@ public class OrderService {
     private final PaymentRepository paymentRepository;
     private final OptionRepository optionRepository;
 
-//    @Value("${image.image-dir}")
-    private String API_URL = "https://api.portone.io/v2/token";
-    private static final String API_KEY = "channel-key-e6a5937e-0f6b-422a-8748-c1f5f9c509f3";
-    private static final String API_SECRET = "PeEG91quIwIlClszpvUh6SDu2nbLLdTZVMdG0g7iYrfgg4bJwxT051fcOvJ8zHjshlnsaHZFnPgyVh3O";
+    @Value("${portone.api-key}")
+    private String API_KEY;
+    @Value("${portone.api-secret}")
+    private String API_SECRET;
     private static final long TOKEN_EXPIRY_DURATION = 3600 * 1000; // 1시간
 
     private final AtomicReference<String> cachedToken = new AtomicReference<>();
@@ -70,7 +71,7 @@ public class OrderService {
     @Transactional
     public Object insertOrder(OrderDTO orderDTO, PaymentDTO paymentDTO, int productId) {
         log.info("[OrderService] insertOrder() 시작");
-        log.info("[OrderService] paymentDTO : {}", orderDTO);
+        log.info("[OrderService] orderDTO : {}", orderDTO);
 
         try {
             // 1. 결제 정보 검증
@@ -90,27 +91,27 @@ public class OrderService {
             TblUser user = userRepository.findTblUserById(orderDTO.getUserId());
 
             // 2. 주문 정보 저장
-//            TblOrder order = new TblOrder();
-//            order.setUser(user);
-//            order.setOrderDatetime(Instant.from(LocalDateTime.now()));
-//            order.setOrderTotalAmount(orderDTO.getOrderTotalAmount());
-//            order.setOrderTotalCount(orderDTO.getOrderTotalCount());
-//            order.setDeliveryStatus(orderDTO.getDeliveryStatus());
-//            order.setOrderStatus(orderDTO.getOrderStatus());
-//            order.setDeliveryFee(orderDTO.getDeliveryFee());
-//            order.setDiscountAmount(orderDTO.getDiscountAmount());
-//            order.setRecipientName(orderDTO.getRecipientName());
-//            order.setRecipientPhoneNumber(orderDTO.getRecipientPhoneNumber());
-//            order.setPostalCode(orderDTO.getPostalCode());
-//            order.setAddressRoad(orderDTO.getAddressRoad());
-//            order.setAddressDetail(orderDTO.getAddressDetail());
-//            order.setAddressName(orderDTO.getAddressName());
-//            order.setDeliveryNote(orderDTO.getDeliveryNote());
-
-            log.info(String.valueOf(orderDTO));
-            TblOrder order = modelMapper.map(orderDTO, TblOrder.class);
+            TblOrder order = new TblOrder();
             order.setUser(user);
             order.setOrderDatetime(Instant.now());
+            order.setOrderTotalAmount(orderDTO.getOrderTotalAmount());
+            order.setOrderTotalCount(orderDTO.getOrderTotalCount());
+            order.setDeliveryStatus(orderDTO.getDeliveryStatus());
+            order.setOrderStatus(orderDTO.getOrderStatus());
+            order.setDeliveryFee(orderDTO.getDeliveryFee());
+            order.setDiscountAmount(orderDTO.getDiscountAmount());
+            order.setRecipientName(orderDTO.getRecipientName());
+            order.setRecipientPhoneNumber(orderDTO.getRecipientPhoneNumber());
+            order.setPostalCode(orderDTO.getPostalCode());
+            order.setAddressRoad(orderDTO.getAddressRoad());
+            order.setAddressDetail(orderDTO.getAddressDetail());
+            order.setAddressName(orderDTO.getAddressName());
+            order.setDeliveryNote(orderDTO.getDeliveryNote());
+
+            log.info(String.valueOf(orderDTO));
+//            TblOrder order = modelMapper.map(orderDTO, TblOrder.class);
+//            order.setUser(user);
+//            order.setOrderDatetime(Instant.now());
 
             orderRepository.save(order);
 
@@ -124,12 +125,14 @@ public class OrderService {
             payment.setPaymentStatus(paymentDTO.getPaymentStatus());
             payment.setImpUid(paymentDTO.getImp_uid());
             payment.setMerchantUid(paymentDTO.getMerchant_uid());
+            payment.setReceiptUrl(paymentDTO.getReceipt_url());
+            payment.setTransactionId(paymentDTO.getTransaction_id());
 
             paymentRepository.save(payment);
 
             TblProduct product = productRepository.findByProductId(productId);
-            Integer optionId = optionRepository.findOptionIdByProduct(product);
-            if (optionId == null) {
+            TblOption option = optionRepository.findByProduct(product);
+            if (option.getOptionId() == null) {
                 throw new IllegalStateException("해당 상품에 대한 옵션이 존재하지 않습니다.");
             }
 
@@ -138,7 +141,7 @@ public class OrderService {
             orderDetail.setAmount(orderDTO.getDiscountAmount());
             orderDetail.setCount(orderDTO.getOrderTotalCount());
             orderDetail.setOrder(order);
-            orderDetail.setOptionId(optionId);
+            orderDetail.setOptionId(option.getOptionId());
 
             orderDetailRepository.save(orderDetail);
 
@@ -240,8 +243,8 @@ public class OrderService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String, String> body = new HashMap<>();
-//        body.put("api_key", "channel-key-e6a5937e-0f6b-422a-8748-c1f5f9c509f3");
-        body.put("apiSecret", "OneKPxsSfPKywqxAdMEfVpg2FdALhdNXvxc9jLvmRp5Oa21y5wnDLgFys1RXeFSI6tFG7MkcDsX27Rto"); // API Secret key 유출주의!
+//        body.put("api_key", API_KEY);
+        body.put("apiSecret", API_SECRET);
 
         ResponseEntity<Map> response = restTemplate.postForEntity(
                 url,
@@ -250,5 +253,24 @@ public class OrderService {
         );
 
         return "Bearer " + response.getBody().get("accessToken").toString();
+    }
+
+    public Object selectOrderList(String userId) {
+        TblUser user = userRepository.findTblUserById(Integer.parseInt(userId));
+        List<TblOrder> orderList = orderRepository.findByUser(user);
+
+        log.info("[OrderService] orderList {}", orderList);
+
+        return orderList.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
+
+    }
+
+    public Object selectOrderDetailList(String orderId) {
+        TblOrder order = orderRepository.findTblOrderById(Integer.valueOf(orderId));
+        List<TblOrderDetail> orderDetails = orderDetailRepository.findAllByOrder(order);
+
+        log.info("[OrderService] orderDetails {}", orderDetails);
+
+        return orderDetails.stream().map(orderDetail -> modelMapper.map(orderDetail, OrderDetailDTO.class)).collect(Collectors.toList());
     }
 }

@@ -43,4 +43,16 @@ public class OrderController {
                     .body(new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "주문 실패", null));
         }
     }
+
+    @Operation(summary = "회원 주문 리스트 조회 요청", description = "해당 회원의 주문건에 대한 리스트 조회가 진행됩니다.", tags = { "OrderController" })
+    @GetMapping("/order/{userId}")
+    public ResponseEntity<ResponseDTO> getOrderList(@PathVariable String userId) {
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문리스트 조회 성공", orderService.selectOrderList(userId)));
+    }
+
+    @Operation(summary = "회원 주문 상세 리스트 조회 요청", description = "해당 회원의 주문건에 대한 상품 상세 리스트 조회가 진행됩니다.", tags = { "OrderController" })
+    @GetMapping("/order/details/{orderId}")
+    public ResponseEntity<ResponseDTO> getOrderDetailList(@PathVariable String orderId) {
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문 상세리스트 조회 성공", orderService.selectOrderDetailList(orderId)));
+    }
 }
