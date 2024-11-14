@@ -9,6 +9,7 @@ import naero.naeroserver.exception.TokenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,33 +22,6 @@ import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/*
- * 설명. JWT(Json Web Token)의 구조 (https://jwt.io/introduction)
- *  ====================================================================================================
- *  1. 헤더(Header)
- *    - typ: 토큰의 타입 지정(JWT)
- *    - alg: 해싱 알고리즘으로 Verify Signature에서 사용 됨
- *  ====================================================================================================
- *  2. 내용 또는 정보(Payload)
- *    - 토큰에 담을 정보가 들어 있음
- *    - 담는 정보의 한 조각을 클레임(claim - name과 value의 쌍으로 구성)이라 부름
- *      a. 등록된 클레임(registered claim)
- *         : 토큰에 대한 정보가 담김
- *            iss: 토큰 발급자(issuer)
- *            sub: 토큰 제목(subject)
- *            aud: 토큰 대상자(audience)
- *            exp: 토큰의 만료 시간(expiration)
- *            nbf: 토큰 활성화(발급) 날짜(not before)
- *            iat: 토큰 활성화(발급) 시간(issued at)
- *      b. 공개 클레임(public claim)
- *         : 사용자 정의 클레임으로 공개용 정보를 위해 사용(충돌 방지를 위해 URI로 구성)
- *      c. 비공개 클레임(private claim)
- *         : 사용자 정의 클레임으로 서버(JWT 발급자)와 클라이언트 사이에 임의로 지정한 정보를 저장
- *           (충돌 발생 우려가 있으니 조심해서 사용할 것)
- *  ====================================================================================================
- *  3. 서명(Verify Signature)
- *    - Header 인코딩 값과 Payload 인코딩 값을 합쳐서 비밀 키로 해쉬(헤더의 해싱 알고리즘으로)하여 생성
- * */
 
 @Component
 public class TokenProvider {
@@ -57,6 +31,7 @@ public class TokenProvider {
     private static final String BEARER_TYPE = "bearer";
     //ms 기준
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60;
+
 
     private final UserDetailsService userDetailsService;
 
@@ -70,7 +45,7 @@ public class TokenProvider {
      *  주입할 값은 스프링 Expression Language (SpEL) or 프로퍼티 키를 사용해 런타임에 설정 가능하다.
      *  이를 통해 설정 파일에서 관리하는 프로퍼티 값을 소스 코드로 불러와 직접 사용할 수 있게 된다.
      * */
-    public TokenProvider(UserDetailsService userDetailsService,
+    public TokenProvider(@Lazy UserDetailsService userDetailsService,
                          @Value("${jwt.secret}") String secretKey) {
 
         // UserDetailsService 인스턴스를 클래스 필드에 할당.
