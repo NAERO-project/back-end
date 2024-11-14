@@ -5,6 +5,7 @@ import naero.naeroserver.common.ResponseDTO;
 import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<ResponseDTO> login(@RequestBody UserDTO user){
+        System.out.println("로그인");
         System.out.println(user);
         return ResponseEntity
                 .ok()
