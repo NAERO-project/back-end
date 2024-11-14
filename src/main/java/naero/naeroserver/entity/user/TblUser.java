@@ -16,7 +16,6 @@ import naero.naeroserver.entity.liked.TblLikedSeller;
 import naero.naeroserver.entity.order.TblAddress;
 import naero.naeroserver.entity.order.TblOrder;
 import naero.naeroserver.entity.product.TblBanner;
-import naero.naeroserver.entity.product.TblCategoryLarge;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;

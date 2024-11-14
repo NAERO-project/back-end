@@ -476,8 +476,8 @@ CREATE TABLE `tbl_payment` (
                                `imp_uid`	varchar(20)	NOT NULL	COMMENT '결제 고유 ID',
                                `merchant_uid`	varchar(50)	NOT NULL	COMMENT '가맹점 고유 주문 번호',
                                `transaction_id`	varchar(50)	NOT NULL	COMMENT '결제 트랜잭션 ID',
-                               `fail_reason`	text	NOT NULL	COMMENT '결제 실패 사유',
-                               `receipt_url`	varchar(255)	NOT NULL	COMMENT '결제 영수증 URL',
+                               `fail_reason`	text	 NULL	COMMENT '결제 실패 사유',
+                               `receipt_url`	varchar(255)	 NULL	COMMENT '결제 영수증 URL',
                                `created_at`	DateTime	NULL	COMMENT '결제 생성 일시',
                                `updated_at`	DateTime	NULL	COMMENT '결제 업데이트 일시',
                                `order_id`	int	NOT NULL	COMMENT '주문번호'
