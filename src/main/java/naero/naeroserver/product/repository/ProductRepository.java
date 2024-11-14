@@ -22,17 +22,20 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "JOIN p.smallCategory sc " +
             "JOIN sc.mediumCategory mc " +
             "JOIN mc.largeCategory lc " +
-            "WHERE lc.id = :largeCategoryId AND p.productCheck = 'Y' " +
+            "WHERE lc.id = :largeCategoryId AND mc.id = :mediumCategoryId AND p.productCheck = 'Y' " +
             "ORDER BY p.id DESC")
-    List<TblProduct> findByProductCheckAndSmallCategoryId(@Param("largeCategoryId") Integer largeCategoryId);
+    List<TblProduct> findByProductCheckAndSmallCategoryId(@Param("largeCategoryId") Integer largeCategoryId,
+                                                          @Param("mediumCategoryId") Integer mediumCategoryId);
 
     @Query("SELECT p FROM TblProduct p " +
             "JOIN p.smallCategory sc " +
             "JOIN sc.mediumCategory mc " +
             "JOIN mc.largeCategory lc " +
-            "WHERE lc.id = :largeCategoryId AND p.productCheck = 'Y' " +
+            "WHERE lc.id = :largeCategoryId AND mc.id = :mediumCategoryId AND p.productCheck = 'Y' " +
             "ORDER BY p.id DESC")
-    Page<TblProduct> findByProductCheckAndSmallCategoryId(@Param("largeCategoryId") Integer largeCategoryId, Pageable paging);
+    Page<TblProduct> findByProductCheckAndSmallCategoryId(@Param("largeCategoryId") Integer largeCategoryId,
+                                                          @Param("mediumCategoryId") Integer mediumCategoryId,
+                                                          Pageable paging);
 
     //    상품 리스트 미리보기 조회
     @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.id DESC")
@@ -53,6 +56,18 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "WHERE tu.id = :id AND p.productCheck = 'Y' " +
             "ORDER BY p.id DESC")
     List<TblProduct> findByIdWithLimit(@Param("id") Integer id, Pageable pageable);
+
+
+
+
+
+
+
+
+
+
+    /* 대분류 카테고리 정리 2024-11-14 */
+
 
     //    브랜드별 페이지 전체 상품 조회 (페이징)
     @Query("SELECT p, pi.producerName FROM TblProduct p " +
