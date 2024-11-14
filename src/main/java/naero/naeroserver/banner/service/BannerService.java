@@ -2,6 +2,7 @@ package naero.naeroserver.banner.service;
 
 import naero.naeroserver.banner.dto.BannerDTO;
 import naero.naeroserver.banner.repository.BannerRepository;
+import naero.naeroserver.common.Criteria;
 import naero.naeroserver.entity.product.TblBanner;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -43,5 +44,16 @@ public class BannerService {
         log.info("[BannerService] selectBannerList() 종료");
 
         return bannerList.stream().map(TblBanner -> modelMapper.map(TblBanner, BannerDTO.class)).collect(Collectors.toList());
+    }
+
+
+    public int selectBannerTotalForAdmin() {
+
+        return 0;
+    }
+
+    public Object selectBannerListWithPagingForAdmin(Criteria cri) {
+
+        return null;
     }
 }
