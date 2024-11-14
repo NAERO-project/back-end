@@ -7,8 +7,13 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 @Service
 public class ShippingService {
@@ -49,6 +54,12 @@ public class ShippingService {
     private final TblShippingRepository tblShippingRepository;
     private final ModelMapper modelMapper;
 
+    /* 설명. 스마트택배 API 관련 필드 */
+    @Value("${sweettracker.api.base-url}")
+    private String baseUrl;
+    @Value("${sweettracker.api.key}")
+    private String apiKey;
+
     @Autowired
     public ShippingService(TblShippingRepository tblShippingRepository, ModelMapper modelMapper) {
         this.tblShippingRepository = tblShippingRepository;
@@ -65,6 +76,21 @@ public class ShippingService {
         log.info("[ShippingService] selectShippingList() End");
 
         return modelMapper.map(shippingDetail, TblShippingDTO.class);
+    }
+
+    public Object getTrackingInformation(String trackingNumber, String shipComCode) {
+        // Initialize RestClient
+        RestClient restClient = RestClient.builder().build();
+
+        // Construct the API URL
+        String url = baseUrl + "/api/v1/trackingInfo?t_key=" + apiKey
+                        + "&t_code=" + shipComCode + "&t_invoice=" + trackingNumber;
+
+        // Make the API request using RestClient
+        return restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(Map.class);
     }
 
     @Transactional
@@ -96,4 +122,5 @@ public class ShippingService {
 
         return (result > 0) ? "배송 업데이트 성공" : "배송 업데이트 실패";
     }
+
 }

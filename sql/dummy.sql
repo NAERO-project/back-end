@@ -239,7 +239,12 @@ INSERT INTO tbl_order (order_total_amount, order_total_count, delivery_status, o
 
 
 INSERT INTO tbl_ship_com (ship_com_code, ship_com_name, ship_com_contact)VALUES
-    ('CJGLS','CJ', '1588-1255');
+    ('01','우체국택배', '1588-1255'),
+    ('04','CJ대한통운', '1588-1255'),
+    ('05','한진택배', '1588-1255'),
+    ('06','로젠택배', '1588-1255'),
+    ('08','롯데택배', '1588-1255');
+
 
 INSERT INTO tbl_shipping (shipping_status, order_id, ship_com_id)VALUES
     ('pending', 1,1);

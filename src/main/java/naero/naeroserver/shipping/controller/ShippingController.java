@@ -24,30 +24,6 @@ public class ShippingController {
         this.shippingService = shippingService;
     }
 
-    /* @ModelAttribute:
-     * Brief:
-     *      The @ModelAttribute annotation in Spring MVC is used to bind a method parameter or return value to a named
-     *      model attribute and expose it to a web view. It can be used in two main ways: to prepopulate a model before
-     *      a request is handled, or to bind form data to an object in a controller.
-     * Usage Scenarios for @ModelAttribute:
-     *      Binding Request Parameters to a Model Attribute:
-     *      - When used as a method parameter, @ModelAttribute binds request parameters to a model object.
-     *      Adding Attributes to the Model:
-     *      - When used on a method, @ModelAttribute adds the returned value to the model, making it available for the view.
-     * Key Points About @ModelAttribute
-     *      Model Binding: @ModelAttribute binds request parameters to a model object, making it useful for form handling
-     *      Adding to Model: When used on a method, it adds the returned object to the model, which is useful for providing common attributes to views.
-     *      Data Prepopulation: You can use @ModelAttribute to prepopulate forms with existing data or provide dropdown lists, radio button options, etc.
-     *  */
-    @Operation(summary = "배송 수정 요청", description = "해당 배송 수정이 진행됩니다.", tags = {"ShippingController"})
-    @PutMapping(value = "/shipping")
-    public ResponseEntity<ResponseDTO> updateShipping(@RequestBody TblShippingDTO tblShippingDTO) {
-
-        return ResponseEntity
-                .ok()
-                .body(new ResponseDTO(HttpStatus.OK, "배송 리스트 수정 성공", shippingService.updateShipping(tblShippingDTO)));
-    }
-
     /* @Operation annotation:
      *  Definition:
      *      The @Operation annotation is part of the OpenAPI Specification and is commonly used in Spring Boot
@@ -77,10 +53,46 @@ public class ShippingController {
      *  */
     @Operation(summary = "배송 조회 요청", description = "해당 배송건에 대한 정보 조회가 진행됩니다.", tags = {"ShippingController"})
     @GetMapping("/shipping/{trackingNumber}")
-    public ResponseEntity<ResponseDTO> getShippingList(@PathVariable String trackingNumber) {
+    public ResponseEntity<ResponseDTO> getShipping(@PathVariable String trackingNumber) {
 
         return ResponseEntity
                 .ok()
                 .body(new ResponseDTO(HttpStatus.OK, "배송 조회 성공", shippingService.selectShipping(trackingNumber)));
     }
+
+    @Operation(summary = "배송 상태 조회 요청", description = "해당 배송건에 대한 상태 조회가 진행됩니다.", tags = {"ShippingController"})
+    @GetMapping("/shipping/track-shipment")
+    public ResponseEntity<?> getTrackingInfo(
+            @RequestParam String trackingNumber,
+            @RequestParam String shipComCode) {
+
+        return ResponseEntity
+                .ok()
+                .body(new ResponseDTO(HttpStatus.OK, "배송 상태 조회 성공", shippingService.getTrackingInformation(trackingNumber, shipComCode)));
+    }
+
+    /* @ModelAttribute:
+     * Brief:
+     *      The @ModelAttribute annotation in Spring MVC is used to bind a method parameter or return value to a named
+     *      model attribute and expose it to a web view. It can be used in two main ways: to prepopulate a model before
+     *      a request is handled, or to bind form data to an object in a controller.
+     * Usage Scenarios for @ModelAttribute:
+     *      Binding Request Parameters to a Model Attribute:
+     *      - When used as a method parameter, @ModelAttribute binds request parameters to a model object.
+     *      Adding Attributes to the Model:
+     *      - When used on a method, @ModelAttribute adds the returned value to the model, making it available for the view.
+     * Key Points About @ModelAttribute
+     *      Model Binding: @ModelAttribute binds request parameters to a model object, making it useful for form handling
+     *      Adding to Model: When used on a method, it adds the returned object to the model, which is useful for providing common attributes to views.
+     *      Data Prepopulation: You can use @ModelAttribute to prepopulate forms with existing data or provide dropdown lists, radio button options, etc.
+     *  */
+    @Operation(summary = "배송 수정 요청", description = "해당 배송 수정이 진행됩니다.", tags = {"ShippingController"})
+    @PutMapping(value = "/shipping")
+    public ResponseEntity<ResponseDTO> updateShipping(@RequestBody TblShippingDTO tblShippingDTO) {
+
+        return ResponseEntity
+                .ok()
+                .body(new ResponseDTO(HttpStatus.OK, "배송 리스트 수정 성공", shippingService.updateShipping(tblShippingDTO)));
+    }
+
 }

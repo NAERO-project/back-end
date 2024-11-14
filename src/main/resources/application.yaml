@@ -58,3 +58,9 @@ logging:
     root: info
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace
+
+# 스마트택배 API config
+sweettracker:
+  api:
+    base-url: http://info.sweettracker.co.kr
+    key: UkJpRtXY7C8uv8hTFaIe3g
