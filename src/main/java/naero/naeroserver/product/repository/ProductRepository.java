@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -57,18 +58,6 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "ORDER BY p.id DESC")
     List<TblProduct> findByIdWithLimit(@Param("id") Integer id, Pageable pageable);
 
-
-
-
-
-
-
-
-
-
-    /* 대분류 카테고리 정리 2024-11-14 */
-
-
     //    브랜드별 페이지 전체 상품 조회 (페이징)
     @Query("SELECT p, pi.producerName FROM TblProduct p " +
             "JOIN p.producer pi " +
@@ -85,29 +74,29 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
     Page<TblProduct> findByProductCheckAndId(@Param("id") Integer id, Pageable paging);
 
     @Query("SELECT p FROM TblProduct p " +
+            "JOIN p.producer pi " +
+            "JOIN pi.producer tu " +
             "JOIN p.smallCategory sc " +
             "JOIN sc.mediumCategory mc " +
             "JOIN mc.largeCategory lc " +
-            "JOIN p.producer pi " +
-            "JOIN pi.producer tu " +
-            "WHERE lc.id = :largeCategoryId AND tu.id = :id AND p.productCheck = 'Y' " +
+            "WHERE tu.id = :producerId AND lc.id = :largeCategoryId AND mc.id = :mediumCategoryId AND p.productCheck = 'Y' " +
             "ORDER BY p.id DESC")
-    List<TblProduct> findByProductCheckAndSmallCategoryIdAndId(
-            @Param("largeCategoryId") Integer largeCategoryId,
-            @Param("id") Integer id);
+    List<TblProduct> findByProductCheckAndSmallCategoryIdAndId(@Param("producerId") Integer producerId,
+                                                               @Param("largeCategoryId") Integer largeCategoryId,
+                                                               @Param("mediumCategoryId") Integer mediumCategoryId);
 
     @Query("SELECT p FROM TblProduct p " +
+            "JOIN p.producer pi " +
+            "JOIN pi.producer tu " +
             "JOIN p.smallCategory sc " +
             "JOIN sc.mediumCategory mc " +
             "JOIN mc.largeCategory lc " +
-            "JOIN p.producer pi " +
-            "JOIN pi.producer tu " +
-            "WHERE lc.id = :largeCategoryId AND tu.id = :producerId AND p.productCheck = 'Y' " +
+            "WHERE tu.id = :producerId AND lc.id = :largeCategoryId AND mc.id = :mediumCategoryId AND p.productCheck = 'Y' " +
             "ORDER BY p.id DESC")
-    Page<TblProduct> findByProductCheckAndSmallCategoryIdAndId(
-            @Param("largeCategoryId") Integer largeCategoryId,
-            @Param("producerId") Integer producerId,
-            Pageable paging);
+    Page<TblProduct> findByProductCheckAndSmallCategoryIdAndId(@Param("producerId") Integer producerId,
+                                             @Param("largeCategoryId") Integer largeCategoryId,
+                                             @Param("mediumCategoryId") Integer mediumCategoryId,
+                                             Pageable paging);
 
 
 }

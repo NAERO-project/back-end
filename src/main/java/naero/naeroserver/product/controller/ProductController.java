@@ -105,25 +105,47 @@ public class ProductController {
     }
 
     /* 브랜드별 페이지 전체 상품 조회 (페이징) */
-//    @Operation(summary = "브랜드별 페이지 상품 리스트 전체 조회 (페이징)", description = "브랜드별 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
-//    @GetMapping("/products/producer/{id}")
-//    public ResponseEntity<ResponseDTO> selectProducerProductListPage(
-//            @RequestParam(name = "offset", defaultValue = "1") String offset,
-//            @PathVariable int id){
-//
-//        log.info("[ProductController] selectProducerProductListPage 상품 리스트 전체 조회(페이징) : " + offset);
-//
-//        int total = productService.selectProducerProductListPage(id);
-//
-//        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
-//        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
-//
-//        pagingResponseDTO.setData(productService.selectProducerProductListPaging(id, cri));
-//
-//        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
-//
-//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
-//    }
+    @Operation(summary = "브랜드별 페이지 상품 리스트 전체 조회 (페이징)", description = "브랜드별 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
+    @GetMapping("/products/producer/{producerId}")
+    public ResponseEntity<ResponseDTO> selectProducerProductListPage(
+            @RequestParam(name = "offset", defaultValue = "1") String offset,
+            @PathVariable int producerId){
+
+        log.info("[ProductController] selectProducerProductListPage 상품 리스트 전체 조회(페이징) : " + offset);
+
+        int total = productService.selectProducerProductListPage(producerId);
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+
+        pagingResponseDTO.setData(productService.selectProducerProductListPaging(producerId, cri));
+
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
+
+    @Operation(summary = "브랜드별 카테고리 상품 리스트 전체 조회 (페이징)", description = "브랜드별 카테고리 리스트 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
+    @GetMapping("/products/producer/{producerId}/{largeId}/{mediumId}")
+    public ResponseEntity<ResponseDTO> selectProducerProductCategoryListPage(
+            @RequestParam(name = "offset", defaultValue = "1") String offset,
+            @PathVariable int producerId,
+            @PathVariable int largeId,
+            @PathVariable int mediumId){
+
+        log.info("[ProductController] selectProducerProductCategoryListPage 상품 리스트 전체 조회(페이징) : " + offset);
+
+        int total = productService.selectProducerProductCategoryListPage(producerId, largeId, mediumId);
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+
+        pagingResponseDTO.setData(productService.selectProducerProductCategoryListPaging(producerId, largeId, mediumId, cri));
+
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
 
 
 
