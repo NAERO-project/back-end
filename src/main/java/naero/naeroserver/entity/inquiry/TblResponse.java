@@ -25,8 +25,7 @@ public class TblResponse {
     @Column(name = "response_content", nullable = false)
     private String responseContent;
 
-    @NotNull
-    @Column(name = "response_date", nullable = false)
+    @Column(name = "response_date")
     private Instant responseDate;
 
     @Column(name = "response_update")

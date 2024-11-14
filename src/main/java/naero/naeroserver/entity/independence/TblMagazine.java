@@ -23,7 +23,6 @@ public class TblMagazine {
     private String magazineContent;
 
     @Size(max = 255)
-    @NotNull
     @Column(name = "magazine_photo", nullable = false)
     private String magazinePhoto;
 

@@ -52,18 +52,15 @@ public class TblPayment {
     @Column(name = "transaction_id", nullable = false, length = 50)
     private String transactionId;
 
-    @NotNull
     @Lob
-    @Column(name = "fail_reason", nullable = false)
+    @Column(name = "fail_reason")
     private String failReason;
 
     @Size(max = 255)
-    @NotNull
-    @Column(name = "receipt_url", nullable = false)
+    @Column(name = "receipt_url")
     private String receiptUrl;
 
-    @NotNull
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private Instant createdAt;
 
     @Column(name = "updated_at")
