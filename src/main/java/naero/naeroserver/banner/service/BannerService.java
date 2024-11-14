@@ -80,4 +80,35 @@ public class BannerService {
 
         return bannerList.stream().map(TblBanner -> modelMapper.map(TblBanner, BannerDTO.class)).collect(Collectors.toList());
     }
+
+    /* 판매자별 배너 전체 조회 */
+    public int selectBannerTotalForProducer(int id) {
+        log.info("[BannerService] selectBannerTotalForProducer() 시작");
+
+        List<TblBanner> bannerList = bannerRepository.findAllByProducerId(id);
+
+        log.info("[BannerService] selectBannerTotalForProducer() 종료");
+
+        return bannerList.size();
+    }
+
+    public Object selectBannerListWithPagingForProducer(int id, Criteria cri) {
+        log.info("[BannerService] selectBannerListWithPagingForProducer() 시작");
+
+        int index = cri.getPageNum() - 1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("id").descending());
+
+        Page<TblBanner> result = bannerRepository.findAllByProducerId(id, paging);
+        List<TblBanner> bannerList = (List<TblBanner>)result.getContent();
+
+        for(int i = 0 ; i < bannerList.size() ; i++) {
+            bannerList.get(i).setBannerUrl(IMAGE_URL + bannerList.get(i).getBannerUrl());
+        }
+
+        log.info("[BannerService] selectBannerListWithPagingForProducer() 종료");
+
+        return bannerList.stream().map(TblBanner -> modelMapper.map(TblBanner, BannerDTO.class)).collect(Collectors.toList());
+
+    }
 }
