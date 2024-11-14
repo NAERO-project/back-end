@@ -15,7 +15,7 @@ import naero.naeroserver.entity.liked.TblLikedProduct;
 import naero.naeroserver.entity.liked.TblLikedSeller;
 import naero.naeroserver.entity.order.TblAddress;
 import naero.naeroserver.entity.order.TblOrder;
-import naero.naeroserver.entity.product.TblCategoryLarge;
+import naero.naeroserver.entity.product.TblBanner;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
@@ -82,7 +82,7 @@ public class TblUser {
     private Set<TblAnswer> tblAnswers = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "approver")
-    private Set<TblCategoryLarge.TblBanner> tblBanners = new LinkedHashSet<>();
+    private Set<TblBanner> tblBanners = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
     private Set<TblCart> tblCarts = new LinkedHashSet<>();
@@ -218,11 +218,11 @@ public class TblUser {
         this.tblAnswers = tblAnswers;
     }
 
-    public Set<TblCategoryLarge.TblBanner> getTblBanners() {
+    public Set<TblBanner> getTblBanners() {
         return tblBanners;
     }
 
-    public void setTblBanners(Set<TblCategoryLarge.TblBanner> tblBanners) {
+    public void setTblBanners(Set<TblBanner> tblBanners) {
         this.tblBanners = tblBanners;
     }
 
