@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import naero.naeroserver.entity.coupon.TblCoupon;
 import naero.naeroserver.entity.inquiry.TblResponse;
 import naero.naeroserver.entity.liked.TblLikedSeller;
+import naero.naeroserver.entity.product.TblBanner;
 import naero.naeroserver.entity.product.TblCategoryLarge;
 import naero.naeroserver.entity.product.TblProduct;
 import org.hibernate.annotations.ColumnDefault;
@@ -53,7 +54,7 @@ public class TblProducer {
     private Integer deliveryCrit;
 
     @OneToMany(mappedBy = "producer")
-    private Set<TblCategoryLarge.TblBanner> tblBanners = new LinkedHashSet<>();
+    private Set<TblBanner> tblBanners = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "producer")
     private Set<TblCoupon> tblCoupons = new LinkedHashSet<>();
@@ -152,11 +153,11 @@ public class TblProducer {
         this.deliveryCrit = deliveryCrit;
     }
 
-    public Set<TblCategoryLarge.TblBanner> getTblBanners() {
+    public Set<TblBanner> getTblBanners() {
         return tblBanners;
     }
 
-    public void setTblBanners(Set<TblCategoryLarge.TblBanner> tblBanners) {
+    public void setTblBanners(Set<TblBanner> tblBanners) {
         this.tblBanners = tblBanners;
     }
 
