@@ -1,12 +1,10 @@
 package naero.naeroserver.member.service;
 
 import jakarta.transaction.Transactional;
-import naero.naeroserver.common.ResponseDTO;
 import naero.naeroserver.entity.user.TblUser;
 import naero.naeroserver.exception.DuplicatedMemberEmailException;
 import naero.naeroserver.exception.DuplicatedUsernameException;
 import naero.naeroserver.exception.LoginFailedException;
-import naero.naeroserver.jwt.TokenDTO;
 import naero.naeroserver.jwt.TokenProvider;
 import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.repository.UserGradeRepository;
