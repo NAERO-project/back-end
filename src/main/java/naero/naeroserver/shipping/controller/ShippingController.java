@@ -41,7 +41,7 @@ public class ShippingController {
      *  */
     @Operation(summary = "배송 수정 요청", description = "해당 배송 수정이 진행됩니다.", tags = {"ShippingController"})
     @PutMapping(value = "/shipping")
-    public ResponseEntity<ResponseDTO> updateShipping(@ModelAttribute TblShippingDTO tblShippingDTO) {
+    public ResponseEntity<ResponseDTO> updateShipping(@RequestBody TblShippingDTO tblShippingDTO) {
 
         return ResponseEntity
                 .ok()
@@ -75,12 +75,12 @@ public class ShippingController {
      *      purely for documentation purposes. It does not control the actual behavior of your API. Instead, it provides
      *      details about the potential HTTP responses that yor API might return.
      *  */
-    @Operation(summary = "배송 리스트 조회 요청", description = "해당 배송건에 대한 정보 조회가 진행됩니다.", tags = {"ShippingController"})
-    @GetMapping("/shipping/{shippingId}")
-    public ResponseEntity<ResponseDTO> getShippingList(@PathVariable int shippingId) {
+    @Operation(summary = "배송 조회 요청", description = "해당 배송건에 대한 정보 조회가 진행됩니다.", tags = {"ShippingController"})
+    @GetMapping("/shipping/{trackingNumber}")
+    public ResponseEntity<ResponseDTO> getShippingList(@PathVariable String trackingNumber) {
 
         return ResponseEntity
                 .ok()
-                .body(new ResponseDTO(HttpStatus.OK, "배송 리스트 조회 성공", shippingService.selectShippingList(shippingId)));
+                .body(new ResponseDTO(HttpStatus.OK, "배송 조회 성공", shippingService.selectShipping(trackingNumber)));
     }
 }

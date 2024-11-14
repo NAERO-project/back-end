@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class ShippingService {
 
@@ -58,17 +55,16 @@ public class ShippingService {
         this.modelMapper = modelMapper;
     }
 
-    public Object selectShippingList(int shippingId) {
+    public Object selectShipping(String trackingNumber) {
         log.info("[ShippingService] selectShippingList() Start");
 
-        List<TblShipping> shippingList = tblShippingRepository.findByShippingId(shippingId);
+        /* 설명. 메서드 이름은 반드시 레포지터리의 콜럼명이랑 일치해야 함. 아니면 에러 발생 */
+        TblShipping shippingDetail = tblShippingRepository.findByTrackingNumber(trackingNumber);
 
-        log.info("[ShippingService] shippingList {}", shippingList);
+        log.info("[ShippingService] shippingList {}", shippingDetail);
         log.info("[ShippingService] selectShippingList() End");
 
-        return shippingList.stream()
-                .map(shipping -> modelMapper.map(shipping, TblShippingDTO.class))
-                .collect(Collectors.toList());
+        return modelMapper.map(shippingDetail, TblShippingDTO.class);
     }
 
     @Transactional
@@ -79,19 +75,25 @@ public class ShippingService {
         /* 설명. 초기 반환값 0으로 설정 */
         int result = 0;
 
-        /* 설명. update 할 엔티티 조회 */
-        TblShipping tblShipping = tblShippingRepository.findById(tblShippingDTO.getShippingId()).get();
+        try {
+            /* 설명. update 할 엔티티 조회 */
+            TblShipping tblShipping = tblShippingRepository.findById(tblShippingDTO.getShippingId()).get();
 
-        /* 설명. update를 위한 엔티티 값 수정 */
-        tblShipping.setShippingId(tblShippingDTO.getShippingId());
-        tblShipping.setTrackingNumber(tblShippingDTO.getTrackingNumber());
-        tblShipping.setShippingStatus(tblShippingDTO.getShippingStatus());
-        tblShipping.setOrderId(tblShippingDTO.getOrderId());
-        tblShipping.setShipCom(tblShipping.getShipCom());
+            /* 설명. update를 위한 엔티티 값 수정 */
+            tblShipping.setId(tblShippingDTO.getShippingId());
+            tblShipping.setTrackingNumber(tblShippingDTO.getTrackingNumber());
+            tblShipping.setShippingStatus(tblShippingDTO.getShippingStatus());
+            tblShipping.setOrderId(tblShippingDTO.getOrderId());
+            tblShipping.setShipCom(tblShipping.getShipCom());
 
-        result = 1;
+            result = 1;
+
+        } catch (Exception e) {
+            log.error("[ShippingService] Exception!");
+        }
 
         log.info("[ShippingService] updateShipping() End =============]");
+
         return (result > 0) ? "배송 업데이트 성공" : "배송 업데이트 실패";
     }
 }
