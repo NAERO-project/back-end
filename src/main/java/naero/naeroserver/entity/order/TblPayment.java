@@ -57,8 +57,7 @@ public class TblPayment {
     private String failReason;
 
     @Size(max = 255)
-    @NotNull
-    @Column(name = "receipt_url", nullable = false)
+    @Column(name = "receipt_url")
     private String receiptUrl;
 
     @Column(name = "created_at")
