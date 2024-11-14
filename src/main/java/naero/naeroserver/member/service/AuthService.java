@@ -1,6 +1,7 @@
 package naero.naeroserver.member.service;
 
 import jakarta.transaction.Transactional;
+import naero.naeroserver.entity.user.TblGrade;
 import naero.naeroserver.entity.user.TblUser;
 import naero.naeroserver.exception.DuplicatedMemberEmailException;
 import naero.naeroserver.exception.DuplicatedUsernameException;
@@ -68,7 +69,8 @@ public class AuthService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         TblUser newUser = modelMapper.map(user, TblUser.class);
-        newUser.setGrade(userGradeRepository.findById(1));
+        TblGrade grade = userGradeRepository.findById(1);
+        newUser.setGrade(grade);
 
         TblUser result = userRepository.save(newUser);
 //        System.out.println(modelMapper.map(result,UserDTO.class));

@@ -53,9 +53,9 @@ public class TblUser {
     @Column(name = "user_phone", length = 20)
     private String userPhone;
 
-    @NotNull
+
     @ColumnDefault("0")
-    @Column(name = "user_point", nullable = false)
+    @Column(name = "user_point")
     private Integer userPoint =0;
 
 
