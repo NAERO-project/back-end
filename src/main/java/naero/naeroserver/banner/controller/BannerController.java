@@ -30,7 +30,7 @@ public class BannerController {
         this.bannerService = bannerService;
     }
 
-    /*  */
+    /* 배너 전체 조회 */
     @Operation(summary = "배너 전체 조회 요청", description = "배너 전체 조회 처리가 진행됩니다.", tags = { "BannerController" })
     @GetMapping("/home")
     public ResponseEntity<ResponseDTO> selectBannerList(){
@@ -38,7 +38,8 @@ public class BannerController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 전체 조회 성공", bannerService.selectBannerList()));
     }
 
-    @Operation(summary = "배너 전체 조회 요청 (페이징)", description = "배너 전체 조회와 페이징 처리가 진행됩니다.", tags = { "BannerController" })
+    /* 관리자 배너 전체 조회 */
+    @Operation(summary = "관리자 배너 전체 조회 요청 (페이징)", description = "관리자 배너 전체 조회와 페이징 처리가 진행됩니다.", tags = { "BannerController" })
     @GetMapping("/admin")
     public ResponseEntity<ResponseDTO> selectBannerListPage(
             @RequestParam(name = "offset", defaultValue = "1") String offset) {

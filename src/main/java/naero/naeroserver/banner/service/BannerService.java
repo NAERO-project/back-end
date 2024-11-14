@@ -9,6 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +36,7 @@ public class BannerService {
         this.modelMapper = modelMapper;
     }
 
+    /* 배너 전체 조회 */
     public Object selectBannerList() {
         log.info("[BannerService] selectBannerList() 시작");
 
@@ -46,14 +51,33 @@ public class BannerService {
         return bannerList.stream().map(TblBanner -> modelMapper.map(TblBanner, BannerDTO.class)).collect(Collectors.toList());
     }
 
-
+    /* 관리자 배너 전체 조회 */
     public int selectBannerTotalForAdmin() {
+        log.info("[BannerService] selectBannerTotalForAdmin() 시작");
 
-        return 0;
+        List<TblBanner> bannerList = bannerRepository.findAll();
+
+        log.info("[BannerService] selectBannerTotalForAdmin() 종료");
+
+        return bannerList.size();
     }
 
     public Object selectBannerListWithPagingForAdmin(Criteria cri) {
+        log.info("[BannerService] selectBannerListWithPagingForAdmin() 시작");
 
-        return null;
+        int index = cri.getPageNum() - 1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("id").descending());
+
+        Page<TblBanner> result = bannerRepository.findAll(paging);
+        List<TblBanner> bannerList = (List<TblBanner>)result.getContent();
+
+        for(int i = 0 ; i < bannerList.size() ; i++) {
+            bannerList.get(i).setBannerUrl(IMAGE_URL + bannerList.get(i).getBannerUrl());
+        }
+
+        log.info("[BannerService] selectBannerListWithPagingForAdmin() 종료");
+
+        return bannerList.stream().map(TblBanner -> modelMapper.map(TblBanner, BannerDTO.class)).collect(Collectors.toList());
     }
 }
