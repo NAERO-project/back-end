@@ -25,8 +25,7 @@ public class TblLikedSeller {
     @JoinColumn(name = "user_id", nullable = false)
     private TblUser user;
 
-    @NotNull
-    @Column(name = "brand_like_date", nullable = false)
+    @Column(name = "brand_like_date")
     private Instant brandLikeDate;
 
     public Integer getId() {

@@ -28,16 +28,15 @@ public class TblQuestion {
     @Column(name = "question_content", nullable = false)
     private String questionContent;
 
-    @NotNull
-    @Column(name = "question_date", nullable = false)
+
+    @Column(name = "question_date")
     private Instant questionDate;
 
     @Column(name = "question_update")
     private Instant questionUpdate;
 
-    @NotNull
     @ColumnDefault("0")
-    @Column(name = "question_status", nullable = false)
+    @Column(name = "question_status")
     private Boolean questionStatus = false;
 
     @Size(max = 255)
