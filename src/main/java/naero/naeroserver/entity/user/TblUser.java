@@ -28,7 +28,7 @@ public class TblUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
-    private Integer id;
+    private Integer userId;
 
     @Size(max = 20)
     @Column(name = "user_fullname", length = 20)
@@ -114,12 +114,12 @@ public class TblUser {
     @OneToMany(mappedBy = "user")
     private Set<TblUserRole> tblUserRoles = new LinkedHashSet<>();
 
-    public Integer getId() {
-        return id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getUserFullname() {

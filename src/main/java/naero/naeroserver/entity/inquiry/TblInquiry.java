@@ -4,10 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import naero.naeroserver.entity.user.TblUser;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "tbl_inquiry")
@@ -15,7 +14,7 @@ public class TblInquiry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "inquiry_id", nullable = false)
-    private Integer id;
+    private Integer inquiryId;
 
     @Size(max = 50)
     @NotNull
@@ -37,8 +36,8 @@ public class TblInquiry {
     @Column(name = "inquiry_lock", nullable = false)
     private Boolean inquiryLock = false;
 
-    @NotNull
-    @Column(name = "inquiry_status", nullable = false)
+    @ColumnDefault("0")
+    @Column(name = "inquiry_status")
     private Boolean inquiryStatus = false;
 
     @NotNull
@@ -46,15 +45,16 @@ public class TblInquiry {
     @JoinColumn(name = "user_id", nullable = false)
     private TblUser user;
 
-    @OneToMany(mappedBy = "inquiry")
-    private Set<TblResponse> tblResponses = new LinkedHashSet<>();
+    @NotNull
+    @Column(name = "product_id", nullable = false)
+    private Integer productId;
 
-    public Integer getId() {
-        return id;
+    public Integer getInquiryId() {
+        return inquiryId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setInquiryId(Integer inquiryId) {
+        this.inquiryId = inquiryId;
     }
 
     public String getInquiryTitle() {
@@ -113,12 +113,12 @@ public class TblInquiry {
         this.user = user;
     }
 
-    public Set<TblResponse> getTblResponses() {
-        return tblResponses;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setTblResponses(Set<TblResponse> tblResponses) {
-        this.tblResponses = tblResponses;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 
 }

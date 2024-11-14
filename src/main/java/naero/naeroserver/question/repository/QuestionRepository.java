@@ -10,13 +10,13 @@ import org.springframework.stereotype.Repository;
 public interface QuestionRepository extends JpaRepository<TblQuestion, Integer> {
 
     // 특정 사용자의 모든 문의를 페이징 처리하여 조회
-    Page<TblQuestion> findByUserId(Integer userId, Pageable pageable);
+    Page<TblQuestion> findByUserUserId(Integer userId, Pageable pageable);
 
     // 특정 사용자의 특정 문의 조회
-    TblQuestion findByQuestionIdAndUserId(Integer questionId, Integer userId);
+    TblQuestion findByQuestionIdAndUserUserId(Integer questionId, Integer userId);
 
     // 문의개수 - 페이징
-    long countByUserId(Integer userId);
+    long countByUserUserId(Integer userId);
 }
 
 

@@ -26,6 +26,7 @@ public class QuestionService {
         this.modelMapper = modelMapper;
     }
 
+    // 1:1 문의 등록
     public String createQuestion(QuestionDTO questionDTO) {
         // 필수 필드에 대한 Null 체크
         if (questionDTO.getQuestionContent() == null || questionDTO.getQuestionContent().trim().isEmpty()) {
@@ -34,32 +35,29 @@ public class QuestionService {
 
         TblQuestion question = modelMapper.map(questionDTO, TblQuestion.class);
 
-        if (question.getQuestionStatus() == null) {
-            question.setQuestionStatus(false);  // 기본값 false 설정
-        }
-
         questionRepository.save(question);
 
         return "문의 등록 성공";
     }
 
 
-    // 1:1 문의 목록
+    // 1:1 문의 전체 조회
     public Page<QuestionDTO> getUserQuestions(Integer userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<TblQuestion> questionsPage = questionRepository.findByUserId(userId, pageable);
+        Page<TblQuestion> questionsPage = questionRepository.findByUserUserId(userId, pageable);
         return questionsPage.map(question -> modelMapper.map(question, QuestionDTO.class));
     }
 
     // 1:1 문의 상세 조회
     public QuestionDTO getUserQuestionById(Integer userId, Integer questionId) {
-        TblQuestion question = questionRepository.findByQuestionIdAndUserId(questionId, userId);
-        return question != null ? modelMapper.map(question, QuestionDTO.class) : null;
+        TblQuestion question = questionRepository.findByQuestionIdAndUserUserId(questionId, userId);
+        return question == null ? null : modelMapper.map(question, QuestionDTO.class);
     }
 
+    // 1:1 문의 수정
     @Transactional
     public String updateQuestion(Integer userId, Integer questionId, QuestionDTO questionDTO) {
-        TblQuestion question = questionRepository.findByQuestionIdAndUserId(questionId, userId);
+        TblQuestion question = questionRepository.findByQuestionIdAndUserUserId(questionId, userId);
 
         // 예외?
         if (question == null || question.getQuestionStatus()) {
@@ -85,7 +83,7 @@ public class QuestionService {
     // 1:1 문의 삭제
     @Transactional
     public String deleteQuestion(Integer userId, Integer questionId) {
-        TblQuestion question = questionRepository.findByQuestionIdAndUserId(questionId, userId);
+        TblQuestion question = questionRepository.findByQuestionIdAndUserUserId(questionId, userId);
         if (question == null) {
             return "삭제 실패: 문의를 찾을 수 없습니다.";
         }
@@ -98,7 +96,7 @@ public class QuestionService {
 
     // 1:1 문의 개수
     public int getTotalQuestions(Integer userId) {
-        return (int) questionRepository.countByUserId(userId);
+        return (int) questionRepository.countByUserUserId(userId);
     }
 }
 

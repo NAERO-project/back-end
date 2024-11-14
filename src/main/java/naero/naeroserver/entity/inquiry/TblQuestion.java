@@ -34,9 +34,8 @@ public class TblQuestion {
     @Column(name = "question_update")
     private Instant questionUpdate;
 
-    @NotNull
     @ColumnDefault("0")
-    @Column(name = "question_status", nullable = false)
+    @Column(name = "question_status")
     private Boolean questionStatus = false;
 
     @Size(max = 255)

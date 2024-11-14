@@ -34,7 +34,7 @@ public class QuestionController {
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "등록 성공", result));
     }
 
-    // 1:1 문의 목록 조회 (페이징 처리)
+    // 1:1 문의 전체 조회
     @GetMapping
     public ResponseEntity<ResponseDTO> getUserQuestions(
             @RequestParam Integer userId,

@@ -13,7 +13,7 @@ public class TblResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "response_id", nullable = false)
-    private Integer id;
+    private Integer responseId;
 
     @Size(max = 50)
     @NotNull
@@ -41,12 +41,12 @@ public class TblResponse {
     @JoinColumn(name = "producer_id", nullable = false, referencedColumnName = "producer_id")
     private TblProducer producer;
 
-    public Integer getId() {
-        return id;
+    public Integer getResponseId() {
+        return responseId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setResponseId(Integer responseId) {
+        this.responseId = responseId;
     }
 
     public String getResponseTitle() {

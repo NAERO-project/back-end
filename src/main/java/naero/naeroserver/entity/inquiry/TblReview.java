@@ -14,7 +14,7 @@ public class TblReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id", nullable = false)
-    private Integer id;
+    private Integer reviewId;
 
     @Size(max = 255)
     @Column(name = "review_image")
@@ -46,12 +46,12 @@ public class TblReview {
     @JoinColumn(name = "user_id", nullable = false)
     private TblUser user;
 
-    public Integer getId() {
-        return id;
+    public Integer getReviewId() {
+        return reviewId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setReviewId(Integer reviewId) {
+        this.reviewId = reviewId;
     }
 
     public String getReviewImage() {
