@@ -21,8 +21,6 @@ public class TblGrade {
     @Column(name = "crit_exp")
     private Integer critExp;
 
-    @OneToMany(mappedBy = "grade")
-    private Set<TblUser> tblUsers = new LinkedHashSet<>();
 
     public Integer getId() {
         return id;
@@ -48,12 +46,5 @@ public class TblGrade {
         this.critExp = critExp;
     }
 
-    public Set<TblUser> getTblUsers() {
-        return tblUsers;
-    }
-
-    public void setTblUsers(Set<TblUser> tblUsers) {
-        this.tblUsers = tblUsers;
-    }
 
 }

@@ -17,6 +17,7 @@ import naero.naeroserver.entity.order.TblAddress;
 import naero.naeroserver.entity.order.TblOrder;
 import naero.naeroserver.entity.product.TblBanner;
 import org.hibernate.annotations.ColumnDefault;
+import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Default;
 
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -52,25 +53,24 @@ public class TblUser {
     @Column(name = "user_phone", length = 20)
     private String userPhone;
 
-    @NotNull
-    @ColumnDefault("0")
-    @Column(name = "user_point", nullable = false)
-    private Integer userPoint;
 
-    @NotNull
-    @Column(name = "enroll_date", nullable = false)
+    @ColumnDefault("0")
+    @Column(name = "user_point")
+    private Integer userPoint =0;
+
+
+    @Column(name = "enroll_date")
     private LocalDate enrollDate;
 
     @Size(max = 1)
     @ColumnDefault("'N'")
     @Column(name = "with_status", length = 1)
-    private String withStatus;
+    private String withStatus="N";
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @ColumnDefault("1")
-    @JoinColumn(name = "grade_id", nullable = false)
-    private TblGrade grade;
+    @JoinColumn(name = "grade_id")
+    private TblGrade grade ;
 
     @OneToMany(mappedBy = "user")
     private Set<TblAddress> tblAddresses = new LinkedHashSet<>();

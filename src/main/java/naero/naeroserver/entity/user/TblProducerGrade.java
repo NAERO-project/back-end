@@ -24,9 +24,6 @@ public class TblProducerGrade {
     @Column(name = "crit_review")
     private Integer critReview;
 
-    @OneToMany(mappedBy = "pgrade")
-    private Set<TblProducer> tblProducers = new LinkedHashSet<>();
-
     public Integer getId() {
         return id;
     }
@@ -58,13 +55,4 @@ public class TblProducerGrade {
     public void setCritReview(Integer critReview) {
         this.critReview = critReview;
     }
-
-    public Set<TblProducer> getTblProducers() {
-        return tblProducers;
-    }
-
-    public void setTblProducers(Set<TblProducer> tblProducers) {
-        this.tblProducers = tblProducers;
-    }
-
 }

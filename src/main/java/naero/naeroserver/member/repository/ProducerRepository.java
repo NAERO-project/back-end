@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface ProducerRepository extends JpaRepository<TblProducer, Integer> {
     TblProducer findTblProducerById(int i);
+
 }

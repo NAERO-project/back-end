@@ -77,7 +77,10 @@ CREATE TABLE `tbl_user` (
 CREATE TRIGGER before_insert_tbl_user
     BEFORE INSERT ON `tbl_user`
     FOR EACH ROW
-    SET NEW.enroll_date = IFNULL(NEW.enroll_date, CURRENT_DATE);
+    SET NEW.enroll_date = IFNULL(NEW.enroll_date, CURRENT_DATE),
+    NEW.with_status = 'N',
+    NEW.user_point = 0;
+;
 
 CREATE TRIGGER after_insert_tbl_user
     AFTER INSERT ON `tbl_user`
