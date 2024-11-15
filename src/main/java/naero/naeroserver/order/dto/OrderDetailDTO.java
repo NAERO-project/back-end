@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class OrderDetailDTO {
 
     int orderDetailId;
-    int productId;
+    int optionId;
     int count;
     int amount;
     LocalDateTime createdAt;
@@ -18,7 +18,7 @@ public class OrderDetailDTO {
 
     public OrderDetailDTO(int orderDetailId, int productId, int count, int amount, LocalDateTime createdAt, LocalDateTime updatedAt, int shippingId, int orderId) {
         this.orderDetailId = orderDetailId;
-        this.productId = productId;
+        this.optionId = productId;
         this.count = count;
         this.amount = amount;
         this.createdAt = createdAt;
@@ -35,12 +35,12 @@ public class OrderDetailDTO {
         this.orderDetailId = orderDetailId;
     }
 
-    public int getProductId() {
-        return productId;
+    public int getOptionId() {
+        return optionId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setOptionId(int optionId) {
+        this.optionId = optionId;
     }
 
     public int getCount() {
@@ -95,7 +95,7 @@ public class OrderDetailDTO {
     public String toString() {
         return "OrderDetailDTO{" +
                 "orderDetailId=" + orderDetailId +
-                ", productId=" + productId +
+                ", productId=" + optionId +
                 ", count=" + count +
                 ", amount=" + amount +
                 ", createdAt=" + createdAt +

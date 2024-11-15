@@ -2,6 +2,7 @@ package naero.naeroserver.entity.order;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import naero.naeroserver.entity.product.TblOption;
 import naero.naeroserver.entity.ship.TblShipping;
 
 import java.time.Instant;
@@ -15,8 +16,9 @@ public class TblOrderDetail {
     private Integer id;
 
     @NotNull
-    @Column(name = "option_id", nullable = false)
-    private Integer optionId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "option_id", nullable = false)
+    private TblOption option;
 
     @NotNull
     @Column(name = "count", nullable = false)
@@ -49,12 +51,12 @@ public class TblOrderDetail {
         this.id = id;
     }
 
-    public Integer getOptionId() {
-        return optionId;
+    public TblOption getOption() {
+        return option;
     }
 
-    public void setOptionId(Integer productId) {
-        this.optionId = productId;
+    public void setOption(TblOption option) {
+        this.option = option;
     }
 
     public Integer getCount() {

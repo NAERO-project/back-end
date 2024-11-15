@@ -32,11 +32,19 @@ public class OrderController {
             // PayRequestDTO에서 필요한 정보 추출
             OrderDTO orderDTO = payRequestDTO.getOrderDTO();
             PaymentDTO paymentDTO = payRequestDTO.getPaymentDTO();
-            int productId = payRequestDTO.getProductId();
+            int optionId = payRequestDTO.getOptionId();
 
             // OrderService에 추출한 정보를 전달
-            OrderDTO createdOrder = (OrderDTO) orderService.insertOrder(orderDTO, paymentDTO, productId);
+            OrderDTO createdOrder = (OrderDTO) orderService.insertOrder(orderDTO, paymentDTO, optionId);
             return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문 성공", createdOrder));
+        }  catch (IllegalStateException e) {
+            log.error("주문 실패: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseDTO(HttpStatus.BAD_REQUEST, e.getMessage(), null));
+        } catch (RuntimeException e) {
+            log.error("주문 실패: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "주문 처리 중 오류가 발생했습니다.", null));
         } catch (Exception e) {
             log.error("주문 실패: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -47,12 +55,30 @@ public class OrderController {
     @Operation(summary = "회원 주문 리스트 조회 요청", description = "해당 회원의 주문건에 대한 리스트 조회가 진행됩니다.", tags = { "OrderController" })
     @GetMapping("/order/{userId}")
     public ResponseEntity<ResponseDTO> getOrderList(@PathVariable String userId) {
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문리스트 조회 성공", orderService.selectOrderList(userId)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문 리스트 조회 성공", orderService.selectOrderList(userId)));
     }
 
-    @Operation(summary = "회원 주문 상세 리스트 조회 요청", description = "해당 회원의 주문건에 대한 상품 상세 리스트 조회가 진행됩니다.", tags = { "OrderController" })
+    @Operation(summary = "회원 주문 상세 조회 요청", description = "해당 회원의 주문건에 대한 상세 정보 조회가 진행됩니다.", tags = { "OrderController" })
     @GetMapping("/order/details/{orderId}")
+    public ResponseEntity<ResponseDTO> getOrderDetail(@PathVariable String orderId) {
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문 상세정보 조회 성공", orderService.getOrderDetail(orderId)));
+    }
+
+    @Operation(summary = "회원 주문 상품 리스트 조회 요청", description = "해당 회원의 주문건에 대한 상품 리스트 조회가 진행됩니다.", tags = { "OrderController" })
+    @GetMapping("/order/product/{orderId}")
     public ResponseEntity<ResponseDTO> getOrderDetailList(@PathVariable String orderId) {
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문 상세리스트 조회 성공", orderService.selectOrderDetailList(orderId)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문 상품 리스트 조회 성공", orderService.getOrderDetailList(orderId)));
+    }
+
+    @Operation(summary = "해당 판매자의 주문 리스트 조회 요청", description = "해당 판매자의 주문건에 대한 리스트 조회가 진행됩니다.", tags = { "OrderController" })
+    @GetMapping("/order/seller/{producerId}")
+    public ResponseEntity<ResponseDTO> getOrderListByProducer(@PathVariable String producerId) {
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "해당 판매자의 주문리스트 조회 성공", orderService.getOrderListByProducer(producerId)));
+    }
+
+    @Operation(summary = "관리자용 전체 주문 리스트 조회 요청", description = "전체 주문건에 대한 리스트 조회가 진행됩니다.", tags = { "OrderController" })
+    @GetMapping("/order/admin")
+    public ResponseEntity<ResponseDTO> getAllOrderList() {
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "전체 주문리스트 조회 성공", orderService.getAllOrderList()));
     }
 }

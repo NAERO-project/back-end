@@ -6,9 +6,10 @@ import naero.naeroserver.entity.order.TblPayment;
 import naero.naeroserver.entity.product.TblOption;
 import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.entity.user.TblUser;
+import naero.naeroserver.member.repository.ProducerRepository;
 import naero.naeroserver.member.repository.UserRepository;
 import naero.naeroserver.order.dto.OrderDTO;
-import naero.naeroserver.order.dto.OrderDetailDTO;
+import naero.naeroserver.order.dto.OrderDetailProductDTO;
 import naero.naeroserver.order.dto.PaymentDTO;
 import naero.naeroserver.order.repository.OrderDetailRepository;
 import naero.naeroserver.order.repository.OrderRepository;
@@ -44,6 +45,7 @@ public class OrderService {
     private final OrderDetailRepository orderDetailRepository;
     private final PaymentRepository paymentRepository;
     private final OptionRepository optionRepository;
+    private final ProducerRepository producerRepository;
 
     @Value("${portone.api-key}")
     private String API_KEY;
@@ -58,7 +60,7 @@ public class OrderService {
 
     @Autowired
     public OrderService(ModelMapper modelMapper, OrderRepository orderRepository, UserRepository userRepository,
-                        ProductRepository productRepository, OrderDetailRepository orderDetailRepository, PaymentRepository paymentRepository, OptionRepository optionRepository) {
+                        ProductRepository productRepository, OrderDetailRepository orderDetailRepository, PaymentRepository paymentRepository, OptionRepository optionRepository, ProducerRepository producerRepository) {
         this.modelMapper = modelMapper;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
@@ -66,10 +68,11 @@ public class OrderService {
         this.orderDetailRepository = orderDetailRepository;
         this.paymentRepository = paymentRepository;
         this.optionRepository = optionRepository;
+        this.producerRepository = producerRepository;
     }
 
     @Transactional
-    public Object insertOrder(OrderDTO orderDTO, PaymentDTO paymentDTO, int productId) {
+    public Object insertOrder(OrderDTO orderDTO, PaymentDTO paymentDTO, int optionId) {
         log.info("[OrderService] insertOrder() 시작");
         log.info("[OrderService] orderDTO : {}", orderDTO);
 
@@ -87,6 +90,20 @@ public class OrderService {
             paymentDTO.setTransaction_id("transid_1223423423422");
 //            paymentDTO.setReceipt_url((String) paymentInfo.get("receipt_url"));
             paymentDTO.setReceipt_url("sample_url");
+
+            // 2. 옵션 조회 및 재고 확인
+            TblOption option = optionRepository.findById(optionId).orElseThrow(()
+                    -> new IllegalArgumentException("해당 상품에 대한 옵션이 존재하지 않습니다."));;
+
+            System.out.println(option.getOptionQuantity());
+            if (option.getOptionQuantity() < orderDTO.getOrderTotalCount()) {
+                throw new IllegalStateException("재고가 부족합니다.");
+            } else {
+                option.setOptionQuantity(option.getOptionQuantity() - orderDTO.getOrderTotalCount());
+            }
+            System.out.println(option.getOptionQuantity());
+
+            System.out.println("주문 정보 저장 시작");
 
             TblUser user = userRepository.findTblUserById(orderDTO.getUserId());
 
@@ -130,25 +147,28 @@ public class OrderService {
 
             paymentRepository.save(payment);
 
-            TblProduct product = productRepository.findByProductId(productId);
-            TblOption option = optionRepository.findByProduct(product);
-            if (option.getOptionId() == null) {
-                throw new IllegalStateException("해당 상품에 대한 옵션이 존재하지 않습니다.");
-            }
+//            TblProduct product = productRepository.findById(productId);
+//            TblOption option = optionRepository.findByProduct(product);
+//            if (option.getId() == null) {
+//                throw new IllegalStateException("해당 상품에 대한 옵션이 존재하지 않습니다.");
+//            }
 
             // 4. 주문 상세 정보 저장
             TblOrderDetail orderDetail = new TblOrderDetail();
             orderDetail.setAmount(orderDTO.getDiscountAmount());
             orderDetail.setCount(orderDTO.getOrderTotalCount());
             orderDetail.setOrder(order);
-            orderDetail.setOptionId(option.getOptionId());
+            orderDetail.setOption(option);
 
             orderDetailRepository.save(orderDetail);
 
             return modelMapper.map(order, OrderDTO.class);
+        } catch (IllegalStateException e) {
+            log.error("[OrderService] Exception: {}", e.getMessage());
+            throw e; // 예외를 다시 던져서 호출하는 쪽에서 처리하도록 함
         } catch (Exception e) {
             log.error("[OrderService] Exception: {}", e.getMessage());
-            return null;
+            throw new RuntimeException("주문 처리 중 오류가 발생했습니다."); // 일반 예외 처리
         }
     }
 
@@ -255,22 +275,53 @@ public class OrderService {
         return "Bearer " + response.getBody().get("accessToken").toString();
     }
 
+    // ================================================================================================================
+
+    // 마이페이지 내 구매자별 주문 리스트 조회 (최신순으로)
     public Object selectOrderList(String userId) {
         TblUser user = userRepository.findTblUserById(Integer.parseInt(userId));
-        List<TblOrder> orderList = orderRepository.findByUser(user);
+        List<TblOrder> orderList = orderRepository.findByUserOrderByRecent(user); // 최신순으로 정렬된 주문 리스트 조회
 
         log.info("[OrderService] orderList {}", orderList);
 
         return orderList.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
-
     }
 
-    public Object selectOrderDetailList(String orderId) {
-        TblOrder order = orderRepository.findTblOrderById(Integer.valueOf(orderId));
-        List<TblOrderDetail> orderDetails = orderDetailRepository.findAllByOrder(order);
+    // 특정 주문번호에 대한 상세 정보 조회(구매자, 판매자, 관리자 모두 해당)
+    public Object getOrderDetail(String orderId) {
+        TblOrder order = orderRepository.findById(Integer.valueOf(orderId))
+                .orElseThrow(() -> new IllegalArgumentException("주문이 존재하지 않습니다."));
+
+        log.info("[OrderService] order {}", order);
+
+        return modelMapper.map(order, OrderDTO.class);
+    }
+
+    // 주문 리스트 내 주문번호 별 주문 상품 리스트 조회(구매자, 판매자, 관리자 모두 해당)
+    public Object getOrderDetailList(String orderId) {
+        List<OrderDetailProductDTO> orderDetails = orderDetailRepository.findOrderDetailWithProductByOrder(Integer.valueOf(orderId));
 
         log.info("[OrderService] orderDetails {}", orderDetails);
 
-        return orderDetails.stream().map(orderDetail -> modelMapper.map(orderDetail, OrderDetailDTO.class)).collect(Collectors.toList());
+        return orderDetails;
     }
+
+    // 판매자 주문 건 조회
+    public Object getOrderListByProducer(String producerId) {
+        List<TblOrder> orderListByProducer = orderRepository.findOrdersByProducerId(Integer.valueOf(producerId));
+
+        log.info("[OrderService] orderListByProducer {}", orderListByProducer);
+
+        return orderListByProducer.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
+    }
+
+    // 관리자 모든 주문 건 조회(최신순으로)
+    public Object getAllOrderList() {
+        List<TblOrder> allOrderList = orderRepository.findAllOrderByRecent();
+
+        log.info("[OrderService] allOrderList {}", allOrderList);
+
+        return allOrderList.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
+    }
+
 }

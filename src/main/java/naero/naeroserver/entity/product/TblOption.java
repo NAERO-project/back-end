@@ -10,7 +10,7 @@ public class TblOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "option_id", nullable = false)
-    private Integer optionId;
+    private Integer id;
 
     @Size(max = 255)
     @Column(name = "option_desc")
@@ -28,12 +28,12 @@ public class TblOption {
     @Column(name = "option_quantity", nullable = false)
     private Integer optionQuantity;
 
-    public Integer getOptionId() {
-        return optionId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setOptionId(Integer optionId) {
-        this.optionId = optionId;
+    public void setId(Integer optionId) {
+        this.id = optionId;
     }
 
     public String getOptionDesc() {

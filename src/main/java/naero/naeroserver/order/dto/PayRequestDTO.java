@@ -4,7 +4,7 @@ public class PayRequestDTO {
 
     private OrderDTO orderDTO;
     private PaymentDTO paymentDTO;
-    private int productId;
+    private int optionId;
 
     public PayRequestDTO() {
     }
@@ -12,7 +12,7 @@ public class PayRequestDTO {
     public PayRequestDTO(OrderDTO orderDTO, PaymentDTO paymentDTO, int productId) {
         this.orderDTO = orderDTO;
         this.paymentDTO = paymentDTO;
-        this.productId = productId;
+        this.optionId = productId;
     }
 
     public OrderDTO getOrderDTO() {
@@ -31,12 +31,12 @@ public class PayRequestDTO {
         this.paymentDTO = paymentDTO;
     }
 
-    public int getProductId() {
-        return productId;
+    public int getOptionId() {
+        return optionId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setOptionId(int optionId) {
+        this.optionId = optionId;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class PayRequestDTO {
         return "PayRequestDTO{" +
                 "orderDTO=" + orderDTO +
                 ", paymentDTO=" + paymentDTO +
-                ", productID=" + productId +
+                ", productID=" + optionId +
                 '}';
     }
 }

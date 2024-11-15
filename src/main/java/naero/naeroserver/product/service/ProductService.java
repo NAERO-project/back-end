@@ -227,7 +227,7 @@ public class ProductService {
         log.info("[ProductService] selectProducerProductListPreview() 시작");
 
         Pageable pageable = PageRequest.of(0, 4);
-        List<TblProduct> producerProductListPreview = productRepository.findByProductIdWithLimit(1, pageable);
+        List<TblProduct> producerProductListPreview = productRepository.findByIdWithLimit(1, pageable);
 
         for (TblProduct tblProduct : producerProductListPreview) {
             tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());

@@ -17,7 +17,7 @@ public class TblProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id", nullable = false)
-    private Integer productId;
+    private Integer id;
 
     @Size(max = 50)
     @Column(name = "product_name", length = 50)
@@ -70,12 +70,12 @@ public class TblProduct {
     @OneToMany(mappedBy = "product")
     private Set<TblReview> tblReviews = new LinkedHashSet<>();
 
-    public Integer getProductId() {
-        return productId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setId(Integer productId) {
+        this.id = productId;
     }
 
     public String getProductName() {
