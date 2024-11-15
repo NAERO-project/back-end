@@ -11,7 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 public class TblCouponList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "`Key`", nullable = false)
+    @Column(name = "coupon_get_id", nullable = false)
     private Integer id;
 
     @Size(max = 1)

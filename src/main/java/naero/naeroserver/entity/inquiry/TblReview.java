@@ -33,8 +33,7 @@ public class TblReview {
     @Column(name = "review_rating", nullable = false)
     private Integer reviewRating;
 
-    @NotNull
-    @Column(name = "review_date", nullable = false)
+    @Column(name = "review_date")
     private Instant reviewDate;
 
     @NotNull

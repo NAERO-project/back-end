@@ -1,12 +1,11 @@
 package naero.naeroserver.entity.user;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import naero.naeroserver.entity.coupon.TblCoupon;
 import naero.naeroserver.entity.inquiry.TblResponse;
 import naero.naeroserver.entity.liked.TblLikedSeller;
-import naero.naeroserver.entity.product.TblCategoryLarge;
+import naero.naeroserver.entity.product.TblBanner;
 import naero.naeroserver.entity.product.TblProduct;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -17,8 +16,11 @@ import java.util.Set;
 @Table(name = "tbl_producer")
 public class TblProducer {
     @Id
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Column(name = "producer_id", nullable = false)
+    private Integer id;
+
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "producer_id", nullable = false)
     private TblUser producer;
 
@@ -38,10 +40,9 @@ public class TblProducer {
     @Column(name = "producer_phone", length = 20)
     private String producerPhone;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @ColumnDefault("1")
-    @JoinColumn(name = "pgrade_id", nullable = false)
+    @JoinColumn(name = "pgrade_id")
     private TblProducerGrade pgrade;
 
     @Column(name = "delivery_fee")
@@ -51,7 +52,7 @@ public class TblProducer {
     private Integer deliveryCrit;
 
     @OneToMany(mappedBy = "producer")
-    private Set<TblCategoryLarge.TblBanner> tblBanners = new LinkedHashSet<>();
+    private Set<TblBanner> tblBanners = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "producer")
     private Set<TblCoupon> tblCoupons = new LinkedHashSet<>();
@@ -65,12 +66,33 @@ public class TblProducer {
     @OneToMany(mappedBy = "producer")
     private Set<TblResponse> tblResponses = new LinkedHashSet<>();
 
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "producer_id")
+    private TblProducer tblProducer;
+
+    public TblProducer getTblProducer() {
+        return tblProducer;
+    }
+
+    public void setTblProducer(TblProducer tblProducer) {
+        this.tblProducer = tblProducer;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public TblUser getProducer() {
         return producer;
     }
 
-    public void setProducer(TblUser producer) {
-        this.producer = producer;
+    public void setProducer(TblUser tblUser) {
+        this.producer = tblUser;
     }
 
     public String getBusiNo() {
@@ -129,11 +151,11 @@ public class TblProducer {
         this.deliveryCrit = deliveryCrit;
     }
 
-    public Set<TblCategoryLarge.TblBanner> getTblBanners() {
+    public Set<TblBanner> getTblBanners() {
         return tblBanners;
     }
 
-    public void setTblBanners(Set<TblCategoryLarge.TblBanner> tblBanners) {
+    public void setTblBanners(Set<TblBanner> tblBanners) {
         this.tblBanners = tblBanners;
     }
 
