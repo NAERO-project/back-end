@@ -3,7 +3,6 @@ package naero.naeroserver.entity.order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.user.TblUser;
 
 @Entity
 @Table(name = "tbl_address")
@@ -11,7 +10,7 @@ public class TblAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id", nullable = false)
-    private Integer id;
+    private Integer addressId;
 
     @Size(max = 255)
     @NotNull
@@ -33,16 +32,15 @@ public class TblAddress {
     private String postalCode;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private TblUser user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
-    public Integer getId() {
-        return id;
+    public Integer getAddressId() {
+        return addressId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setAddressId(Integer id) {
+        this.addressId = id;
     }
 
     public String getAddressName() {
@@ -77,12 +75,12 @@ public class TblAddress {
         this.postalCode = postalCode;
     }
 
-    public TblUser getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(TblUser user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
 }

@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface UserRoleRepository extends JpaRepository<TblUserRole,Integer> {
-    List<TblUserRole> findByUserId(Integer userId);
+    List<TblUserRole> findByUserRoleId(Integer roleid);
 }
