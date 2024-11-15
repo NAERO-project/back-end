@@ -310,6 +310,7 @@ CREATE TABLE `tbl_banner` (
                               `banner_create_at`	DateTime	NULL	COMMENT '등록 날짜',
                               `banner_delete_at`	DateTime	NULL	COMMENT '철회 날짜',
                               `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
+                              `banner_accept_status`  varchar(1)	NULL DEFAULT 'N'	COMMENT '승인여부',
                               `banner_accept_at`	DateTime	NULL	COMMENT '승인 날짜',
                               `approver_id`	int	NULL	COMMENT '승인자'
 );
@@ -324,7 +325,7 @@ CREATE TABLE `tbl_magazine` (
 
 
 CREATE TABLE tbl_liked_seller (
-                                  `likeSeller_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '찜번호',
+                                  `like_seller_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '찜번호',
                                   `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
                                   `user_id`	int	NOT NULL	COMMENT '회원 번호',
                                   `brand_like_date`	DateTime NULL	COMMENT '등록일시'
