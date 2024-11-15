@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import naero.naeroserver.entity.user.TblProducer;
 import naero.naeroserver.entity.user.TblUser;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 
@@ -41,6 +42,11 @@ public class TblBanner {
 
     @Column(name = "banner_accept_at")
     private Instant bannerAcceptAt;
+
+    @Size(max = 1)
+    @ColumnDefault("'N'")
+    @Column(name = "banner_check", length = 1)
+    private String bannerCheck;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "approver_id")
@@ -108,6 +114,14 @@ public class TblBanner {
 
     public void setBannerAcceptAt(Instant bannerAcceptAt) {
         this.bannerAcceptAt = bannerAcceptAt;
+    }
+
+    public String getBannerCheck() {
+        return bannerCheck;
+    }
+
+    public void setBannerCheck(String bannerCheck) {
+        this.bannerCheck = bannerCheck;
     }
 
     public TblUser getApprover() {

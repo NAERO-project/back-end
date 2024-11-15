@@ -11,15 +11,18 @@ import java.util.List;
 
 public interface BannerRepository extends JpaRepository<TblBanner, Integer> {
 
-    @Query("SELECT b FROM TblBanner b " +
-            "JOIN b.producer pi " +
-            "WHERE pi.id = :id " +
-            "ORDER BY b.bannerId")
-    List<TblBanner> findAllByProducerId(@Param("id") int id);
+    List<TblBanner> findAllByBannerCheck(String status);
 
     @Query("SELECT b FROM TblBanner b " +
             "JOIN b.producer pi " +
-            "WHERE pi.id = :id " +
-            "ORDER BY b.bannerId")
-    Page<TblBanner> findAllByProducerId(@Param("id") int id, Pageable pageable);
+            "WHERE pi.id = :producerId " +
+            "ORDER BY b.id")
+    List<TblBanner> findAllByProducerId(@Param("producerId") int producerId);
+
+    @Query("SELECT b FROM TblBanner b " +
+            "JOIN b.producer pi " +
+            "WHERE pi.id = :producerId " +
+            "ORDER BY b.id")
+    Page<TblBanner> findAllByProducerId(@Param("producerId") int producerId, Pageable pageable);
+
 }

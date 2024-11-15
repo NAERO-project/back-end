@@ -3,9 +3,10 @@ package naero.naeroserver.entity.product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.liked.TblLikedProduct;
 import naero.naeroserver.entity.inquiry.TblReview;
+import naero.naeroserver.entity.liked.TblLikedProduct;
 import naero.naeroserver.entity.user.TblProducer;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 import java.util.LinkedHashSet;
@@ -45,15 +46,13 @@ public class TblProduct {
     private Instant productDeleteAt;
 
     @Size(max = 1)
+    @ColumnDefault("'Y'")
     @Column(name = "product_check", length = 1)
     private String productCheck;
 
-    @Column(name = "product_quantity")
-    private Integer productQuantity;
-
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "producer_id", nullable = false, referencedColumnName = "producer_id")
+    @JoinColumn(name = "producer_id", nullable = false)
     private TblProducer producer;
 
     @NotNull
@@ -140,14 +139,6 @@ public class TblProduct {
 
     public void setProductCheck(String productCheck) {
         this.productCheck = productCheck;
-    }
-
-    public Integer getProductQuantity() {
-        return productQuantity;
-    }
-
-    public void setProductQuantity(Integer productQuantity) {
-        this.productQuantity = productQuantity;
     }
 
     public TblProducer getProducer() {

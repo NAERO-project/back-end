@@ -9,12 +9,13 @@ public class BannerDTO {
     private String bannerDeleteAt;
     private int producerId;
     private String bannerAcceptAt;
+    private String bannerCheck;
     private int approverId;
 
     public BannerDTO() {
     }
 
-    public BannerDTO(int bannerId, String bannerThumbnail, String bannerImg, String bannerUrl, String bannerCreateAt, String bannerDeleteAt, int producerId, String bannerAcceptAt, int approverId) {
+    public BannerDTO(int bannerId, String bannerThumbnail, String bannerImg, String bannerUrl, String bannerCreateAt, String bannerDeleteAt, int producerId, String bannerAcceptAt, String bannerCheck, int approverId) {
         this.bannerId = bannerId;
         this.bannerThumbnail = bannerThumbnail;
         this.bannerImg = bannerImg;
@@ -23,6 +24,7 @@ public class BannerDTO {
         this.bannerDeleteAt = bannerDeleteAt;
         this.producerId = producerId;
         this.bannerAcceptAt = bannerAcceptAt;
+        this.bannerCheck = bannerCheck;
         this.approverId = approverId;
     }
 
@@ -90,6 +92,14 @@ public class BannerDTO {
         this.bannerAcceptAt = bannerAcceptAt;
     }
 
+    public String getBannerCheck() {
+        return bannerCheck;
+    }
+
+    public void setBannerCheck(String bannerCheck) {
+        this.bannerCheck = bannerCheck;
+    }
+
     public int getApproverId() {
         return approverId;
     }
@@ -109,6 +119,7 @@ public class BannerDTO {
                 ", bannerDeleteAt='" + bannerDeleteAt + '\'' +
                 ", producerId=" + producerId +
                 ", bannerAcceptAt='" + bannerAcceptAt + '\'' +
+                ", bannerCheck='" + bannerCheck + '\'' +
                 ", approverId=" + approverId +
                 '}';
     }

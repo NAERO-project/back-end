@@ -44,7 +44,7 @@ public class BannerService {
     public Object selectBannerList() {
         log.info("[BannerService] selectBannerList() 시작");
 
-        List<TblBanner> bannerList = bannerRepository.findAll();
+        List<TblBanner> bannerList = bannerRepository.findAllByBannerCheck("Y");
 
         for(int i=0; i<bannerList.size(); i++){
             bannerList.get(i).setBannerImg(IMAGE_URL + bannerList.get(i).getBannerImg());
@@ -86,24 +86,24 @@ public class BannerService {
     }
 
     /* 판매자별 배너 전체 조회 */
-    public int selectBannerTotalForProducer(int id) {
+    public int selectBannerTotalForProducer(int producerId) {
         log.info("[BannerService] selectBannerTotalForProducer() 시작");
 
-        List<TblBanner> bannerList = bannerRepository.findAllByProducerId(id);
+        List<TblBanner> bannerList = bannerRepository.findAllByProducerId(producerId);
 
         log.info("[BannerService] selectBannerTotalForProducer() 종료");
 
         return bannerList.size();
     }
 
-    public Object selectBannerListWithPagingForProducer(int id, Criteria cri) {
+    public Object selectBannerListWithPagingForProducer(int producerId, Criteria cri) {
         log.info("[BannerService] selectBannerListWithPagingForProducer() 시작");
 
         int index = cri.getPageNum() - 1;
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("id").descending());
 
-        Page<TblBanner> result = bannerRepository.findAllByProducerId(id, paging);
+        Page<TblBanner> result = bannerRepository.findAllByProducerId(producerId, paging);
         List<TblBanner> bannerList = (List<TblBanner>)result.getContent();
 
         for(int i = 0 ; i < bannerList.size() ; i++) {
@@ -118,7 +118,7 @@ public class BannerService {
 
     /* 판매자별 배너 신청 */
     @Transactional
-    public Object insertBanner(BannerDTO bannerDTO, MultipartFile bannerImage) {
+    public Object insertBannerProducerId(BannerDTO bannerDTO, MultipartFile bannerImage) {
         log.info("[BannerService] insertBanner() 시작");
         log.info("[BannerService] bannerDTO : {}", bannerDTO);
 
