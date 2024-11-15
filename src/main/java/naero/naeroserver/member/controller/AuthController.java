@@ -59,7 +59,7 @@ public class AuthController {
         //여기서 이메일 인증 ID 확인해도 될 듯
         return ResponseEntity
                 .ok()
-                .body(new ResponseDTO(HttpStatus.OK, "회원 가입 성공", authService.signup(user)));
+                .body(new ResponseDTO(HttpStatus.CREATED, "회원 가입 성공", authService.signup(user)));
     }
 
 

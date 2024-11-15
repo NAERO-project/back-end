@@ -9,16 +9,16 @@ public class UserDTO {
     private String password;
     private String userEmail;
     private String userPhone;
-    private String userPoint;
+    private int userPoint;
     private Date enrollDate;
-    private char withStatus;
+    private char withStatus ='N';
     private UserGradeDTO grade;
 
     public UserDTO() {
     }
 
 
-    public UserDTO(int userId, String userFullName, String username, String password, String userEmail, String userPhone, String userPoint, Date enrollDate, char withStatus, UserGradeDTO grade) {
+    public UserDTO(int userId, String userFullName, String username, String password, String userEmail, String userPhone, int userPoint, Date enrollDate, char withStatus, UserGradeDTO grade) {
         this.userId = userId;
         this.userFullName = userFullName;
         this.username = username;
@@ -79,11 +79,11 @@ public class UserDTO {
         this.userPhone = userPhone;
     }
 
-    public String getUserPoint() {
+    public int getUserPoint() {
         return userPoint;
     }
 
-    public void setUserPoint(String userPoint) {
+    public void setUserPoint(int userPoint) {
         this.userPoint = userPoint;
     }
 
