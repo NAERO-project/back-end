@@ -65,11 +65,11 @@ public class OrderController {
         } catch (RuntimeException e) {
             log.error("결제 취소 실패: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "결제 취소 중 오류가 발생했습니다.", null));
+                    .body(new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null));
         } catch (Exception e) {
             log.error("결제 취소 실패: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "결제 취소 실패", null));
+                    .body(new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null));
         }
     }
 

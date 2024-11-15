@@ -283,25 +283,27 @@ public class OrderService {
         TblOrder order = orderRepository.findById(payment.getOrder().getId())
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보가 존재하지 않습니다."));
 
-        if (!order.getDeliveryStatus().equals("pending")) {
+        System.out.println(order.getOrderStatus());
+
+        if (!order.getDeliveryStatus().equals("pending") || order.getOrderStatus().equals("canceled")) {
             throw new IllegalStateException("취소가 불가한 주문 건 입니다.");
         }
 
         try {
             // 1. 포트원 API를 통해 결제 취소 요청
-            String portoneToken = getPortOneToken();
-            String url = "https://api.portone.io/payments/" + paymentId + "/cancel";
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("Authorization", portoneToken);
-
-            ResponseEntity<Map> response = new RestTemplate().exchange(
-                    url,
-                    HttpMethod.POST,
-                    new HttpEntity<>(headers),
-                    Map.class
-            );
+//            String portoneToken = getPortOneToken();
+//            String url = "https://api.portone.io/payments/" + paymentId + "/cancel";
+//
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.APPLICATION_JSON);
+//            headers.set("Authorization", portoneToken);
+//
+//            ResponseEntity<Map> response = new RestTemplate().exchange(
+//                    url,
+//                    HttpMethod.POST,
+//                    new HttpEntity<>(headers),
+//                    Map.class
+//            );
 
 //            if (response.getStatusCode() == HttpStatus.OK) {
 //                log.info("결제 취소 성공: {}", response.getBody());
@@ -309,12 +311,12 @@ public class OrderService {
                 // 2. 결제 정보 업데이트
                 payment.setPaymentStatus("canceled");
                 payment.setUpdatedAt(Instant.now());
-                paymentRepository.save(payment);
+//                paymentRepository.save(payment);
 
                 // 3. 주문 정보 업데이트
                 order.setOrderStatus("canceled");
                 order.setUpdatedAt(Instant.now());
-                orderRepository.save(order);
+//                orderRepository.save(order);
 
                 // 4. 상품 정보(재고 원복) 업데이트
                 TblOrderDetail orderProduct = orderDetailRepository.findByOrderId(order.getId());
