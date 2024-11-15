@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -238,11 +239,100 @@ public class ProductService {
         return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
     }
 
+    /* 상품별 상세 조회 */
+    public Object selectProductDetail(int id) {
+        log.info("[ProductService] selectProductDetail() 시작");
 
+        TblProduct product = productRepository.findById(id).get();
+        product.setProductThumbnail(IMAGE_URL + product.getProductThumbnail());
 
+        log.info("[ProductService] selectProductDetail() 종료");
 
+        return modelMapper.map(product, TblProduct.class);
+    }
 
+    /* 판매자 상품 등록 */
+    @Transactional
+    public Object insertProduct(ProductDTO productDTO, MultipartFile productImage) {
+        log.info("[ProductService] insertProduct() 시작");
+        log.info("[ProductService] productDTO : {}", productDTO);
 
+        String imageName = UUID.randomUUID().toString().replace("-", "");
+        String replaceFileName = null;
+        String replaceThumbnailFileName = null;
+        int result = 0;
+
+        try {
+            replaceFileName = FileUploadUtils.saveFile(IMAGE_DIR, imageName, productImage);
+            replaceThumbnailFileName = FileUploadUtils.saveThumbnailFile(IMAGE_DIR, replaceFileName);
+
+            productDTO.setProductImg(replaceFileName);
+            productDTO.setProductThumbnail(replaceThumbnailFileName);
+
+            log.info("[ProductService] 등록 이미지명 : {}", replaceFileName);
+
+            TblProduct insertProduct = modelMapper.map(productDTO, TblProduct.class);
+
+            productRepository.save(insertProduct);
+
+            result = 1;
+        } catch (Exception e) {
+            FileUploadUtils.deleteFile(IMAGE_DIR, replaceFileName);
+            throw new RuntimeException(e);
+        }
+
+        return "상품 입력 성공";
+    }
+
+    /* 판매자 상품 수정 */
+    @Transactional
+    public Object updateProduct(ProductDTO productDTO, MultipartFile productImage) {
+        log.info("[ProductService] updateProduct() Start");
+        log.info("[ProductService] productDTO : {}", productDTO);
+
+        String replaceFileName = null;
+        int result = 0;
+
+        try {
+
+            /* 설명. update 할 엔티티 조회 */
+            TblProduct product = productRepository.findById(productDTO.getProductId()).get();
+            String oriImage = product.getProductThumbnail();
+            log.info("[updateProduct] oriImage : {}", oriImage);
+
+            /* 설명. update를 위한 엔티티 값 수정 */
+            product.setProductName(productDTO.getProductName());
+            product.setProductPrice(productDTO.getProductPrice());
+            product.setProductDesc(productDTO.getProductDesc());
+            product.setProductCheck(productDTO.getProductCheck());
+            product.setProductQuantity(productDTO.getProductQuantity());
+            product.setProductThumbnail(productDTO.getProductThumbnail());
+
+            if(productImage != null){
+                String imageName = UUID.randomUUID().toString().replace("-", "");
+                replaceFileName = FileUploadUtils.saveFile(IMAGE_DIR, imageName, productImage);
+                log.info("[updateProduct] InsertFileName : {}", replaceFileName);
+
+                product.setProductThumbnail(replaceFileName);	// 새로운 파일 이름으로 update
+                log.info("[updateProduct] deleteImage : {}", oriImage);
+
+                boolean isDelete = FileUploadUtils.deleteFile(IMAGE_DIR, oriImage);
+                log.info("[update] isDelete : {}", isDelete);
+            } else {
+
+                /* 설명. 이미지 변경 없을 경우 */
+                product.setProductThumbnail(oriImage);
+            }
+
+            result = 1;
+        } catch (IOException e) {
+            log.info("[updateProduct] Exception!!");
+            FileUploadUtils.deleteFile(IMAGE_DIR, replaceFileName);
+            throw new RuntimeException(e);
+        }
+        log.info("[ProductService] updateProduct End ===================================");
+        return (result > 0) ? "상품 업데이트 성공" : "상품 업데이트 실패";
+    }
 
 
 
@@ -336,20 +426,6 @@ public class ProductService {
 //    }
 //
 
-//
-//
-
-
-
-
-
-
-
-
-
-//
-//
-//
 //    public int selectProducerProductFoodList(int id) {
 //        log.info("[ProductService] selectProducerProductFoodList 시작");
 //
@@ -436,51 +512,4 @@ public class ProductService {
 //
 //        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
 //    }
-//
-//    public Object selectProductDetail(int id) {
-//        log.info("[ProductService] selectProductDetail() 시작");
-//
-//        TblProduct product = productRepository.findById(id).get();
-//        product.setProductThumbnail(IMAGE_URL + product.getProductThumbnail());
-//
-//        log.info("[ProductService] selectProductDetail() 종료");
-//
-//        return modelMapper.map(product, TblProduct.class);
-//    }
-//
-//    /* 판매자 상품 등록 */
-//    @Transactional
-//    public Object insertProduct(ProductDTO productDTO, MultipartFile productImage) {
-//        log.info("[ProductService] insertProduct() 시작");
-//        log.info("[ProductService] productDTO : {}", productDTO);
-//
-//        String imageName = UUID.randomUUID().toString().replace("-", "");
-//        String replaceFileName = null;
-//        String replaceThumbnailFileName = null;
-//        int result = 0;
-//
-//        try {
-//            replaceFileName = FileUploadUtils.saveFile(IMAGE_DIR, imageName, productImage);
-//            replaceThumbnailFileName = FileUploadUtils.saveThumbnailFile(IMAGE_DIR, replaceFileName);
-//
-//            productDTO.setProductImg(replaceFileName);
-//            productDTO.setProductThumbnail(replaceThumbnailFileName);
-//
-//            log.info("[ProductService] 등록 이미지명 : {}", replaceFileName);
-//
-//            TblProduct insertProduct = modelMapper.map(productDTO, TblProduct.class);
-//
-//            productRepository.save(insertProduct);
-//
-//            result = 1;
-//        } catch (Exception e) {
-//            FileUploadUtils.deleteFile(IMAGE_DIR, replaceFileName);
-//            throw new RuntimeException(e);
-//        }
-//
-//        return "상품 입력 성공";
-//    }
-
-
-
 }

@@ -147,6 +147,29 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
     }
 
+    /* 상품별 상세 조회 */
+    @Operation(summary = "상품별 상세 조회 요청", description = "상품별로 상세 내용이 담긴 페이지 처리가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/{id}")
+    public ResponseEntity<ResponseDTO> selectProductDetail(@PathVariable int id){
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 상세정보 조회 성공", productService.selectProductDetail(id)));
+    }
+
+    /* 판매자 상품 등록 */
+    @Operation(summary = "판매자 상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
+    @PostMapping(value = "/products")
+    public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
+    }
+
+    /* 판매자 상품 수정 */
+    @Operation(summary = "판매자 상품 수정 요청", description = "상품 수정이 진행됩니다.", tags = { "ProductController" })
+    @PutMapping(value = "/products")
+    public ResponseEntity<ResponseDTO> updateProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 수정 성공",  productService.updateProduct(productDTO, productImage)));
+    }
 
 
 
@@ -215,10 +238,6 @@ public class ProductController {
 //        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
 //    }
 
-
-
-
-
 //
 //    @Operation(summary = "브랜드별 페이지 식품 상품 리스트 전체 조회 (페이징)", description = "브랜드별 식품 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
 //    @GetMapping("/products/producer/{id}/food")
@@ -278,21 +297,5 @@ public class ProductController {
 //        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
 //
 //        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
-//    }
-//
-//    /* 상품별 상세 조회 */
-//    @Operation(summary = "상품별 상세 조회 요청", description = "상품별로 상세 내용이 담긴 페이지 처리가 진행됩니다.", tags = { "ProductController" })
-//    @GetMapping("/products/{id}")
-//    public ResponseEntity<ResponseDTO> selectProductDetail(@PathVariable int id){
-//
-//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 상세정보 조회 성공", productService.selectProductDetail(id)));
-//    }
-//
-//    /* 판매자 상품 등록 */
-//    @Operation(summary = "판매자 상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
-//    @PostMapping(value = "/products")
-//    public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
-//
-//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
 //    }
 }
