@@ -1,6 +1,7 @@
 package naero.naeroserver.banner.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import naero.naeroserver.banner.dto.BannerDTO;
 import naero.naeroserver.banner.service.BannerService;
 import naero.naeroserver.common.Criteria;
 import naero.naeroserver.common.PageDTO;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/banner")
@@ -53,7 +55,7 @@ public class BannerController {
     }
 
     /* 판매자별 배너 전체 조회 */
-    @Operation(summary = "판매자 배너 전체 조회 요청 (페이징)", description = "판매자 배너 전체 조회와 페이징 처리가 진행됩니다.", tags = { "BannerController" })
+    @Operation(summary = "판매자별 배너 전체 조회 요청 (페이징)", description = "판매자 배너 전체 조회와 페이징 처리가 진행됩니다.", tags = { "BannerController" })
     @GetMapping("/producer/{id}")
     public ResponseEntity<ResponseDTO> selectBannerListProducerPage(
             @RequestParam(name = "offset", defaultValue = "1") String offset,
@@ -68,5 +70,13 @@ public class BannerController {
         pagingResponseDTO.setPageInfo(new PageDTO(cri, bannerTotal));
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "판매자별 배너 조회 성공", pagingResponseDTO));
+    }
+
+    /* 관리자 배너 등록 */
+    @Operation(summary = "관리자 배너 등록", description = "관리자 페이지에서 배너 등록 처리", tags = { "BannerController" })
+    @PostMapping("/admin")
+    public ResponseEntity<ResponseDTO> insertBannerListAdminPage(@ModelAttribute BannerDTO bannerDTO, MultipartFile bannerImage){
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 등록 성공", bannerService.insertBanner(bannerDTO, bannerImage)));
     }
 }

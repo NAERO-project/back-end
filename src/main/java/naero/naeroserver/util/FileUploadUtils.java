@@ -1,5 +1,6 @@
 package naero.naeroserver.util;
 
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,30 @@ public class FileUploadUtils {
         return replaceFileName;
     }
 
+    /**
+     * Thumbnail 생성 method
+     * @param uploadDir
+     * @param replaceFileName
+     * @return replaceThumbnailFileName
+     * @throws IOException
+     */
+    public static String saveThumbnailFile(String uploadDir, String replaceFileName) throws IOException {
+        Path originalFilePath = Paths.get(uploadDir).resolve(replaceFileName);
+        String replaceThumbnailFileName = FilenameUtils.getBaseName(replaceFileName)
+                + "_thumbnail." + FilenameUtils.getExtension(replaceFileName);
+        Path thumbnailFilePath = Paths.get(uploadDir).resolve(replaceThumbnailFileName);
+
+        try {
+            Thumbnails.of(originalFilePath.toFile())
+                    .size(160, 90)
+                    .toFile(thumbnailFilePath.toFile());
+        } catch (IOException e) {
+            throw new IOException("Could not save thumbnail: " + replaceThumbnailFileName, e);
+        }
+
+        return replaceThumbnailFileName;
+    }
+
     public static boolean deleteFile(String uploadDir, String fileName) {
 
         boolean result = false;
@@ -54,4 +79,5 @@ public class FileUploadUtils {
 
         return result;
     }
+
 }
