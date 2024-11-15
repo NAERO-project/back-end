@@ -69,8 +69,7 @@ public class AuthService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         TblUser newUser = modelMapper.map(user, TblUser.class);
-        TblGrade grade = userGradeRepository.findById(1);
-        newUser.setGrade(grade);
+        newUser.setGradeId(1);
 
         TblUser result = userRepository.save(newUser);
 //        System.out.println(modelMapper.map(result,UserDTO.class));

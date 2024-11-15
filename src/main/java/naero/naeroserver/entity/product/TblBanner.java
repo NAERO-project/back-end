@@ -3,8 +3,7 @@ package naero.naeroserver.entity.product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.user.TblProducer;
-import naero.naeroserver.entity.user.TblUser;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 
@@ -14,7 +13,7 @@ public class TblBanner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "banner_id", nullable = false)
-    private Integer id;
+    private Integer bannerId;
 
     @Size(max = 255)
     @Column(name = "banner_thumbnail")
@@ -35,23 +34,26 @@ public class TblBanner {
     private Instant bannerDeleteAt;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "producer_id", nullable = false)
-    private TblProducer producer;
+    @Column(name = "producer_id", nullable = false)
+    private Integer producerId;
+
+    @Size(max = 1)
+    @ColumnDefault("'N'")
+    @Column(name = "banner_accept_status", length = 1)
+    private String bannerAcceptStatus;
 
     @Column(name = "banner_accept_at")
     private Instant bannerAcceptAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "approver_id")
-    private TblUser approver;
+    @Column(name = "approver_id")
+    private Integer approverId;
 
-    public Integer getId() {
-        return id;
+    public Integer getBannerId() {
+        return bannerId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setBannerId(Integer id) {
+        this.bannerId = id;
     }
 
     public String getBannerThumbnail() {
@@ -94,12 +96,20 @@ public class TblBanner {
         this.bannerDeleteAt = bannerDeleteAt;
     }
 
-    public TblProducer getProducer() {
-        return producer;
+    public Integer getProducerId() {
+        return producerId;
     }
 
-    public void setProducer(TblProducer producer) {
-        this.producer = producer;
+    public void setProducerId(Integer producerId) {
+        this.producerId = producerId;
+    }
+
+    public String getBannerAcceptStatus() {
+        return bannerAcceptStatus;
+    }
+
+    public void setBannerAcceptStatus(String bannerAcceptStatus) {
+        this.bannerAcceptStatus = bannerAcceptStatus;
     }
 
     public Instant getBannerAcceptAt() {
@@ -110,12 +120,12 @@ public class TblBanner {
         this.bannerAcceptAt = bannerAcceptAt;
     }
 
-    public TblUser getApprover() {
-        return approver;
+    public Integer getApproverId() {
+        return approverId;
     }
 
-    public void setApprover(TblUser approver) {
-        this.approver = approver;
+    public void setApproverId(Integer approverId) {
+        this.approverId = approverId;
     }
 
 }

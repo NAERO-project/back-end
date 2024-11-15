@@ -13,7 +13,7 @@ import java.time.Instant;
 public class TblLikedProduct {
     @Id
     @Column(name = "like_id", nullable = false)
-    private Integer id;
+    private Integer likeId;
 
     @NotNull
     @Column(name = "product_id", nullable = false)
@@ -26,12 +26,12 @@ public class TblLikedProduct {
     @Column(name = "product_like_date")
     private Instant productLikeDate;
 
-    public Integer getId() {
-        return id;
+    public Integer getLikeId() {
+        return likeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setLikeId(Integer id) {
+        this.likeId = id;
     }
 
     public Integer getProductId() {

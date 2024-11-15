@@ -2,7 +2,6 @@ package naero.naeroserver.entity.cart;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import naero.naeroserver.entity.user.TblUser;
 
 @Entity
 @Table(name = "tbl_cart")
@@ -14,7 +13,7 @@ public class TblCart {
 
     @NotNull
     @Column(name = "option_id", nullable = false)
-    private Integer optionId;
+    private Integer option;
 
     @NotNull
     @Column(name = "count", nullable = false)
@@ -25,9 +24,8 @@ public class TblCart {
     private Integer price;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private TblUser user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     public Integer getCartId() {
         return cartId;
@@ -37,12 +35,12 @@ public class TblCart {
         this.cartId = id;
     }
 
-    public Integer getOptionId() {
-        return optionId;
+    public Integer getOption() {
+        return option;
     }
 
-    public void setOptionId(Integer optionId) {
-        this.optionId = optionId;
+    public void setOption(Integer option) {
+        this.option = option;
     }
 
     public Integer getCount() {
@@ -61,12 +59,12 @@ public class TblCart {
         this.price = price;
     }
 
-    public TblUser getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(TblUser user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
 }
