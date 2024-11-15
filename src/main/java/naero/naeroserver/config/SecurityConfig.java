@@ -67,7 +67,7 @@ public class SecurityConfig {
                     //swagger 사용시
 //            auth.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
 
-//            auth.anyRequest().permitAll();
+            auth.anyRequest().permitAll();
                 }).sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> {
