@@ -3,7 +3,6 @@ package naero.naeroserver.entity.inquiry;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.user.TblProducer;
 
 import java.time.Instant;
 
@@ -13,7 +12,7 @@ public class TblResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "response_id", nullable = false)
-    private Integer id;
+    private Integer responseId;
 
     @Size(max = 50)
     @NotNull
@@ -32,21 +31,19 @@ public class TblResponse {
     private Instant responseUpdate;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "inquiry_id", nullable = false)
-    private TblInquiry inquiry;
+    @Column(name = "inquiry_id", nullable = false)
+    private Integer inquiryId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "producer_id", nullable = false, referencedColumnName = "producer_id")
-    private TblProducer producer;
+    @Column(name = "producer_id", nullable = false)
+    private Integer producerId;
 
-    public Integer getId() {
-        return id;
+    public Integer getResponseId() {
+        return responseId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setResponseId(Integer id) {
+        this.responseId = id;
     }
 
     public String getResponseTitle() {
@@ -81,20 +78,20 @@ public class TblResponse {
         this.responseUpdate = responseUpdate;
     }
 
-    public TblInquiry getInquiry() {
-        return inquiry;
+    public Integer getInquiryId() {
+        return inquiryId;
     }
 
-    public void setInquiry(TblInquiry inquiry) {
-        this.inquiry = inquiry;
+    public void setInquiryId(Integer inquiryId) {
+        this.inquiryId = inquiryId;
     }
 
-    public TblProducer getProducer() {
-        return producer;
+    public Integer getProducerId() {
+        return producerId;
     }
 
-    public void setProducer(TblProducer producer) {
-        this.producer = producer;
+    public void setProducerId(Integer producerId) {
+        this.producerId = producerId;
     }
 
 }
