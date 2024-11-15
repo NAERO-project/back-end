@@ -160,9 +160,6 @@ public class OrderService {
             orderDetailRepository.save(orderDetail);
 
             return modelMapper.map(order, OrderDTO.class);
-        } catch (IllegalStateException e) {
-            log.error("[OrderService] Exception: {}", e.getMessage());
-            throw e; // 예외를 다시 던져서 호출하는 쪽에서 처리하도록 함
         } catch (Exception e) {
             log.error("[OrderService] Exception: {}", e.getMessage());
             throw new RuntimeException("주문 처리 중 오류가 발생했습니다."); // 일반 예외 처리

@@ -1,9 +1,10 @@
 package naero.naeroserver.entity.liked;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import naero.naeroserver.entity.product.TblProduct;
-import naero.naeroserver.entity.user.TblUser;
 
 import java.time.Instant;
 
@@ -11,19 +12,16 @@ import java.time.Instant;
 @Table(name = "tbl_liked_product")
 public class TblLikedProduct {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "like_id", nullable = false)
     private Integer id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
-    private TblProduct product;
+    @Column(name = "product_id", nullable = false)
+    private Integer productId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private TblUser user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     @Column(name = "product_like_date")
     private Instant productLikeDate;
@@ -36,20 +34,20 @@ public class TblLikedProduct {
         this.id = id;
     }
 
-    public TblProduct getProduct() {
-        return product;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setProduct(TblProduct product) {
-        this.product = product;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 
-    public TblUser getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(TblUser user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Instant getProductLikeDate() {
