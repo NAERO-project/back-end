@@ -46,7 +46,7 @@ public class CartService {
 
             // 장바구니에 해당 상품이 이미 있는지 확인
             TblUser user = userRepository.findById(cartDTO.getUserId());
-            TblCart cart = cartRepository.findByOptionAndUser(option, user);
+            TblCart cart = cartRepository.findByOptionIdAndUserId(option.getOptionId(), user.getUserId());
 
             if (cart != null) { // 장바구니에 해당 상품이 이미 있을 경우 수량만 추가
                 cart.setCount(cart.getCount() + cartDTO.getCount());

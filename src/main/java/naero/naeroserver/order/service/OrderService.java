@@ -4,7 +4,6 @@ import naero.naeroserver.entity.order.TblOrder;
 import naero.naeroserver.entity.order.TblOrderDetail;
 import naero.naeroserver.entity.order.TblPayment;
 import naero.naeroserver.entity.product.TblOption;
-import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.entity.user.TblUser;
 import naero.naeroserver.member.repository.ProducerRepository;
 import naero.naeroserver.member.repository.UserRepository;
@@ -102,11 +101,11 @@ public class OrderService {
                 option.setOptionQuantity(option.getOptionQuantity() - orderDTO.getOrderTotalCount());
             }
 
-            TblUser user = userRepository.findTblUserById(orderDTO.getUserId());
+            TblUser user = userRepository.findTblUserByUserId(orderDTO.getUserId());
 
             // 2. 주문 정보 저장
             TblOrder order = new TblOrder();
-            order.setUser(user);
+            order.setUserId(user.getUserId());
             order.setOrderDatetime(Instant.now());
             order.setOrderTotalAmount(orderDTO.getOrderTotalAmount());
             order.setOrderTotalCount(orderDTO.getOrderTotalCount());
@@ -132,7 +131,7 @@ public class OrderService {
             // 3. 결제 정보 저장
             TblPayment payment = new TblPayment();
             payment.setUserId(paymentDTO.getUserId());
-            payment.setOrder(order); // 저장된 order의 ID 참조
+            payment.setOrderId(order.getOrderId()); // 저장된 order의 ID 참조
             payment.setAmount(orderDTO.getOrderTotalAmount());
             payment.setCurrency(paymentDTO.getCurrency());
             payment.setPaymentMethod(paymentDTO.getPaymentMethod());
@@ -154,8 +153,8 @@ public class OrderService {
             TblOrderDetail orderDetail = new TblOrderDetail();
             orderDetail.setAmount(orderDTO.getDiscountAmount());
             orderDetail.setCount(orderDTO.getOrderTotalCount());
-            orderDetail.setOrder(order);
-            orderDetail.setOption(option);
+            orderDetail.setOrderId(order.getOrderId());
+            orderDetail.setOptionId(option.getOptionId());
 
             orderDetailRepository.save(orderDetail);
 
@@ -277,7 +276,7 @@ public class OrderService {
         TblPayment payment = paymentRepository.findById(Integer.valueOf(paymentId))
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보가 존재하지 않습니다."));
 
-        TblOrder order = orderRepository.findById(payment.getOrder().getId())
+        TblOrder order = orderRepository.findById(payment.getOrderId())
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보가 존재하지 않습니다."));
 
         System.out.println(order.getOrderStatus());
@@ -316,8 +315,8 @@ public class OrderService {
 //                orderRepository.save(order);
 
                 // 4. 상품 정보(재고 원복) 업데이트
-                TblOrderDetail orderProduct = orderDetailRepository.findByOrderId(order.getId());
-                TblOption option = orderProduct.getOption();
+                TblOrderDetail orderProduct = orderDetailRepository.findByOrderId(order.getOrderId());
+                TblOption option = optionRepository.findTblOptionByOptionId(orderProduct.getOptionId());
                 option.setOptionQuantity(option.getOptionQuantity() + order.getOrderTotalCount());
 
 //            } else {
@@ -334,7 +333,7 @@ public class OrderService {
 
     // 마이페이지 내 구매자별 주문 리스트 조회 (최신순으로)
     public Object selectOrderList(String userId) {
-        TblUser user = userRepository.findTblUserById(Integer.parseInt(userId));
+        TblUser user = userRepository.findTblUserByUserId(Integer.parseInt(userId));
         List<TblOrder> orderList = orderRepository.findByUserOrderByRecent(user); // 최신순으로 정렬된 주문 리스트 조회
 
         log.info("[OrderService] orderList {}", orderList);
