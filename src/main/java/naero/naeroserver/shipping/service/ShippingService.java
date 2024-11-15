@@ -106,11 +106,11 @@ public class ShippingService {
             TblShipping tblShipping = tblShippingRepository.findById(tblShippingDTO.getShippingId()).get();
 
             /* 설명. update를 위한 엔티티 값 수정 */
-            tblShipping.setId(tblShippingDTO.getShippingId());
+            tblShipping.setShippingId(tblShippingDTO.getShippingId());
             tblShipping.setTrackingNumber(tblShippingDTO.getTrackingNumber());
             tblShipping.setShippingStatus(tblShippingDTO.getShippingStatus());
             tblShipping.setOrderId(tblShippingDTO.getOrderId());
-            tblShipping.setShipCom(tblShipping.getShipCom());
+            tblShipping.setShipComId(tblShippingDTO.getShipComId());
 
             result = 1;
 

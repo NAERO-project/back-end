@@ -5,21 +5,19 @@ public class TblShippingDTO {
     private int shippingId;
     private String trackingNumber;
     private String shippingStatus;
-    //    OrderDTO order;
-    /* 일단, OrderDTO 없이 dummy 데이터로 진행, 즉 orderId에 연결이 없는 것을 가정 */
     private int orderId;
-    private TblShipComDTO shipCom;
+    private int shipComId;
 
     public TblShippingDTO() {
     }
 
     public TblShippingDTO(int shippingId, String trackingNumber,
-                          String shippingStatus, int orderId, TblShipComDTO shipCom) {
+                          String shippingStatus, int orderId, int shipComId) {
         this.shippingId = shippingId;
         this.trackingNumber = trackingNumber;
         this.shippingStatus = shippingStatus;
         this.orderId = orderId;
-        this.shipCom = shipCom;
+        this.shipComId = shipComId;
     }
 
     public int getShippingId() {
@@ -54,12 +52,12 @@ public class TblShippingDTO {
         this.orderId = orderId;
     }
 
-    public TblShipComDTO getShipCom() {
-        return shipCom;
+    public int getShipComId() {
+        return shipComId;
     }
 
-    public void setShipCom(TblShipComDTO shipCom) {
-        this.shipCom = shipCom;
+    public void setShipComId(int shipComId) {
+        this.shipComId = shipComId;
     }
 
     @Override
@@ -69,7 +67,7 @@ public class TblShippingDTO {
                 ", trackingNumber='" + trackingNumber + '\'' +
                 ", shippingStatus='" + shippingStatus + '\'' +
                 ", orderId=" + orderId +
-                ", shipCom=" + shipCom +
+                ", shipComId=" + shipComId +
                 '}';
     }
 }
