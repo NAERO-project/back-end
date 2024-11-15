@@ -3,7 +3,6 @@ package naero.naeroserver.entity.inquiry;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.user.TblUser;
 
 import java.time.Instant;
 
@@ -13,7 +12,7 @@ public class TblAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id", nullable = false)
-    private Integer id;
+    private Integer answerId;
 
     @Size(max = 50)
     @NotNull
@@ -25,29 +24,26 @@ public class TblAnswer {
     @Column(name = "answer_content", nullable = false)
     private String answerContent;
 
-    @NotNull
-    @Column(name = "answer_date", nullable = false)
+    @Column(name = "answer_date")
     private Instant answerDate;
 
     @Column(name = "answer_update")
     private Instant answerUpdate;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "question_id", nullable = false)
-    private TblQuestion question;
+    @Column(name = "question_id", nullable = false)
+    private Integer questionId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "answer_emp_id", nullable = false)
-    private TblUser answerEmp;
+    @Column(name = "answer_emp_id", nullable = false)
+    private Integer answerEmpId;
 
-    public Integer getId() {
-        return id;
+    public Integer getAnswerId() {
+        return answerId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setAnswerId(Integer id) {
+        this.answerId = id;
     }
 
     public String getAnswerTitle() {
@@ -82,20 +78,20 @@ public class TblAnswer {
         this.answerUpdate = answerUpdate;
     }
 
-    public TblQuestion getQuestion() {
-        return question;
+    public Integer getQuestionId() {
+        return questionId;
     }
 
-    public void setQuestion(TblQuestion question) {
-        this.question = question;
+    public void setQuestionId(Integer questionId) {
+        this.questionId = questionId;
     }
 
-    public TblUser getAnswerEmp() {
-        return answerEmp;
+    public Integer getAnswerEmpId() {
+        return answerEmpId;
     }
 
-    public void setAnswerEmp(TblUser answerEmp) {
-        this.answerEmp = answerEmp;
+    public void setAnswerEmpId(Integer answerEmpId) {
+        this.answerEmpId = answerEmpId;
     }
 
 }

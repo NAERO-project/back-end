@@ -10,8 +10,7 @@ public class TblShipping {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "shipping_id", nullable = false)
-//    private Integer shippingId;
-    private Integer id;
+    private Integer shippingId;
 
     @Size(max = 50)
     @Column(name = "tracking_number", length = 50)
@@ -22,30 +21,20 @@ public class TblShipping {
     @Column(name = "shipping_status", nullable = false, length = 50)
     private String shippingStatus;
 
-    //    @NotNull
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "order_id", nullable = false)
-//    private TblOrder order;
-    /* 일단, OrderDTO 없이 dummy 데이터로 진행, 즉 orderId에 FK 연결이 없는 것을 가정 */
-    @Size(max = 50)
     @NotNull
-    @Column(name = "order_id", nullable = false, length = 50)
+    @Column(name = "order_id", nullable = false)
     private Integer orderId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ship_com_id", nullable = false)
-    private TblShipCom shipCom;
+    @Column(name = "ship_com_id", nullable = false)
+    private Integer shipComId;
 
-//    @OneToMany(mappedBy = "shipping")
-//    private Set<TblOrderDetail> tblOrderDetails = new LinkedHashSet<>();
-
-    public Integer getId() {
-        return id;
+    public Integer getShippingId() {
+        return shippingId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setShippingId(Integer id) {
+        this.shippingId = id;
     }
 
     public String getTrackingNumber() {
@@ -64,34 +53,20 @@ public class TblShipping {
         this.shippingStatus = shippingStatus;
     }
 
-    //    public TblOrder getOrder() {
-//        return order;
-//    }
-    public Integer getOrderId(Integer orderId) {
-        return this.orderId = orderId;
+    public Integer getOrderId() {
+        return orderId;
     }
 
-    //    public void setOrder(TblOrder order) {
-//        this.order = order;
-//    }
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
 
-    public TblShipCom getShipCom() {
-        return shipCom;
+    public Integer getShipComId() {
+        return shipComId;
     }
 
-    public void setShipCom(TblShipCom shipCom) {
-        this.shipCom = shipCom;
+    public void setShipComId(Integer shipComId) {
+        this.shipComId = shipComId;
     }
-
-//    public Set<TblOrderDetail> getTblOrderDetails() {
-//        return tblOrderDetails;
-//    }
-
-//    public void setTblOrderDetails(Set<TblOrderDetail> tblOrderDetails) {
-//        this.tblOrderDetails = tblOrderDetails;
-//    }
 
 }

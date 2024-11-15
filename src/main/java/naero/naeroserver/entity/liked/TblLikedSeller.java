@@ -2,8 +2,6 @@ package naero.naeroserver.entity.liked;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import naero.naeroserver.entity.user.TblProducer;
-import naero.naeroserver.entity.user.TblUser;
 
 import java.time.Instant;
 
@@ -12,45 +10,42 @@ import java.time.Instant;
 public class TblLikedSeller {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "likeSeller_id", nullable = false)
-    private Integer id;
+    @Column(name = "like_seller_id", nullable = false)
+    private Integer likeSellerId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "producer_id", nullable = false, referencedColumnName = "producer_id")
-    private TblProducer producer;
+    @Column(name = "producer_id", nullable = false)
+    private Integer producerId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private TblUser user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
-    @NotNull
-    @Column(name = "brand_like_date", nullable = false)
+    @Column(name = "brand_like_date")
     private Instant brandLikeDate;
 
-    public Integer getId() {
-        return id;
+    public Integer getLikeSellerId() {
+        return likeSellerId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setLikeSellerId(Integer id) {
+        this.likeSellerId = id;
     }
 
-    public TblProducer getProducer() {
-        return producer;
+    public Integer getProducerId() {
+        return producerId;
     }
 
-    public void setProducer(TblProducer producer) {
-        this.producer = producer;
+    public void setProducerId(Integer producerId) {
+        this.producerId = producerId;
     }
 
-    public TblUser getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(TblUser user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Instant getBrandLikeDate() {

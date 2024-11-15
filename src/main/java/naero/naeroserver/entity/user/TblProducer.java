@@ -1,24 +1,18 @@
 package naero.naeroserver.entity.user;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.coupon.TblCoupon;
-import naero.naeroserver.entity.inquiry.TblResponse;
-import naero.naeroserver.entity.liked.TblLikedSeller;
-import naero.naeroserver.entity.product.TblCategoryLarge;
-import naero.naeroserver.entity.product.TblProduct;
 import org.hibernate.annotations.ColumnDefault;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "tbl_producer")
 public class TblProducer {
     @Id
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Column(name = "producer_id", nullable = false)
+    private Integer id;
+
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "producer_id", nullable = false)
     private TblUser producer;
 
@@ -38,11 +32,9 @@ public class TblProducer {
     @Column(name = "producer_phone", length = 20)
     private String producerPhone;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @ColumnDefault("1")
-    @JoinColumn(name = "pgrade_id", nullable = false)
-    private TblProducerGrade pgrade;
+    @Column(name = "pgrade_id")
+    private Integer pgrade;
 
     @Column(name = "delivery_fee")
     private Integer deliveryFee;
@@ -50,20 +42,13 @@ public class TblProducer {
     @Column(name = "delivery_crit")
     private Integer deliveryCrit;
 
-    @OneToMany(mappedBy = "producer")
-    private Set<TblCategoryLarge.TblBanner> tblBanners = new LinkedHashSet<>();
+    public Integer getId() {
+        return id;
+    }
 
-    @OneToMany(mappedBy = "producer")
-    private Set<TblCoupon> tblCoupons = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "producer")
-    private Set<TblLikedSeller> tblLikedSellers = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "producer")
-    private Set<TblProduct> tblProducts = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "producer")
-    private Set<TblResponse> tblResponses = new LinkedHashSet<>();
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public TblUser getProducer() {
         return producer;
@@ -105,11 +90,11 @@ public class TblProducer {
         this.producerPhone = producerPhone;
     }
 
-    public TblProducerGrade getPgrade() {
+    public Integer getPgrade() {
         return pgrade;
     }
 
-    public void setPgrade(TblProducerGrade pgrade) {
+    public void setPgrade(Integer pgrade) {
         this.pgrade = pgrade;
     }
 
@@ -127,46 +112,6 @@ public class TblProducer {
 
     public void setDeliveryCrit(Integer deliveryCrit) {
         this.deliveryCrit = deliveryCrit;
-    }
-
-    public Set<TblCategoryLarge.TblBanner> getTblBanners() {
-        return tblBanners;
-    }
-
-    public void setTblBanners(Set<TblCategoryLarge.TblBanner> tblBanners) {
-        this.tblBanners = tblBanners;
-    }
-
-    public Set<TblCoupon> getTblCoupons() {
-        return tblCoupons;
-    }
-
-    public void setTblCoupons(Set<TblCoupon> tblCoupons) {
-        this.tblCoupons = tblCoupons;
-    }
-
-    public Set<TblLikedSeller> getTblLikedSellers() {
-        return tblLikedSellers;
-    }
-
-    public void setTblLikedSellers(Set<TblLikedSeller> tblLikedSellers) {
-        this.tblLikedSellers = tblLikedSellers;
-    }
-
-    public Set<TblProduct> getTblProducts() {
-        return tblProducts;
-    }
-
-    public void setTblProducts(Set<TblProduct> tblProducts) {
-        this.tblProducts = tblProducts;
-    }
-
-    public Set<TblResponse> getTblResponses() {
-        return tblResponses;
-    }
-
-    public void setTblResponses(Set<TblResponse> tblResponses) {
-        this.tblResponses = tblResponses;
     }
 
 }

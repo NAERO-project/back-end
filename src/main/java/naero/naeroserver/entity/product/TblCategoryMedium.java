@@ -1,11 +1,7 @@
 package naero.naeroserver.entity.product;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "tbl_category_medium")
@@ -13,26 +9,21 @@ public class TblCategoryMedium {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "medium_category_id", nullable = false)
-    private Integer id;
+    private Integer mediumCategoryId;
 
     @Size(max = 50)
     @Column(name = "medium_category_name", length = 50)
     private String mediumCategoryName;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "large_category_id", nullable = false)
-    private TblCategoryLarge largeCategory;
+    @Column(name = "large_category_id")
+    private Integer largeCategoryId;
 
-    @OneToMany(mappedBy = "mediumCategory")
-    private Set<TblCategorySmall> tblCategorySmalls = new LinkedHashSet<>();
-
-    public Integer getId() {
-        return id;
+    public Integer getMediumCategoryId() {
+        return mediumCategoryId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setMediumCategoryId(Integer id) {
+        this.mediumCategoryId = id;
     }
 
     public String getMediumCategoryName() {
@@ -43,20 +34,12 @@ public class TblCategoryMedium {
         this.mediumCategoryName = mediumCategoryName;
     }
 
-    public TblCategoryLarge getLargeCategory() {
-        return largeCategory;
+    public Integer getLargeCategoryId() {
+        return largeCategoryId;
     }
 
-    public void setLargeCategory(TblCategoryLarge largeCategory) {
-        this.largeCategory = largeCategory;
-    }
-
-    public Set<TblCategorySmall> getTblCategorySmalls() {
-        return tblCategorySmalls;
-    }
-
-    public void setTblCategorySmalls(Set<TblCategorySmall> tblCategorySmalls) {
-        this.tblCategorySmalls = tblCategorySmalls;
+    public void setLargeCategoryId(Integer largeCategoryId) {
+        this.largeCategoryId = largeCategoryId;
     }
 
 }
