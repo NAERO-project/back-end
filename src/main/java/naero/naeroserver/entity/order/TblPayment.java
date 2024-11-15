@@ -12,7 +12,7 @@ public class TblPayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_id", nullable = false)
-    private Integer id;
+    private Integer paymentId;
 
     @NotNull
     @Column(name = "user_id", nullable = false)
@@ -67,16 +67,15 @@ public class TblPayment {
     private Instant updatedAt;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
-    private TblOrder order;
+    @Column(name = "order_id", nullable = false)
+    private Integer orderId;
 
-    public Integer getId() {
-        return id;
+    public Integer getPaymentId() {
+        return paymentId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPaymentId(Integer id) {
+        this.paymentId = id;
     }
 
     public Integer getUserId() {
@@ -175,12 +174,12 @@ public class TblPayment {
         this.updatedAt = updatedAt;
     }
 
-    public TblOrder getOrder() {
-        return order;
+    public Integer getOrderId() {
+        return orderId;
     }
 
-    public void setOrder(TblOrder order) {
-        this.order = order;
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
 }

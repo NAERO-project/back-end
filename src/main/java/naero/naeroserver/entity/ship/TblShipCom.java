@@ -4,16 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Entity
 @Table(name = "tbl_ship_com")
 public class TblShipCom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ship_com_id", nullable = false)
-    private Integer id;
+    private Integer shipComId;
 
     @Size(max = 50)
     @NotNull
@@ -30,15 +27,12 @@ public class TblShipCom {
     @Column(name = "ship_com_contact", nullable = false, length = 50)
     private String shipComContact;
 
-    @OneToMany(mappedBy = "shipCom")
-    private Set<TblShipping> tblShippings = new LinkedHashSet<>();
-
-    public Integer getId() {
-        return id;
+    public Integer getShipComId() {
+        return shipComId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setShipComId(Integer id) {
+        this.shipComId = id;
     }
 
     public String getShipComCode() {
@@ -63,14 +57,6 @@ public class TblShipCom {
 
     public void setShipComContact(String shipComContact) {
         this.shipComContact = shipComContact;
-    }
-
-    public Set<TblShipping> getTblShippings() {
-        return tblShippings;
-    }
-
-    public void setTblShippings(Set<TblShipping> tblShippings) {
-        this.tblShippings = tblShippings;
     }
 
 }

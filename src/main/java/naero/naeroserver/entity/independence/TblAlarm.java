@@ -3,7 +3,7 @@ package naero.naeroserver.entity.independence;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.user.TblUser;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 
@@ -13,7 +13,7 @@ public class TblAlarm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alarm_id", nullable = false)
-    private Integer id;
+    private Integer alarmId;
 
     @Size(max = 255)
     @Column(name = "alarm_url")
@@ -23,6 +23,7 @@ public class TblAlarm {
     @Column(name = "alarm_detail")
     private String alarmDetail;
 
+    @ColumnDefault("0")
     @Column(name = "check_status")
     private Boolean checkStatus;
 
@@ -30,16 +31,15 @@ public class TblAlarm {
     private Instant alarmSendDate;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private TblUser user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
-    public Integer getId() {
-        return id;
+    public Integer getAlarmId() {
+        return alarmId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setAlarmId(Integer id) {
+        this.alarmId = id;
     }
 
     public String getAlarmUrl() {
@@ -74,12 +74,12 @@ public class TblAlarm {
         this.alarmSendDate = alarmSendDate;
     }
 
-    public TblUser getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(TblUser user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
 }
