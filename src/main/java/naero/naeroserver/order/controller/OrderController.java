@@ -52,6 +52,27 @@ public class OrderController {
         }
     }
 
+    @Operation(summary = "결제 취소 요청", description = "결제를 취소합니다.", tags = { "OrderController" })
+    @PutMapping("/order/cancel/{paymentId}")
+    public ResponseEntity<ResponseDTO> cancelPayment(@PathVariable String paymentId) {
+        try {
+            orderService.cancelPayment(paymentId);
+            return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "결제 취소 성공", null));
+        } catch (IllegalArgumentException e) {
+            log.error("결제 취소 실패: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseDTO(HttpStatus.BAD_REQUEST, e.getMessage(), null));
+        } catch (RuntimeException e) {
+            log.error("결제 취소 실패: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "결제 취소 중 오류가 발생했습니다.", null));
+        } catch (Exception e) {
+            log.error("결제 취소 실패: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "결제 취소 실패", null));
+        }
+    }
+
     @Operation(summary = "회원 주문 리스트 조회 요청", description = "해당 회원의 주문건에 대한 리스트 조회가 진행됩니다.", tags = { "OrderController" })
     @GetMapping("/order/{userId}")
     public ResponseEntity<ResponseDTO> getOrderList(@PathVariable String userId) {

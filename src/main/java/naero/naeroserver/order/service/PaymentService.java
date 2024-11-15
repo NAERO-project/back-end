@@ -1,34 +1,34 @@
-//package naero.naeroserver.order.service;
-//
-//import naero.naeroserver.entity.order.TblPayment;
-//import naero.naeroserver.order.dto.OrderDTO;
-//import naero.naeroserver.order.repository.PaymentRepository;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpEntity;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.MediaType;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.HashMap;
-//import java.util.Map;
-//
-//@Service
-//public class PaymentService {
-//
-//    private static final Logger log = LoggerFactory.getLogger(PaymentService.class);
-//    private final PaymentRepository paymentRepository;
-//
-//    private static final String API_KEY = "your-api-key";
-//    private static final String SECRET_KEY = "your-secret-key";
-//
-//    @Autowired
-//    public PaymentService(PaymentRepository paymentRepository) {
-//        this.paymentRepository = paymentRepository;
-//    }
-//
+package naero.naeroserver.order.service;
+
+import naero.naeroserver.entity.order.TblPayment;
+import naero.naeroserver.order.dto.OrderDTO;
+import naero.naeroserver.order.repository.PaymentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+public class PaymentService {
+
+    private static final Logger log = LoggerFactory.getLogger(PaymentService.class);
+    private final PaymentRepository paymentRepository;
+
+    private static final String API_KEY = "your-api-key";
+    private static final String SECRET_KEY = "your-secret-key";
+
+    @Autowired
+    public PaymentService(PaymentRepository paymentRepository) {
+        this.paymentRepository = paymentRepository;
+    }
+
 //    // PortOne 결제 처리 메소드
 //    public String processPayment(OrderDTO orderDTO) {
 //        try {
@@ -101,4 +101,4 @@
 //    public void savePayment(TblPayment payment) {
 //        paymentRepository.save(payment);
 //    }
-//}
+}
