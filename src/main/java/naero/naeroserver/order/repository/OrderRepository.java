@@ -13,7 +13,7 @@ public interface OrderRepository extends JpaRepository<TblOrder, Integer> {
 
     // 마이페이지 내 구매자별 주문 리스트 조회 (최신순으로)
     @Query("SELECT o FROM TblOrder o WHERE o.userId = :userId ORDER BY o.createdAt DESC")
-    List<TblOrder> findByUserOrderByRecent(@Param("user") TblUser user);
+    List<TblOrder> findByUserOrderByRecent(@Param("userId") Integer userId);
 
     // 판매자 주문 건 조회
 //    @Query("SELECT o FROM TblOrder o " +
