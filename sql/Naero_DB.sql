@@ -69,7 +69,7 @@ CREATE TABLE `tbl_user` (
                             `user_email`	varchar(255)	NULL	COMMENT '이메일',
                             `user_phone`	varchar(20)	NULL	COMMENT '연락처',
                             `user_point`	int	NULL DEFAULT 0	COMMENT '보유 포인트',
-                            `enroll_date`	 DATE	 NULL 	COMMENT '가입일',
+                            `enroll_date`	 DateTime	 NULL 	COMMENT '가입일',
                             `with_status`	varchar(1)	NULL DEFAULT 'N'	COMMENT '탈퇴여부',
                             `grade_id`	int NULL	DEFAULT 1	COMMENT '회원 등급 번호'
 );
@@ -77,7 +77,7 @@ CREATE TABLE `tbl_user` (
 CREATE TRIGGER before_insert_tbl_user
     BEFORE INSERT ON `tbl_user`
     FOR EACH ROW
-    SET NEW.enroll_date = IFNULL(NEW.enroll_date, CURRENT_DATE),
+    SET NEW.enroll_date = IFNULL(NEW.enroll_date, CURRENT_TIMESTAMP),
     NEW.with_status = 'N',
     NEW.user_point = 0;
 ;

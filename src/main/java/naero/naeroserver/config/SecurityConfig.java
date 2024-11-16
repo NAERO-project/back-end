@@ -86,12 +86,12 @@ public class SecurityConfig {
 //
 //                    //사업자 아이디로 로그인했을 때 부터 요청 가능한 api
 ////                    auth.requestMatchers("").hasAnyAuthority("USER");
-
-
-                    //swagger 사용시
-//            auth.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
-
-//            auth.anyRequest().permitAll();
+//
+//
+//                    //swagger 사용시
+////            auth.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
+//
+////            auth.anyRequest().permitAll();
                 }).sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> {
