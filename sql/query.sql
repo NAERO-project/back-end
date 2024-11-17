@@ -139,3 +139,52 @@ GROUP BY
 ORDER BY
     order_date ASC;
 
+# Cross Producer Sales Query
+SELECT
+    pr.producer_name,
+    SUM(od.amount) AS total_amount
+FROM
+    tbl_producer pr
+        LEFT JOIN tbl_product pt ON pr.producer_id = pt.producer_id
+        LEFT JOIN tbl_option op ON pt.product_id = op.product_id
+        LEFT JOIN tbl_order_detail od ON op.option_id = od.option_id
+WHERE
+    od.created_at >= NOW() - INTERVAL 1 WEEK
+GROUP BY
+    pr.producer_name
+ORDER BY
+    total_amount DESC;
+
+# Cross Producer Quantity Query
+SELECT
+    pr.producer_name,
+    SUM(od.count) AS total_count
+FROM
+    tbl_producer pr
+        LEFT JOIN tbl_product pt ON pr.producer_id = pt.producer_id
+        LEFT JOIN tbl_option op ON pt.product_id = op.product_id
+        LEFT JOIN tbl_order_detail od ON op.option_id = od.option_id
+WHERE
+    od.created_at >= NOW() - INTERVAL 1 WEEK
+GROUP BY
+    pr.producer_name
+ORDER BY
+    total_count DESC;
+
+# Series Producer Sales Query
+SELECT
+#     pt.product_name,
+DATE(od.created_at) AS order_date,
+SUM(od.amount) AS total_amount
+FROM
+    tbl_producer pr
+        LEFT JOIN tbl_product pt ON pr.producer_id = pt.producer_id
+        LEFT JOIN tbl_option op ON pt.product_id = op.product_id
+        LEFT JOIN tbl_order_detail od ON op.option_id = od.option_id
+WHERE
+    od.created_at >= NOW() - INTERVAL 1 WEEK
+  AND pr.producer_name = "ㅇㅇ상회"
+GROUP BY
+    DATE(od.created_at), pr.producer_name
+ORDER BY
+    order_date;
