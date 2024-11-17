@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -153,5 +154,16 @@ public class BannerService {
         }
 
         return (result > 0) ? "배너 신청 성공" : "배너 신청 실패";
+    }
+
+    /* 배너 삭제 */
+    public Object deleteBanner(BannerDTO bannerDTO) {
+        log.info("[BannerService] deleteBanner() 시작");
+
+        bannerRepository.deleteById(bannerDTO.getBannerId());
+
+        log.info("[BannerService] deleteBanner() 종료");
+
+        return ResponseEntity.noContent().build();
     }
 }
