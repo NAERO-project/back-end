@@ -119,4 +119,9 @@ public class CartService {
         return (result > 0) ? "장바구니 상품 삭제 완료" : "장바구니 상품 삭제 실패";
     }
 
+    // 장바구니 상품 주문 페이지로 넘길때 사용하는 메서드
+    public TblOrder startCartOrder(List<CartDTO> cartDTOList) {
+        // TODO
+        return null;
+    }
 }

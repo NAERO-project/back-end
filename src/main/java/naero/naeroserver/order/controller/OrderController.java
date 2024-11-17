@@ -25,7 +25,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @Operation(summary = "상품 주문 요청", description = "상품 주문이 진행됩니다.", tags = { "OrderController" })
+    @Operation(summary = "단일 상품 결제 요청", description = "상품 결제가 진행됩니다.", tags = { "OrderController" })
     @PostMapping("/order")
     public ResponseEntity<ResponseDTO> insertOrder(@RequestBody PayRequestDTO payRequestDTO) {
         try {

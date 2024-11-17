@@ -1,9 +1,11 @@
 package naero.naeroserver.cart.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpSession;
 import naero.naeroserver.cart.dto.CartDTO;
 import naero.naeroserver.cart.service.CartService;
 import naero.naeroserver.common.ResponseDTO;
+import naero.naeroserver.entity.order.TblOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,9 +20,11 @@ public class CartController {
 
     private static final Logger log = LoggerFactory.getLogger(CartController.class);
     private final CartService cartService;
+    private final HttpSession httpSession;
 
-    public CartController(CartService cartService) {
+    public CartController(CartService cartService, HttpSession httpSession) {
         this.cartService = cartService;
+        this.httpSession = httpSession;
     }
 
     @Operation(summary = "장바구니 등록 요청", description = "장바구니에 상품 정보가 등록됩니다.", tags = { "CartController" })
@@ -58,6 +62,14 @@ public class CartController {
     public ResponseEntity<ResponseDTO> deleteCartItems(@RequestBody List<String> cartIds) {
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, "장바구니 삭제 완료", cartService.deleteCartItems(cartIds)));
+    }
+
+    public ResponseEntity<ResponseDTO> startCartOrder(@ModelAttribute List<CartDTO> cartDTOList) {
+        TblOrder tempOrder = cartService.startCartOrder(cartDTOList);
+
+        httpSession.setAttribute("tempOrder", tempOrder);
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문 페이지로 이동", null));
     }
 
 
