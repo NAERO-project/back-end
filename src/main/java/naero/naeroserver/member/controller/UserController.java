@@ -2,6 +2,7 @@ package naero.naeroserver.member.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import naero.naeroserver.common.ResponseDTO;
+import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,26 +30,35 @@ public class UserController {
     //
     @GetMapping("/detail/{username}")
     public ResponseEntity<ResponseDTO> userDetail(@PathVariable String username){
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message", userService.findByusername(username)));
+        //프런트와 연동 후, 회원 탈퇴와 같은 방식을 취할 예정
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
+                userService.findByusername(username)
+                ));
     }
     
     //탈퇴
     @GetMapping("/withdraw/{username}")
     public ResponseEntity<ResponseDTO> withdraw(@PathVariable String username) {
         System.out.println("유저의 회원 탈퇴 요청");
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // 인증된 사용자 이름을 가져옵니다 (JWT의 sub 클레임에 해당)
-        /*String authenticatedUsername = authentication.getName();
+//         인증된 사용자명?
+        String authenticatedUsername = authentication.getName();
 
-        System.out.println(authenticatedUsername);
         // 요청한 사용자 이름과 JWT의 sub 비교
         if (!authenticatedUsername.equals(username)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new ResponseDTO(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.", null));
-        }
-*/
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "message", userService.withdrawUser(username)));
+        }userService.withdrawUser(username);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "message", null));
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<ResponseDTO> updateDetail(@RequestBody UserDTO user){
+
+        System.out.println("수정요청");
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
+                userService.updateDetail(user)));
     }
 
   /*  @GetMapping("/detail")

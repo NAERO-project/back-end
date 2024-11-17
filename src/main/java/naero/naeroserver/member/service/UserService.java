@@ -2,7 +2,10 @@ package naero.naeroserver.member.service;
 
 import jakarta.transaction.Transactional;
 import naero.naeroserver.entity.user.TblUser;
+import naero.naeroserver.exception.UpdateUserException;
 import naero.naeroserver.member.dto.UserDTO;
+import naero.naeroserver.member.dto.UserGradeDTO;
+import naero.naeroserver.member.repository.UserGradeRepository;
 import naero.naeroserver.member.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,15 +17,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final UserGradeRepository userGradeRepository;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, UserGradeRepository userGradeRepository) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
+        this.userGradeRepository = userGradeRepository;
     }
 
     public Object findByusername(String username) {
-        return userRepository.findByUsername(username);
+
+        UserDTO result =  modelMapper.map( userRepository.findByUsername(username) , UserDTO.class);
+        result.setGrade(modelMapper.map(userGradeRepository.findByGradeId(result.getGrade().getGradeId()), UserGradeDTO.class));
+        return result;
     }
 
 /*    @Transactional
@@ -32,10 +40,32 @@ public class UserService {
 
     @Transactional
     public Object withdrawUser(String username) {
-        TblUser getUser = userRepository.findByUsername(username);
 
+        TblUser getUser = userRepository.findByUsername(username);
+            if (getUser == null) {
+                throw new UpdateUserException("사용자를 찾을 수 없습니다.");
+            }
         getUser.setWithStatus("Y");
 
-        return null;
+        return modelMapper.map(getUser, UserDTO.class);
+
+    }
+
+    @Transactional
+    public Object updateDetail(UserDTO user) {
+        TblUser getUser = userRepository.findByUsername(user.getUsername());
+        if (getUser == null) {
+            throw new UpdateUserException("사용자를 찾을 수 없습니다.");
+        }
+
+        if (user.getUserFullName() != null) {
+            getUser.setUserFullname(user.getUserFullName());
+        }
+        if (user.getUserPhone() != null) {
+            getUser.setUserPhone(user.getUserPhone());
+        }
+
+        return modelMapper.map(getUser, UserDTO.class);
+
     }
 }
