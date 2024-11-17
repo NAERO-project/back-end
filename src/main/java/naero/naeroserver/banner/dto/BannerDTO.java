@@ -8,6 +8,7 @@ public class BannerDTO {
     private String bannerCreateAt;
     private String bannerDeleteAt;
     private int producerId;
+    private String bannerAcceptStatus;
     private String bannerAcceptAt;
     private String bannerCheck;
     private int approverId;
@@ -15,7 +16,7 @@ public class BannerDTO {
     public BannerDTO() {
     }
 
-    public BannerDTO(int bannerId, String bannerThumbnail, String bannerImg, String bannerUrl, String bannerCreateAt, String bannerDeleteAt, int producerId, String bannerAcceptAt, String bannerCheck, int approverId) {
+    public BannerDTO(int bannerId, String bannerThumbnail, String bannerImg, String bannerUrl, String bannerCreateAt, String bannerDeleteAt, int producerId, String bannerAcceptStatus, String bannerAcceptAt, String bannerCheck, int approverId) {
         this.bannerId = bannerId;
         this.bannerThumbnail = bannerThumbnail;
         this.bannerImg = bannerImg;
@@ -23,6 +24,7 @@ public class BannerDTO {
         this.bannerCreateAt = bannerCreateAt;
         this.bannerDeleteAt = bannerDeleteAt;
         this.producerId = producerId;
+        this.bannerAcceptStatus = bannerAcceptStatus;
         this.bannerAcceptAt = bannerAcceptAt;
         this.bannerCheck = bannerCheck;
         this.approverId = approverId;
@@ -84,6 +86,14 @@ public class BannerDTO {
         this.producerId = producerId;
     }
 
+    public String getBannerAcceptStatus() {
+        return bannerAcceptStatus;
+    }
+
+    public void setBannerAcceptStatus(String bannerAcceptStatus) {
+        this.bannerAcceptStatus = bannerAcceptStatus;
+    }
+
     public String getBannerAcceptAt() {
         return bannerAcceptAt;
     }
@@ -118,6 +128,7 @@ public class BannerDTO {
                 ", bannerCreateAt='" + bannerCreateAt + '\'' +
                 ", bannerDeleteAt='" + bannerDeleteAt + '\'' +
                 ", producerId=" + producerId +
+                ", bannerAcceptStatus='" + bannerAcceptStatus + '\'' +
                 ", bannerAcceptAt='" + bannerAcceptAt + '\'' +
                 ", bannerCheck='" + bannerCheck + '\'' +
                 ", approverId=" + approverId +

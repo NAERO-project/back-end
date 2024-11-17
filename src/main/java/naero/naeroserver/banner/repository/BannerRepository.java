@@ -25,20 +25,4 @@ public interface BannerRepository extends JpaRepository<TblBanner, Integer> {
             "ORDER BY b.bannerId")
     Page<TblBanner> findAllByAndProducerId(@Param("producerId") int producerId,
                                             Pageable paging);
-
-
-//    @Query("SELECT b FROM TblBanner b " +
-//            "JOIN TblProducer pi ON b.producerId = pi.id " +
-//            "WHERE pi.id = :producerId " +
-//            "AND b.bannerAcceptStatus = 'Y' " +
-//            "ORDER BY b.bannerId")
-//    List<TblBanner> findAllByProducerId(@Param("producerId") int producerId);
-//
-//    @Query("SELECT b FROM TblBanner b " +
-//            "JOIN TblProducer pi ON b.producerId = pi.id " +
-//            "WHERE pi.id = :producerId " +
-//            "AND b.bannerAcceptStatus = 'Y' " +
-//            "ORDER BY b.bannerId")
-//    Page<TblBanner> findAllByProducerId(@Param("producerId") int producerId, Pageable pageable);
-
 }

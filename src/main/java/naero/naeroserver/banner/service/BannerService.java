@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -165,5 +166,23 @@ public class BannerService {
         log.info("[BannerService] deleteBanner() 종료");
 
         return ResponseEntity.noContent().build();
+    }
+
+    /* 관리자 배너 등록 */
+    public Object updateBanner(BannerDTO bannerDTO) {
+        log.info("[BannerService] BannerDTO() 시작");
+        log.info("[BannerService] BannerDTO : {}", bannerDTO);
+
+        String replaceFileName = null;
+        int result = 0;
+
+        /* 설명. update 할 엔티티 조회 */
+        TblBanner banner = bannerRepository.findById(bannerDTO.getBannerId()).get();
+
+        /* 설명. update를 위한 엔티티 값 수정 */
+        banner.setBannerAcceptStatus(bannerDTO.getBannerAcceptStatus());
+
+        log.info("[ProductService] updateProduct End ===================================");
+        return (result > 0) ? "배너 업데이트 성공" : "배너 업데이트 실패";
     }
 }
