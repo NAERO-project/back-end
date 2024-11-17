@@ -22,5 +22,5 @@ public interface OrderDetailRepository extends JpaRepository<TblOrderDetail, Int
     List<OrderDetailProductDTO> findOrderDetailWithProductByOrder(@Param("orderId") Integer orderId);
 
     // 주문 번호로 주문 상세 조회
-    TblOrderDetail findByOrderId(Integer id);
+    TblOrderDetail findByOrderId(Integer orderId);
 }

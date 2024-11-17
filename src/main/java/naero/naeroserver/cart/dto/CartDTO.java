@@ -2,7 +2,7 @@ package naero.naeroserver.cart.dto;
 
 public class CartDTO {
 
-    private int id;
+    private int cartId;
     private int optionId;
     private int count;
     private int price;
@@ -11,20 +11,20 @@ public class CartDTO {
     public CartDTO() {
     }
 
-    public CartDTO(int id, int optionId, int count, int price, int userId) {
-        this.id = id;
+    public CartDTO(int cartId, int optionId, int count, int price, int userId) {
+        this.cartId = cartId;
         this.optionId = optionId;
         this.count = count;
         this.price = price;
         this.userId = userId;
     }
 
-    public int getId() {
-        return id;
+    public int getCartId() {
+        return cartId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCartId(int cartId) {
+        this.cartId = cartId;
     }
 
     public int getOptionId() {
@@ -62,7 +62,7 @@ public class CartDTO {
     @Override
     public String toString() {
         return "CartDTO{" +
-                "cartId=" + id +
+                "cartId=" + cartId +
                 ", optionId=" + optionId +
                 ", count=" + count +
                 ", price=" + price +

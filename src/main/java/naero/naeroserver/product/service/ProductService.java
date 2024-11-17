@@ -1,7 +1,6 @@
 package naero.naeroserver.product.service;
 
 import naero.naeroserver.common.Criteria;
-import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.product.dto.ProductDTO;
 import naero.naeroserver.product.repository.ProductRepository;
 import naero.naeroserver.util.FileUploadUtils;
@@ -44,7 +43,7 @@ public class ProductService {
     /* 상품 리스트 전체 조회 (페이징) */
     public int selectProductPage() {
         log.info("[ProductService] selectProductPage 시작");
-        List<TblProduct> productList = productRepository.findByProductCheck();
+        List<naero.naeroserver.entity.product.TblProduct> productList = productRepository.findByProductCheck();
 
         log.info("[ProductService] selectProductPage 종료");
 
@@ -58,8 +57,8 @@ public class ProductService {
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-        Page<TblProduct> result = productRepository.findByProductCheck(paging);
-        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+        Page<naero.naeroserver.entity.product.TblProduct> result = productRepository.findByProductCheck(paging);
+        List<naero.naeroserver.entity.product.TblProduct> productList = (List<naero.naeroserver.entity.product.TblProduct>)result.getContent();
 
         for(int i = 0; i<productList.size(); i++){
             productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
@@ -73,7 +72,7 @@ public class ProductService {
     public int selectProductPageFood() {
         log.info("[ProductService] selectProductPageFood() 시작");
 
-        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId(2);
+        List<naero.naeroserver.entity.product.TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId(2);
 
         log.info("[ProductService] selectProductPageFood() 종료");
 
@@ -87,8 +86,8 @@ public class ProductService {
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId(2, paging);
-        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+        Page<naero.naeroserver.entity.product.TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId(2, paging);
+        List<naero.naeroserver.entity.product.TblProduct> productList = (List<naero.naeroserver.entity.product.TblProduct>)result.getContent();
 
         for(int i = 0; i<productList.size(); i++){
             productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
@@ -102,7 +101,7 @@ public class ProductService {
     public int selectProductPageBeauty() {
         log.info("[ProductService] selectProductPageBeauty() 시작");
 
-        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId(3);
+        List<naero.naeroserver.entity.product.TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId(3);
 
         log.info("[ProductService] selectProductPageBeauty() 종료");
 
@@ -116,8 +115,8 @@ public class ProductService {
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId(3, paging);
-        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+        Page<naero.naeroserver.entity.product.TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId(3, paging);
+        List<naero.naeroserver.entity.product.TblProduct> productList = (List<naero.naeroserver.entity.product.TblProduct>)result.getContent();
 
         for(int i = 0; i<productList.size(); i++){
             productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
@@ -131,7 +130,7 @@ public class ProductService {
     public int selectProductPageFashion() {
         log.info("[ProductService] selectProductPageFashion 시작");
 
-        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId(4);
+        List<naero.naeroserver.entity.product.TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryId(4);
 
         log.info("[ProductService] selectProductPageFashion 종료");
 
@@ -145,8 +144,8 @@ public class ProductService {
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId(4, paging);
-        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+        Page<naero.naeroserver.entity.product.TblProduct> result = productRepository.findByProductCheckAndSmallCategoryId(4, paging);
+        List<naero.naeroserver.entity.product.TblProduct> productList = (List<naero.naeroserver.entity.product.TblProduct>)result.getContent();
 
         for(int i = 0; i<productList.size(); i++){
             productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
@@ -162,9 +161,9 @@ public class ProductService {
         log.info("[ProductService] selectProductListPreview() 시작");
 
         Pageable pageable = PageRequest.of(0, 8); // 최신 상품 순으로 8개만 조회
-        List<TblProduct> productListPreview = productRepository.findAllProductWithLimit(pageable);
+        List<naero.naeroserver.entity.product.TblProduct> productListPreview = productRepository.findAllProductWithLimit(pageable);
 
-        for (TblProduct tblProduct : productListPreview) {
+        for (naero.naeroserver.entity.product.TblProduct tblProduct : productListPreview) {
             tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
         }
 
@@ -178,9 +177,9 @@ public class ProductService {
         log.info("[ProductService] selectProductListAboutFoodPreview() 시작");
 
         Pageable pageable = PageRequest.of(0, 8);
-        List<TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(2, pageable);
+        List<naero.naeroserver.entity.product.TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(2, pageable);
 
-        for (TblProduct tblProduct : productListPreview) {
+        for (naero.naeroserver.entity.product.TblProduct tblProduct : productListPreview) {
             tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
         }
 
@@ -194,9 +193,9 @@ public class ProductService {
         log.info("[ProductService] selectProductListAboutCosmeticsPreview() 시작");
 
         Pageable pageable = PageRequest.of(0, 8);
-        List<TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(4, pageable);
+        List<naero.naeroserver.entity.product.TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(4, pageable);
 
-        for (TblProduct tblProduct : productListPreview) {
+        for (naero.naeroserver.entity.product.TblProduct tblProduct : productListPreview) {
             tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
         }
 
@@ -210,9 +209,9 @@ public class ProductService {
         log.info("[ProductService] selectProductListAboutFashionPreview() 시작");
 
         Pageable pageable = PageRequest.of(0, 8);
-        List<TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(3, pageable);
+        List<naero.naeroserver.entity.product.TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(3, pageable);
 
-        for (TblProduct tblProduct : productListPreview) {
+        for (naero.naeroserver.entity.product.TblProduct tblProduct : productListPreview) {
             tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
         }
 
@@ -227,9 +226,9 @@ public class ProductService {
         log.info("[ProductService] selectProducerProductListPreview() 시작");
 
         Pageable pageable = PageRequest.of(0, 4);
-        List<TblProduct> producerProductListPreview = productRepository.findByIdWithLimit(1, pageable);
+        List<naero.naeroserver.entity.product.TblProduct> producerProductListPreview = productRepository.findByIdWithLimit(1, pageable);
 
-        for (TblProduct tblProduct : producerProductListPreview) {
+        for (naero.naeroserver.entity.product.TblProduct tblProduct : producerProductListPreview) {
             tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
         }
 
@@ -258,7 +257,7 @@ public class ProductService {
 
             log.info("[ProductService] 등록 이미지명 : {}", replaceFileName);
 
-            TblProduct insertProduct = modelMapper.map(productDTO, TblProduct.class);
+            naero.naeroserver.entity.product.TblProduct insertProduct = modelMapper.map(productDTO, naero.naeroserver.entity.product.TblProduct.class);
 
             productRepository.save(insertProduct);
 

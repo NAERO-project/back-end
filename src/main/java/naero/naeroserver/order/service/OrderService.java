@@ -54,6 +54,8 @@ public class OrderService {
     @Value("${portone.api-secret}")
     private String API_SECRET;
     private static final long TOKEN_EXPIRY_DURATION = 3600 * 1000; // 1시간
+    @Value("${image.image-url}")
+    private String IMG_URL;
 
     private final AtomicReference<String> cachedToken = new AtomicReference<>();
     private long tokenFetchTime = 0;
@@ -384,6 +386,11 @@ public class OrderService {
         List<OrderDetailProductDTO> orderDetails = orderDetailRepository.findOrderDetailWithProductByOrder(Integer.valueOf(orderId));
 
         log.info("[OrderService] orderDetails {}", orderDetails);
+
+        for(int i = 0 ; i < orderDetails.size() ; i++) {
+            orderDetails.get(i).setProductImg(IMG_URL + orderDetails.get(i).getProductImg());
+            orderDetails.get(i).setProductThumbnail(IMG_URL + orderDetails.get(i).getProductThumbnail());
+        }
 
         return orderDetails;
     }

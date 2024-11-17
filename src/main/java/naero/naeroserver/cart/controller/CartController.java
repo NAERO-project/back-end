@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/*")
 public class CartController {
@@ -21,8 +23,8 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @Operation(summary = "회원 조회 요청", description = "회원 한명이 조회됩니다.", tags = { "MemberController" })
-    @PostMapping("/cart/add")
+    @Operation(summary = "장바구니 등록 요청", description = "장바구니에 상품 정보가 등록됩니다.", tags = { "CartController" })
+    @PostMapping("/cart/insert")
     public ResponseEntity<ResponseDTO> insertCartItem(@ModelAttribute CartDTO cartDTO) {
         try {
             return ResponseEntity.ok().body(
@@ -35,6 +37,27 @@ public class CartController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null));
         }
+    }
+
+    @Operation(summary = "장바구니 조회 요청", description = "장바구니 리스트 조회가 진행됩니다.", tags = { "CartController" })
+    @GetMapping("/cart/{userId}")
+    public ResponseEntity<ResponseDTO> getCartList(@PathVariable String userId) {
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, "장바구니 조회 성공", cartService.getCartList(userId)));
+    }
+
+    @Operation(summary = "장바구니 수정 요청", description = "장바구니 상품 수정이 진행됩니다.", tags = { "CartController" })
+    @PutMapping("/cart/update")
+    public ResponseEntity<ResponseDTO> updateCartItem(@ModelAttribute CartDTO cartItem) {
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, "장바구니 수정 성공", cartService.updateCartItem(cartItem)));
+    }
+
+    @Operation(summary = "장바구니 상품 삭제 요청", description = "장바구니에서 여러 상품을 삭제합니다.", tags = { "CartController" })
+    @DeleteMapping("/cart/delete")
+    public ResponseEntity<ResponseDTO> deleteCartItems(@RequestBody List<String> cartIds) {
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, "장바구니 삭제 완료", cartService.deleteCartItems(cartIds)));
     }
 
 
