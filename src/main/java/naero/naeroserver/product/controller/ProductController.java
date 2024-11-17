@@ -170,6 +170,13 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 수정 성공",  productService.updateProduct(productDTO, productImage)));
     }
 
+    /* 판매자 상품 삭제 */
+    @Operation(summary = "판매자 상품 삭제 요청", description = "상품 삭제가 진행됩니다.", tags = { "ProductController" })
+    @DeleteMapping(value = "/products")
+    public ResponseEntity<ResponseDTO> deleteProduct(@ModelAttribute ProductDTO productDTO){
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 삭제 성공",  productService.deleteProduct(productDTO)));
+    }
 
 
 

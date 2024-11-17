@@ -3,7 +3,6 @@ package naero.naeroserver.product.service;
 import naero.naeroserver.common.Criteria;
 import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.product.dto.ProductDTO;
-import naero.naeroserver.product.dto.ProductProducerDTO;
 import naero.naeroserver.product.repository.ProductRepository;
 import naero.naeroserver.util.FileUploadUtils;
 import org.modelmapper.ModelMapper;
@@ -15,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -329,6 +329,17 @@ public class ProductService {
         }
         log.info("[ProductService] updateProduct End ===================================");
         return (result > 0) ? "상품 업데이트 성공" : "상품 업데이트 실패";
+    }
+
+    public Object deleteProduct(ProductDTO productDTO) {
+        log.info("[ProductService] deleteProduct() 시작");
+
+//        TblProduct product = productRepository.findById(productDTO.getProductId()).get();
+        productRepository.deleteById(productDTO.getProductId());
+
+        log.info("[ProductService] deleteProduct() 종료");
+
+        return ResponseEntity.noContent().build();
     }
 
 

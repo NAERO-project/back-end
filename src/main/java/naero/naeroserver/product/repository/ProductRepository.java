@@ -1,7 +1,6 @@
 package naero.naeroserver.product.repository;
 
 import naero.naeroserver.entity.product.TblProduct;
-import naero.naeroserver.product.dto.ProductProducerDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
