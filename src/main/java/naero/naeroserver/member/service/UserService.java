@@ -2,6 +2,7 @@ package naero.naeroserver.member.service;
 
 import jakarta.transaction.Transactional;
 import naero.naeroserver.entity.user.TblUser;
+import naero.naeroserver.exception.LoginFailedException;
 import naero.naeroserver.exception.UpdateUserException;
 import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.dto.UserGradeDTO;
@@ -67,5 +68,13 @@ public class UserService {
 
         return modelMapper.map(getUser, UserDTO.class);
 
+    }
+
+    public Object findByUserEmail(String email) {
+        TblUser getUser = userRepository.findByUserEmail(email);
+        if (getUser !=null)
+            return getUser.getUsername();
+
+        throw  new LoginFailedException("해당 이메일로 가입한 회원이 없습니다.");
     }
 }
