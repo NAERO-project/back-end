@@ -11,18 +11,34 @@ import java.util.List;
 
 public interface BannerRepository extends JpaRepository<TblBanner, Integer> {
 
-    List<TblBanner> findAllByBannerCheck(String status);
+    List<TblBanner> findAllByBannerAcceptStatus(String status);
 
     @Query("SELECT b FROM TblBanner b " +
-            "JOIN b.producer pi " +
+            "JOIN TblProducer pi ON b.producerId = pi.id " +
             "WHERE pi.id = :producerId " +
-            "ORDER BY b.id")
-    List<TblBanner> findAllByProducerId(@Param("producerId") int producerId);
+            "ORDER BY b.bannerId")
+    List<TblBanner> findAllByAndProducerId(@Param("producerId") int producerId);
 
     @Query("SELECT b FROM TblBanner b " +
-            "JOIN b.producer pi " +
+            "JOIN TblProducer pi ON b.producerId = pi.id " +
             "WHERE pi.id = :producerId " +
-            "ORDER BY b.id")
-    Page<TblBanner> findAllByProducerId(@Param("producerId") int producerId, Pageable pageable);
+            "ORDER BY b.bannerId")
+    Page<TblBanner> findAllByAndProducerId(@Param("producerId") int producerId,
+                                            Pageable paging);
+
+
+//    @Query("SELECT b FROM TblBanner b " +
+//            "JOIN TblProducer pi ON b.producerId = pi.id " +
+//            "WHERE pi.id = :producerId " +
+//            "AND b.bannerAcceptStatus = 'Y' " +
+//            "ORDER BY b.bannerId")
+//    List<TblBanner> findAllByProducerId(@Param("producerId") int producerId);
+//
+//    @Query("SELECT b FROM TblBanner b " +
+//            "JOIN TblProducer pi ON b.producerId = pi.id " +
+//            "WHERE pi.id = :producerId " +
+//            "AND b.bannerAcceptStatus = 'Y' " +
+//            "ORDER BY b.bannerId")
+//    Page<TblBanner> findAllByProducerId(@Param("producerId") int producerId, Pageable pageable);
 
 }

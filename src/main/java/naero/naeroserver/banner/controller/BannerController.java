@@ -29,47 +29,45 @@ public class BannerController {
         this.bannerService = bannerService;
     }
 
-    /* 배너 전체 조회 */
-    @Operation(summary = "배너 전체 조회 요청", description = "배너 전체 조회 처리가 진행됩니다.", tags = { "BannerController" })
+    /*배너 전체 조회 */
+    @Operation(summary = "판매자 배너 전체 조회 요청", description = "배너 전체 조회 처리가 진행됩니다.", tags = { "BannerController" })
     @GetMapping("/home")
     public ResponseEntity<ResponseDTO> selectBannerList(){
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 전체 조회 성공", bannerService.selectBannerList()));
     }
 
-    /* 관리자 배너 전체 조회 */
-    @Operation(summary = "관리자 배너 전체 조회 요청 (페이징)", description = "관리자 배너 전체 조회와 페이징 처리가 진행됩니다.", tags = { "BannerController" })
-    @GetMapping("/admin")
-    public ResponseEntity<ResponseDTO> selectBannerListAdminPage(
-            @RequestParam(name = "offset", defaultValue = "1") String offset) {
+    /* 판매자 배너 전체 조회 */
+    @Operation(summary = "판매자 배너 전체 조회 요청 (페이징)", description = "배너 전체 조회와 페이징 처리가 진행됩니다.", tags = { "BannerController" })
+    @GetMapping("/producer/{producerId}")
+    public ResponseEntity<ResponseDTO> selectProducerBannerList(@RequestParam(name = "offset", defaultValue = "1") String offset,
+                                                                @PathVariable int producerId){
 
-        log.info("[BannerController] selectBannerListPage :" + offset);
-        int bannerTotal = bannerService.selectBannerTotalForAdmin();
+        log.info("[BannerController] selectProducerBannerList :" + offset);
+        int bannerTotal = bannerService.selectProducerBannerList(producerId);
 
         Criteria cri = new Criteria(Integer.valueOf(offset), 7);
         PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
-        pagingResponseDTO.setData(bannerService.selectBannerListWithPagingForAdmin(cri));
+        pagingResponseDTO.setData(bannerService.selectProducerBannerListPaging(producerId, cri));
         pagingResponseDTO.setPageInfo(new PageDTO(cri, bannerTotal));
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "관리자 배너 조회 성공", pagingResponseDTO));
     }
 
-    /* 판매자별 배너 전체 조회 */
-    @Operation(summary = "판매자별 배너 전체 조회 요청 (페이징)", description = "판매자 배너 전체 조회와 페이징 처리가 진행됩니다.", tags = { "BannerController" })
-    @GetMapping("/producer/{producerId}")
-    public ResponseEntity<ResponseDTO> selectBannerListProducerPage(
-            @RequestParam(name = "offset", defaultValue = "1") String offset,
-            @PathVariable int producerId){
+    /* 관리자 배너 전체 조회 */
+    @Operation(summary = "관리자 배너 전체 조회 요청 (페이징)", description = "배너 전체 조회와 페이징 처리가 진행됩니다.", tags = { "BannerController" })
+    @GetMapping("/admin")
+    public ResponseEntity<ResponseDTO> selectAdminBannerList(@RequestParam(name = "offset", defaultValue = "1") String offset){
 
-        log.info("[BannerController] selectBannerListProducerPage : " + offset);
-        int bannerTotal = bannerService.selectBannerTotalForProducer(producerId);
+        log.info("[BannerController] selectBannerListPage :" + offset);
+        int bannerTotal = bannerService.selectAdminBannerList();
 
         Criteria cri = new Criteria(Integer.valueOf(offset), 7);
         PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
-        pagingResponseDTO.setData(bannerService.selectBannerListWithPagingForProducer(producerId, cri));
+        pagingResponseDTO.setData(bannerService.selectAdminBannerListPaging(cri));
         pagingResponseDTO.setPageInfo(new PageDTO(cri, bannerTotal));
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "판매자별 배너 조회 성공", pagingResponseDTO));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "관리자 배너 조회 성공", pagingResponseDTO));
     }
 
     /* 판매자 배너 신청 */
@@ -77,8 +75,9 @@ public class BannerController {
     @PostMapping("/producer")
     public ResponseEntity<ResponseDTO> insertBannerListProducerPage(@ModelAttribute BannerDTO bannerDTO, MultipartFile bannerImage){
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 등록 성공", bannerService.insertBannerProducerId(bannerDTO, bannerImage)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 등록 성공", bannerService.insertBanner(bannerDTO, bannerImage)));
     }
+
 //
 //
 //    /* 관리자 배너 등록 */

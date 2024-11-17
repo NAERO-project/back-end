@@ -44,7 +44,7 @@ public class BannerService {
     public Object selectBannerList() {
         log.info("[BannerService] selectBannerList() 시작");
 
-        List<TblBanner> bannerList = bannerRepository.findAllByBannerCheck("Y");
+        List<TblBanner> bannerList = bannerRepository.findAllByBannerAcceptStatus("Y");
 
         for(int i=0; i<bannerList.size(); i++){
             bannerList.get(i).setBannerImg(IMAGE_URL + bannerList.get(i).getBannerImg());
@@ -55,23 +55,59 @@ public class BannerService {
         return bannerList.stream().map(TblBanner -> modelMapper.map(TblBanner, BannerDTO.class)).collect(Collectors.toList());
     }
 
-    /* 관리자 배너 전체 조회 */
-    public int selectBannerTotalForAdmin() {
-        log.info("[BannerService] selectBannerTotalForAdmin() 시작");
+    /* 판매자 배너 전체 조회 */
+    public int selectProducerBannerList(int producerId) {
 
-        List<TblBanner> bannerList = bannerRepository.findAll();
+        List<TblBanner> bannerList = bannerRepository.findAllByAndProducerId(producerId);
 
-        log.info("[BannerService] selectBannerTotalForAdmin() 종료");
+        for(int i=0; i<bannerList.size(); i++){
+            bannerList.get(i).setBannerImg(IMAGE_URL + bannerList.get(i).getBannerImg());
+        }
+
+        log.info("[BannerService] selectProducerBannerList() 종료");
 
         return bannerList.size();
     }
 
-    public Object selectBannerListWithPagingForAdmin(Criteria cri) {
+    public Object selectProducerBannerListPaging(int producerId, Criteria cri) {
+        log.info("[BannerService] selectProducerBannerListPaging() 시작");
+
+        int index = cri.getPageNum() - 1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("bannerId").descending());
+
+        Page<TblBanner> result = bannerRepository.findAllByAndProducerId(producerId, paging);
+        List<TblBanner> bannerList = (List<TblBanner>)result.getContent();
+
+        for(int i = 0 ; i < bannerList.size() ; i++) {
+            bannerList.get(i).setBannerUrl(IMAGE_URL + bannerList.get(i).getBannerUrl());
+        }
+
+        log.info("[BannerService] selectProducerBannerListPaging() 종료");
+
+        return bannerList.stream().map(TblBanner -> modelMapper.map(TblBanner, BannerDTO.class)).collect(Collectors.toList());
+    }
+
+    /* 관리자 배너 전체 조회 */
+    public int selectAdminBannerList() {
+
+        List<TblBanner> bannerList = bannerRepository.findAll();
+
+        for(int i=0; i<bannerList.size(); i++){
+            bannerList.get(i).setBannerImg(IMAGE_URL + bannerList.get(i).getBannerImg());
+        }
+
+        log.info("[BannerService] selectAdminBannerList() 종료");
+
+        return bannerList.size();
+    }
+
+    public Object selectAdminBannerListPaging(Criteria cri) {
         log.info("[BannerService] selectBannerListWithPagingForAdmin() 시작");
 
         int index = cri.getPageNum() - 1;
         int count = cri.getAmount();
-        Pageable paging = PageRequest.of(index, count, Sort.by("id").descending());
+        Pageable paging = PageRequest.of(index, count, Sort.by("bannerId").descending());
 
         Page<TblBanner> result = bannerRepository.findAll(paging);
         List<TblBanner> bannerList = (List<TblBanner>)result.getContent();
@@ -85,40 +121,9 @@ public class BannerService {
         return bannerList.stream().map(TblBanner -> modelMapper.map(TblBanner, BannerDTO.class)).collect(Collectors.toList());
     }
 
-    /* 판매자별 배너 전체 조회 */
-    public int selectBannerTotalForProducer(int producerId) {
-        log.info("[BannerService] selectBannerTotalForProducer() 시작");
-
-        List<TblBanner> bannerList = bannerRepository.findAllByProducerId(producerId);
-
-        log.info("[BannerService] selectBannerTotalForProducer() 종료");
-
-        return bannerList.size();
-    }
-
-    public Object selectBannerListWithPagingForProducer(int producerId, Criteria cri) {
-        log.info("[BannerService] selectBannerListWithPagingForProducer() 시작");
-
-        int index = cri.getPageNum() - 1;
-        int count = cri.getAmount();
-        Pageable paging = PageRequest.of(index, count, Sort.by("id").descending());
-
-        Page<TblBanner> result = bannerRepository.findAllByProducerId(producerId, paging);
-        List<TblBanner> bannerList = (List<TblBanner>)result.getContent();
-
-        for(int i = 0 ; i < bannerList.size() ; i++) {
-            bannerList.get(i).setBannerUrl(IMAGE_URL + bannerList.get(i).getBannerUrl());
-        }
-
-        log.info("[BannerService] selectBannerListWithPagingForProducer() 종료");
-
-        return bannerList.stream().map(TblBanner -> modelMapper.map(TblBanner, BannerDTO.class)).collect(Collectors.toList());
-
-    }
-
     /* 판매자별 배너 신청 */
     @Transactional
-    public Object insertBannerProducerId(BannerDTO bannerDTO, MultipartFile bannerImage) {
+    public Object insertBanner(BannerDTO bannerDTO, MultipartFile bannerImage) {
         log.info("[BannerService] insertBanner() 시작");
         log.info("[BannerService] bannerDTO : {}", bannerDTO);
 
@@ -128,7 +133,6 @@ public class BannerService {
         int result = 0;
 
         try {
-
             /* 설명. util 패키지에 FileUploadUtils 추가 */
             replaceFileName = FileUploadUtils.saveFile(IMAGE_DIR, imageName, bannerImage);
             replaceThumbnailFileName = FileUploadUtils.saveThumbnailFile(IMAGE_DIR, replaceFileName);
@@ -136,7 +140,7 @@ public class BannerService {
             bannerDTO.setBannerImg(replaceFileName);
             bannerDTO.setBannerThumbnail(replaceThumbnailFileName);
 
-            log.info("[BannerService] insert Image Name : {}", replaceFileName);
+            log.info("[BannerService] 등록 이미지명 : {}", replaceFileName);
 
             TblBanner insertBanner = modelMapper.map(bannerDTO, TblBanner.class);
 
