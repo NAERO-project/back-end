@@ -3,6 +3,7 @@ package naero.naeroserver.product.service;
 import naero.naeroserver.common.Criteria;
 import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.product.dto.ProductDTO;
+import naero.naeroserver.product.dto.ProductOptionDTO;
 import naero.naeroserver.product.repository.ProductRepository;
 import naero.naeroserver.util.FileUploadUtils;
 import org.modelmapper.ModelMapper;
@@ -241,12 +242,11 @@ public class ProductService {
     public Object selectProductDetail(int productId) {
         log.info("[ProductService] selectProductDetail() 시작");
 
-        TblProduct product = productRepository.findById(productId).get();
-        product.setProductThumbnail(IMAGE_URL + product.getProductThumbnail());
+        List<ProductOptionDTO> productList = productRepository.findByIdAndOption(productId);
 
         log.info("[ProductService] selectProductDetail() 종료");
 
-        return modelMapper.map(product, TblProduct.class);
+        return productList;
     }
 
     /* 판매자 상품 등록 */
@@ -341,6 +341,8 @@ public class ProductService {
 
         return ResponseEntity.noContent().build();
     }
+
+
 
 
 
