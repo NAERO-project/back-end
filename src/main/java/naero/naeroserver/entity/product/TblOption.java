@@ -10,7 +10,7 @@ public class TblOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "option_id", nullable = false)
-    private Integer id;
+    private Integer optionId;
 
     @Size(max = 255)
     @Column(name = "option_desc")
@@ -20,20 +20,19 @@ public class TblOption {
     private Integer addPrice;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
-    private TblProduct product;
+    @Column(name = "product_id", nullable = false)
+    private Integer productId;
 
     @NotNull
     @Column(name = "option_quantity", nullable = false)
     private Integer optionQuantity;
 
-    public Integer getId() {
-        return id;
+    public Integer getOptionId() {
+        return optionId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setOptionId(Integer id) {
+        this.optionId = id;
     }
 
     public String getOptionDesc() {
@@ -52,12 +51,12 @@ public class TblOption {
         this.addPrice = addPrice;
     }
 
-    public TblProduct getProduct() {
-        return product;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setProduct(TblProduct product) {
-        this.product = product;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 
     public Integer getOptionQuantity() {

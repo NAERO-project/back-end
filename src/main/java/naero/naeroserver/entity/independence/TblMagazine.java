@@ -10,7 +10,7 @@ public class TblMagazine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "magazine_id", nullable = false)
-    private Integer id;
+    private Integer magazineId;
 
     @Size(max = 20)
     @NotNull
@@ -23,15 +23,15 @@ public class TblMagazine {
     private String magazineContent;
 
     @Size(max = 255)
-    @Column(name = "magazine_photo", nullable = false)
+    @Column(name = "magazine_photo")
     private String magazinePhoto;
 
-    public Integer getId() {
-        return id;
+    public Integer getMagazineId() {
+        return magazineId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setMagazineId(Integer id) {
+        this.magazineId = id;
     }
 
     public String getMagazineTitle() {

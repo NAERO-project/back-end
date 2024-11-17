@@ -10,7 +10,7 @@ public class TblFaq {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "faq_id", nullable = false)
-    private Integer id;
+    private Integer faqId;
 
     @Size(max = 50)
     @NotNull
@@ -22,12 +22,12 @@ public class TblFaq {
     @Column(name = "faq_content", nullable = false)
     private String faqContent;
 
-    public Integer getId() {
-        return id;
+    public Integer getFaqId() {
+        return faqId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setFaqId(Integer id) {
+        this.faqId = id;
     }
 
     public String getFaqTitle() {

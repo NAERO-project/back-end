@@ -3,7 +3,6 @@ package naero.naeroserver.entity.coupon;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.user.TblUser;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
@@ -12,7 +11,7 @@ public class TblCouponList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "coupon_get_id", nullable = false)
-    private Integer id;
+    private Integer couponGetId;
 
     @Size(max = 1)
     @ColumnDefault("'N'")
@@ -20,21 +19,19 @@ public class TblCouponList {
     private String useStatus;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private TblUser user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "coupon_id", nullable = false)
-    private TblCoupon coupon;
+    @Column(name = "coupon_id", nullable = false)
+    private Integer couponId;
 
-    public Integer getId() {
-        return id;
+    public Integer getCouponGetId() {
+        return couponGetId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCouponGetId(Integer id) {
+        this.couponGetId = id;
     }
 
     public String getUseStatus() {
@@ -45,20 +42,20 @@ public class TblCouponList {
         this.useStatus = useStatus;
     }
 
-    public TblUser getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(TblUser user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public TblCoupon getCoupon() {
-        return coupon;
+    public Integer getCouponId() {
+        return couponId;
     }
 
-    public void setCoupon(TblCoupon coupon) {
-        this.coupon = coupon;
+    public void setCouponId(Integer couponId) {
+        this.couponId = couponId;
     }
 
 }
