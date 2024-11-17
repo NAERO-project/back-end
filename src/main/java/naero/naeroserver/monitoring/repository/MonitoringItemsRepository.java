@@ -11,7 +11,6 @@ import java.time.Instant;
 @Repository
 public interface MonitoringItemsRepository extends JpaRepository<TblProduct, Integer> {
 
-
     @Query(value = "SELECT COUNT(DISTINCT pt.product_name) AS total_count " +
             "FROM tbl_product pt " +
             "LEFT JOIN tbl_option op ON pt.product_id = op.product_id " +
@@ -25,4 +24,5 @@ public interface MonitoringItemsRepository extends JpaRepository<TblProduct, Int
             "LEFT JOIN tbl_order_detail od ON op.option_id = od.option_id " +
             "WHERE od.created_at BETWEEN :twoDaysAgo AND :yesterday", nativeQuery = true)
     Long findTwoDaysAgoItems(@Param("twoDaysAgo") Instant twoDaysAgo, @Param("yesterday") Instant yesterday);
+
 }

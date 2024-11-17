@@ -31,5 +31,6 @@ public interface MonitoringOrderRepository extends JpaRepository<TblOrder, Integ
             "WHERE o.createdAt BETWEEN :twoDaysAgo AND :yesterday " +
             "AND o.orderStatus = 'completed'")
     Long findTwoDaysAgoSalesQuantity(@Param("twoDaysAgo") Instant twoDaysAgo, @Param("yesterday") Instant yesterday);
+
 }
 

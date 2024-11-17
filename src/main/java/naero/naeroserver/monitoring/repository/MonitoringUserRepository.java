@@ -18,4 +18,5 @@ public interface MonitoringUserRepository extends JpaRepository<TblUser, Integer
             "FROM TblUser u " +
             "WHERE u.enrollDate BETWEEN :twoDaysAgo AND :yesterday")
     Long findTwoDaysAgoRegistMembers(@Param("twoDaysAgo") Instant twoDaysAgo, @Param("yesterday") Instant yesterday);
+
 }

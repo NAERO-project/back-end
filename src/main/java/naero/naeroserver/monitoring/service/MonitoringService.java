@@ -1,8 +1,6 @@
 package naero.naeroserver.monitoring.service;
 
-import naero.naeroserver.monitoring.repository.MonitoringItemsRepository;
-import naero.naeroserver.monitoring.repository.MonitoringOrderRepository;
-import naero.naeroserver.monitoring.repository.MonitoringUserRepository;
+import naero.naeroserver.monitoring.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,26 +95,6 @@ public class MonitoringService {
     private long safeFetch(Supplier<Long> supplier) {
         Long value = supplier.get();
         return (value != null) ? value : 0;
-    }
-
-    public Object selectSalesStatisticsCross(String categoryOption, String indexOption,
-                                             String startDate, String endDate, String specification) {
-        return null;
-    }
-
-    public Object selectSalesStatisticsSeries(String categoryOption, String indexOption,
-                                              String startDate, String endDate, String specification) {
-        return null;
-    }
-
-    public Object selectLikedStatisticsCross(String categoryOption, String startDate,
-                                             String endDate, String specification) {
-        return null;
-    }
-
-    public Object selectLikedStatisticsSeries(String categoryOption, String startDate,
-                                              String endDate, String specification) {
-        return null;
     }
 }
 
