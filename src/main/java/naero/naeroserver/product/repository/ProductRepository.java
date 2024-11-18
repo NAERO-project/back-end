@@ -21,7 +21,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
 
     @Query("SELECT p " +
             "FROM TblProduct p " +
-            "JOIN TblCategorySmall cs ON p.smallCategory = cs.smallCategoryId " +
+            "JOIN TblCategorySmall cs ON p.smallCategoryId = cs.smallCategoryId " +
             "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
             "AND cm.mediumCategoryId = :mediumId " +
             "AND p.productCheck = 'Y' " +
@@ -30,7 +30,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
 
     @Query("SELECT p " +
             "FROM TblProduct p " +
-            "JOIN TblCategorySmall cs ON p.smallCategory = cs.smallCategoryId " +
+            "JOIN TblCategorySmall cs ON p.smallCategoryId = cs.smallCategoryId " +
             "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
             "AND cm.mediumCategoryId = :mediumId " +
             "AND p.productCheck = 'Y' " +
@@ -43,7 +43,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
     List<TblProduct> findAllProductWithLimit(Pageable pageable);
 
     @Query("SELECT p FROM TblProduct p, TblCategorySmall sc, TblCategoryMedium mc " +
-            "WHERE p.smallCategory = sc.smallCategoryId " +
+            "WHERE p.smallCategoryId = sc.smallCategoryId " +
             "AND sc.mediumCategoryId = mc.mediumCategoryId AND mc.mediumCategoryId = :mediumId " +
             "AND p.productCheck = 'Y' " +
             "ORDER BY p.productCreateAt DESC")
@@ -76,7 +76,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
 
     @Query("SELECT p " +
             "FROM TblProduct p " +
-            "JOIN TblCategorySmall cs ON p.smallCategory = cs.smallCategoryId " +
+            "JOIN TblCategorySmall cs ON p.smallCategoryId = cs.smallCategoryId " +
             "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
             "WHERE p.producerId = :producerId " +
             "AND cm.mediumCategoryId = :mediumId " +
@@ -87,7 +87,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
 
     @Query("SELECT p " +
             "FROM TblProduct p " +
-            "JOIN TblCategorySmall cs ON p.smallCategory = cs.smallCategoryId " +
+            "JOIN TblCategorySmall cs ON p.smallCategoryId = cs.smallCategoryId " +
             "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
             "WHERE p.producerId = :producerId " +
             "AND cm.mediumCategoryId = :mediumId " +
@@ -103,11 +103,12 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "JOIN TblOption op ON p.productId = op.productId " +
             "WHERE p.productId = :productId")
     List<ProductOptionDTO> findByIdAndOption(@Param("productId") Integer productId);
-    @Query("SELECT p, pi.producer FROM TblProduct p " +
-            "JOIN TblProducer pi ON p.productId = pi.id " +
-            "WHERE pi.id = :producerId AND p.productCheck = 'Y' " +
-            "ORDER BY p.productId DESC")
-    List<TblProduct> findByIdWithLimit(@Param("producerId") Integer producerId, Pageable pageable);
+
+//    @Query("SELECT p, pi.producer FROM TblProduct p " +
+//            "JOIN TblProducer pi ON p.productId = pi.id " +
+//            "WHERE pi.id = :producerId AND p.productCheck = 'Y' " +
+//            "ORDER BY p.productId DESC")
+//    List<TblProduct> findByIdWithLimit(@Param("producerId") Integer producerId, Pageable pageable);
 
     // 주문 페이지 내 주문할 상품 정보 전달용
     @Query("SELECT new naero.naeroserver.order.dto.OrderPageProductDTO(o.optionId, o.productId, p.producerId, " +
