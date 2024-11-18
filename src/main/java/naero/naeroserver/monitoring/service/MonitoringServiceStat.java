@@ -31,10 +31,10 @@ public class MonitoringServiceStat {
         this.crossStatProducer = crossStatProducer;
     }
 
-    /* 설명. 횡단면 상품별 매출 통계 데이터 조회 */
+    /* 설명. 횡단면 브랜드/상품별 매출 통계 데이터 조회 */
     public List<Map<String, Object>> selectSalesStatisticsCross(String categoryOption, String indexOption,
                                                                 Instant parsedStartInstant, Instant parsedEndInstant) {
-        log.info("[MonitoringService] selectSalesStatisticsCross() Start");
+        log.info("[MonitoringStat] selectSalesStatisticsCross() Start");
 
         switch (categoryOption) {
             case "브랜드":
@@ -50,15 +50,34 @@ public class MonitoringServiceStat {
                         ? crossStatProduct.getCrossByProductAndQuantity(parsedStartInstant, parsedEndInstant)
                         : new ArrayList<>();
             default:
-                log.warn("Invalid categoryOption or indexOption provided: categoryOption={}, indexOption={}", categoryOption, indexOption);
+                log.warn("Invalid categoryOption or indexOption provided: categoryOption={}, indexOption={}",
+                        categoryOption, indexOption);
                 return new ArrayList<>();
+        }
+    }
+
+    /* 설명. 횡단면 브랜드/상품별 찜 통계 데이터 조회 */
+    public List<Map<String, Object>> selectLikedStatisticsCross(String categoryOption, Instant parsedStartInstant,
+                                                                Instant parsedEndInstant) {
+        log.info("[MonitoringServiceStat] selectLikedStatisticsCross() Start with categoryOption: {}", categoryOption);
+
+        // Use constants or enums for categoryOption values if possible
+        switch (categoryOption) {
+            case "브랜드":
+                return crossStatProducer.getCrossByProducerAndLike(parsedStartInstant, parsedEndInstant);
+            case "상품":
+                return crossStatProduct.getCrossByProductAndLike(parsedStartInstant, parsedEndInstant);
+            default:
+                log.warn("Invalid categoryOption provided: categoryOption={}", categoryOption);
+                // Consider throwing an exception if invalid input should be handled explicitly
+                throw new IllegalArgumentException("Invalid categoryOption: " + categoryOption);
         }
     }
 
     /* 설명. 시계열 매출 통계 데이터 조회 */
     public List<Map<String, Object>> selectSalesStatisticsSeries(String categoryOption, String indexOption,
                                                                  Instant parsedStartInstant, Instant parsedEndInstant, String specification) {
-        log.info("[MonitoringService] selectSalesStatisticsSeries() Start");
+        log.info("[MonitoringStat] selectSalesStatisticsSeries() Start");
 
         switch (categoryOption) {
             case "브랜드":
@@ -74,19 +93,25 @@ public class MonitoringServiceStat {
                         ? monitoringProductRepository.findSeriesByProductAndQuantity(parsedStartInstant, parsedEndInstant, specification)
                         : new ArrayList<>();
             default:
-                log.warn("Invalid categoryOption or indexOption provided: categoryOption={}, indexOption={}, specification={}",
-                        categoryOption, indexOption, specification);
+                log.warn("Invalid categoryOption or indexOption provided: categoryOption={}, indexOption={}",
+                        categoryOption, indexOption);
                 return new ArrayList<>();
         }
     }
 
-//    public List<Map<String, Object>> selectLikedStatisticsCross(String categoryOption, Instant parsedStartInstant,
-//                                                                Instant parsedEndInstant) {
-//        return null;
-//    }
-//
-//    public List<Map<String, Object>> selectLikedStatisticsSeries(String categoryOption, Instant parsedStartInstant,
-//                                                                 Instant parsedEndInstant, String specification) {
-//        return null;
-//    }
+    /* 설명. 시계열 찜 통계 데이터 조회 */
+    public List<Map<String, Object>> selectLikedStatisticsSeries(String categoryOption, Instant parsedStartInstant,
+                                                                 Instant parsedEndInstant, String specification) {
+        log.info("[MonitoringStat] selectLikedStatisticsSeries() Start");
+
+        switch (categoryOption) {
+            case "브랜드":
+                return monitoringProducerRepository.findSeriesByProducerAndLikes(parsedStartInstant, parsedEndInstant, specification);
+            case "상품":
+                return monitoringProductRepository.findSeriesByProductAndLikes(parsedStartInstant, parsedEndInstant, specification);
+            default:
+                log.warn("Invalid categoryOption provided: categoryOption={}", categoryOption);
+                return new ArrayList<>();
+        }
+    }
 }

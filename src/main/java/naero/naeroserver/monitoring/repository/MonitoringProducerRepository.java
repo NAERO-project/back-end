@@ -59,4 +59,24 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
     List<Map<String, Object>> findSeriesByProducerAndQuantity(@Param("parsedStartInstant") Instant parsedStartInstant,
                                                               @Param("parsedEndInstant") Instant parsedEndInstant,
                                                               @Param("specification") String specification);
+
+    @Query("SELECT new map(pr.producerName AS producer_name, CAST(COUNT(pr.producerName) AS double) AS total_like) " +
+            "FROM TblProducer pr " +
+            "LEFT JOIN TblLikedSeller lpr ON pr.producerId = lpr.producerId " +
+            "WHERE (lpr.brandLikeDate IS NOT NULL OR lpr.brandLikeDate BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
+            "GROUP BY pr.producerName " +
+            "ORDER BY COUNT(pr.producerName) DESC")
+    List<Map<String, Double>> findCrossByProducerAndLike(@Param("parsedStartInstant") Instant parsedStartInstant,
+                                                         @Param("parsedEndInstant") Instant parsedEndInstant);
+
+    @Query("SELECT new map(DATE(lpr.brandLikeDate) AS like_date, COUNT(pr.producerName) AS total_like) " +
+            "FROM TblProducer pr " +
+            "LEFT JOIN TblLikedSeller lpr ON pr.producerId = lpr.producerId " +
+            "WHERE (lpr.brandLikeDate IS NOT NULL OR lpr.brandLikeDate BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
+            "AND pr.producerName = :specification " +
+            "GROUP BY DATE(lpr.brandLikeDate), pr.producerName " +
+            "ORDER BY DATE(lpr.brandLikeDate)")
+    List<Map<String, Object>> findSeriesByProducerAndLikes(@Param("parsedStartInstant") Instant parsedStartInstant,
+                                                           @Param("parsedEndInstant") Instant parsedEndInstant,
+                                                           @Param("specification") String specification);
 }

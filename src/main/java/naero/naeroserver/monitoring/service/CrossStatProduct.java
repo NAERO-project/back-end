@@ -113,4 +113,51 @@ public class CrossStatProduct {
         System.out.println("[결과확인] result = " + result);
         return result;
     }
+
+    /* Method to get PRODUCT LIKED statistics and process the top 3 with "others" */
+    public List<Map<String, Object>> getCrossByProductAndLike(Instant parsedStartInstant, Instant parsedEndInstant) {
+        log.info("[CrossStat] getCrossByProductAndLike() Start");
+
+        // Fetch product sales quantity
+        List<Map<String, Double>> salesStatistics = monitoringProductRepository.findCrossByProductAndLike(parsedStartInstant, parsedEndInstant);
+        System.out.println("salesStatistics = " + salesStatistics);
+
+        // Calculate the total sum of all quantity
+        double overallTotalCount = salesStatistics.stream()
+                .mapToDouble(stat -> stat.get("total_like"))
+                .sum();
+
+        // Sort and split the statistics into top 3 and "others"
+        List<Map<String, Object>> result = new ArrayList<>();
+        double othersTotalCount = 0.0;
+
+        for (int i = 0; i < salesStatistics.size(); i++) {
+            Map<String, Double> stat = salesStatistics.get(i);
+            if (i < 3) {
+                // Add top 3 products with their ratio
+                double totalCount = stat.get("total_like");
+                double ratio = totalCount / overallTotalCount;
+                result.add(Map.of(
+                        "product_name", stat.get("product_name"),
+                        "total_like", totalCount,
+                        "ratio", ratio
+                ));
+            } else {
+                // Accumulate the rest as "others"
+                othersTotalCount += stat.get("total_like");
+            }
+        }
+
+        // Add "others" to the result if necessary
+        if (othersTotalCount > 0) {
+            double othersRatio = othersTotalCount / overallTotalCount;
+            result.add(Map.of(
+                    "product_name", "others",
+                    "total_like", othersTotalCount,
+                    "ratio", othersRatio
+            ));
+        }
+        System.out.println("[결과확인] result = " + result);
+        return result;
+    }
 }

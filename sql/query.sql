@@ -1,4 +1,4 @@
-SELECT
+ SELECT
     pt.product_name,
     SUM(od.amount) AS total_amount
 FROM

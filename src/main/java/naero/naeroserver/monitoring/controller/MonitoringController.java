@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
@@ -26,15 +28,12 @@ public class MonitoringController {
     private static final Logger log = LoggerFactory.getLogger(MonitoringController.class);
 
     private final MonitoringService monitoringService;
-    private final MonitoringServiceStat monitoringServiceStatistics;
-    private final MonitoringServiceStat monitoringServiceProduct;
+    private final MonitoringServiceStat monitoringServiceStat;
 
     @Autowired
-    public MonitoringController(MonitoringService monitoringService,
-                                MonitoringServiceStat monitoringServiceStatistics, MonitoringServiceStat monitoringServiceProduct) {
+    public MonitoringController(MonitoringService monitoringService, MonitoringServiceStat monitoringServiceStat) {
         this.monitoringService = monitoringService;
-        this.monitoringServiceStatistics = monitoringServiceStatistics;
-        this.monitoringServiceProduct = monitoringServiceProduct;
+        this.monitoringServiceStat = monitoringServiceStat;
     }
 
     /* 설명. 24시간 매출 총액 데이터 조회 */
@@ -99,19 +98,19 @@ public class MonitoringController {
         return getStatisticsResponse(categoryOption, indexOption, startDate, endDate, specification, true);
     }
 
-//    /* 설명. 선호도 통계 데이터 조회 */
-//    @Operation(summary = "선호도 통계 조회 요청", description = "사용자 검색 입력에 따라 선호도 통계 조회가 진행됩니다.",
-//            tags = { "MonitoringController" })
-//    @GetMapping("/monitoring/liked-statistics")
-//    public ResponseEntity<ResponseDTO> selectLikedStatisticsCross(
-//            @RequestParam(defaultValue = "브랜드") String categoryOption,
-////            @RequestParam String indexOption,   // 선호도는 찜 개수에 따라 집계하는 것이므로 지표선택은 적용되지 않음
-//            @RequestParam(required = false, defaultValue = "") String startDate,
-//            @RequestParam(required = false, defaultValue = "") String endDate,
-//            @RequestParam(required = false) String specification
-//    ) {
-//        return getStatisticsResponse(categoryOption, null, startDate, endDate, specification, false);
-//    }
+    /* 설명. 선호도 통계 데이터 조회 */
+    @Operation(summary = "선호도 통계 조회 요청", description = "사용자 검색 입력에 따라 선호도 통계 조회가 진행됩니다.",
+            tags = { "MonitoringController" })
+    @GetMapping("/monitoring/liked-statistics")
+    public ResponseEntity<ResponseDTO> selectLikedStatisticsCross(
+            @RequestParam(defaultValue = "브랜드") String categoryOption,
+//            @RequestParam String indexOption,   // 선호도는 찜 개수에 따라 집계하는 것이므로 지표선택은 적용되지 않음
+            @RequestParam(required = false, defaultValue = "") String startDate,
+            @RequestParam(required = false, defaultValue = "") String endDate,
+            @RequestParam(required = false) String specification
+    ) {
+        return getStatisticsResponse(categoryOption, null, startDate, endDate, specification, false);
+    }
 
     // Modularized method for handling the response
     private ResponseEntity<ResponseDTO> getStatisticsResponse(String categoryOption, String indexOption,
@@ -136,14 +135,18 @@ public class MonitoringController {
         // Call the appropriate service method based on specification
         List<Map<String, Object>> response = (specification == null || specification.trim().isEmpty())
 //                ? (isSalesStatistics
-//                ? monitoringServiceStatistics.selectSalesStatisticsCross(categoryOption, indexOption, parsedStartInstant, parsedEndInstant)
-//                : monitoringServiceStatistics.selectLikedStatisticsCross(categoryOption, parsedStartInstant, parsedEndInstant))
+////                ? monitoringServiceStat.selectSalesStatisticsCross(categoryOption, indexOption, parsedStartInstant, parsedEndInstant)
+//                ? monitoringServiceStat.selectSalesStatisticsCross(categoryOption, indexOption, parsedStartInstant, parsedEndInstant)
+//                : monitoringServiceStat.selectLikedStatisticsCross(categoryOption, parsedStartInstant, parsedEndInstant))
 //                : (isSalesStatistics
-//                ? monitoringServiceStatistics.selectSalesStatisticsSeries(categoryOption, indexOption, parsedStartInstant, parsedEndInstant, specification)
-//                : monitoringServiceStatistics.selectLikedStatisticsSeries(categoryOption, parsedStartInstant, parsedEndInstant, specification));
+////                ? monitoringServiceStat.selectSalesStatisticsSeries(categoryOption, indexOption, parsedStartInstant, parsedEndInstant, specification)
+//                ? monitoringServiceStat.selectSalesStatisticsSeries(categoryOption, indexOption, parsedStartInstant, parsedEndInstant, specification)
+//                : monitoringServiceStat.selectLikedStatisticsSeries(categoryOption, parsedStartInstant, parsedEndInstant, specification));
 
-                ? monitoringServiceProduct.selectSalesStatisticsCross(categoryOption, indexOption, parsedStartInstant, parsedEndInstant)
-                : monitoringServiceProduct.selectSalesStatisticsSeries(categoryOption, indexOption, parsedStartInstant, parsedEndInstant, specification);
+//                ? monitoringServiceStat.selectSalesStatisticsCross(categoryOption, indexOption, parsedStartInstant, parsedEndInstant)
+//                : monitoringServiceStat.selectSalesStatisticsSeries(categoryOption, indexOption, parsedStartInstant, parsedEndInstant, specification);
+                ? monitoringServiceStat.selectLikedStatisticsCross(categoryOption, parsedStartInstant, parsedEndInstant)
+                : monitoringServiceStat.selectLikedStatisticsSeries(categoryOption, parsedStartInstant, parsedEndInstant, specification);
 
         String message = (specification == null || specification.trim().isEmpty()) ? "횡단면 조회 성공" : "시계열 조회 성공";
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, message, response));

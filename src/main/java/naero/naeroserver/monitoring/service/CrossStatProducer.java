@@ -113,4 +113,49 @@ public class CrossStatProducer {
         System.out.println("[결과확인] result = " + result);
         return result;
     }
+
+    /* Method to get PRODUCER LIKED statistics and process the top 3 with "others" */
+    public List<Map<String, Object>> getCrossByProducerAndLike(Instant parsedStartInstant, Instant parsedEndInstant) {
+        log.info("[CrossStat] getCrossByProducerAndLike() Start");
+
+        // Fetch producer like quantity
+        List<Map<String, Double>> likesStatistics = monitoringProducerRepository.findCrossByProducerAndLike(parsedStartInstant, parsedEndInstant);
+
+        // Calculate the total sum of all likes
+        double overallTotalLike = likesStatistics.stream()
+                .mapToDouble(stat -> stat.get("total_like"))
+                .sum();
+
+        // Sort and split the statistics into top 3 and "others"
+        List<Map<String, Object>> result = new ArrayList<>();
+        double othersTotalLike = 0.0;
+
+        for (int i = 0; i < likesStatistics.size(); i++) {
+            Map<String, Double> stat = likesStatistics.get(i);
+            if (i < 3) {
+                // Add Top 3 products with their ratio
+                double totalLike = stat.get("total_like");
+                double ratio = totalLike / overallTotalLike;
+                result.add(Map.of(
+                        "producer_name", stat.get("producer_name"),
+                        "total_like", totalLike,
+                        "ratio", ratio
+                ));
+            } else {
+                // Accumulate the rest as "others"
+                othersTotalLike += stat.get("total_like");
+            }
+        }
+
+        if (othersTotalLike > 0) {
+            double othersRatio = othersTotalLike / overallTotalLike;
+            result.add(Map.of(
+                    "producer_name", "others",
+                    "total_like", othersTotalLike,
+                    "ratio", othersRatio
+            ));
+        }
+        System.out.println("[결과확인] result = " + result);
+        return result;
+    }
 }
