@@ -31,9 +31,9 @@ public class BannerService {
     private final BannerRepository bannerRepository;
     private final ModelMapper modelMapper;
 
-    @Value("/springboot-app/naeroimgs")
+    @Value("${image.image-dir}")
     private String IMAGE_DIR;
-    @Value("http://localhost:8080/naeroimgs")
+    @Value("${image.image-url}")
     private String IMAGE_URL;
 
     @Autowired
