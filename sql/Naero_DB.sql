@@ -22,6 +22,7 @@ DROP TABLE IF EXISTS `tbl_coupon`;
 DROP TABLE IF EXISTS `tbl_liked_seller`;
 DROP TABLE IF EXISTS `tbl_liked_product`;
 
+
 DROP TABLE IF EXISTS `tbl_address`;
 DROP TABLE IF EXISTS `tbl_review`;
 
@@ -311,7 +312,6 @@ CREATE TABLE `tbl_banner` (
                               `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
                               `banner_accept_status`  varchar(1)	NULL DEFAULT 'N'	COMMENT '승인여부',
                               `banner_accept_at`	DateTime	NULL	COMMENT '승인 날짜',
-                              `banner_check`	varchar(1)	NULL DEFAULT 'N'	COMMENT '승인 여부',
                               `approver_id`	int	NULL	COMMENT '승인자'
 );
 

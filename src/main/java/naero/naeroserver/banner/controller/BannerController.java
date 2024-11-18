@@ -79,28 +79,20 @@ public class BannerController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 등록 성공", bannerService.insertBanner(bannerDTO, bannerImage)));
     }
 
-    /* 관리자 배너 등록 */
+    /* 관리자, 판매자 배너 등록,반려(수정) */
     @Operation(summary = "관리자 배너 등록", description = "관리자 페이지에서 배너 등록 처리", tags = { "BannerController" })
     @PutMapping("/admin")
-    public ResponseEntity<ResponseDTO> updateBannerListAdminPage(@ModelAttribute BannerDTO bannerDTO){
+    public ResponseEntity<ResponseDTO> updateBannerListAdminPage(@ModelAttribute BannerDTO bannerDTO, MultipartFile bannerImage){
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 등록 성공", bannerService.updateBanner(bannerDTO)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 등록 성공", bannerService.updateBanner(bannerDTO, bannerImage)));
     }
 
-//    /* 관리자 배너 반려 */
-//    @Operation(summary = "관리자 배너 등록", description = "관리자 페이지에서 배너 등록 처리", tags = { "BannerController" })
-//    @PutMapping("/returning")
-//    public ResponseEntity<ResponseDTO> insertBannerListAdminPage(@ModelAttribute BannerDTO bannerDTO){
-//
-//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 등록 성공", bannerService.updateReturning(bannerDTO)));
-//    }
-
     /* 배너 삭제 */
-//    @Operation(summary = "배너 삭제 요청", description = "배너 삭제가 진행됩니다.", tags = { "ProductController" })
-//    @DeleteMapping(value = "/producer")
-//    public ResponseEntity<ResponseDTO> deleteBannerListProducerPage(@ModelAttribute BannerDTO bannerDTO){
-//
-//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 삭제 성공",  bannerService.deleteBanner(bannerDTO)));
-//    }
+    @Operation(summary = "배너 삭제 요청", description = "배너 삭제가 진행됩니다.", tags = { "ProductController" })
+    @DeleteMapping(value = "/producer")
+    public ResponseEntity<ResponseDTO> deleteBannerListProducerPage(@ModelAttribute BannerDTO bannerDTO){
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 삭제 성공",  bannerService.deleteBanner(bannerDTO)));
+    }
 
 }

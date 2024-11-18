@@ -157,49 +157,77 @@ public class BannerService {
         return (result > 0) ? "배너 신청 성공" : "배너 신청 실패";
     }
 
-    /* 관리자 배너 등록 */
-    public Object updateBanner(BannerDTO bannerDTO) {
+    /* 관리자, 판매자 배너 등록,반려(수정) */
+    @Transactional
+    public Object updateBanner(BannerDTO bannerDTO, MultipartFile bannerImage) {
         log.info("[BannerService] BannerDTO() 시작");
         log.info("[BannerService] BannerDTO : {}", bannerDTO);
 
+        String replaceFileName = null;
         int result = 0;
 
-        /* 설명. update 할 엔티티 조회 */
-//        TblBanner banner = bannerRepository.findById(bannerDTO.getBannerId()).get();
-        TblBanner banner = bannerRepository.findById(bannerDTO.getBannerId()).get();
-        log.info("???: {}", banner);
+        try{
+            /* 설명. update 할 엔티티 조회 */
+            TblBanner banner = bannerRepository.findById(bannerDTO.getBannerId()).get();
+            String oriImage = banner.getBannerThumbnail();
+            log.info("???: {}", banner);
 
-        /* 설명. update를 위한 엔티티 값 수정 */
-        banner.setBannerAcceptStatus(bannerDTO.getBannerAcceptStatus());
-        banner.setApproverId(bannerDTO.getApproverId());
+            /* 설명. update를 위한 엔티티 값 수정 */
+            banner.setBannerThumbnail(bannerDTO.getBannerThumbnail());
+            banner.setBannerUrl(bannerDTO.getBannerUrl());
+            banner.setBannerAcceptStatus(bannerDTO.getBannerAcceptStatus());
+            banner.setApproverId(bannerDTO.getApproverId());
+            banner.setBannerThumbnail(bannerDTO.getBannerThumbnail());
 
-        log.info("[ProductService] updateProduct End ===================================");
+            if(bannerImage != null){
+                String imageName = UUID.randomUUID().toString().replace("-", "");
+                replaceFileName = FileUploadUtils.saveFile(IMAGE_DIR, imageName, bannerImage);
+                log.info("[updateProduct] InsertFileName : {}", replaceFileName);
+
+                banner.setBannerThumbnail(replaceFileName);	// 새로운 파일 이름으로 update
+                log.info("[updateProduct] deleteImage : {}", oriImage);
+
+                boolean isDelete = FileUploadUtils.deleteFile(IMAGE_DIR, oriImage);
+                log.info("[update] isDelete : {}", isDelete);
+            }else{
+                banner.setBannerThumbnail(oriImage);
+            }
+
+            result = 1;
+        } catch (IOException e) {
+            log.info("[updateProduct] Exception!!");
+            FileUploadUtils.deleteFile(IMAGE_DIR, replaceFileName);
+            throw new RuntimeException(e);
+        }
+
+        log.info("[BannerService] updateBanner End ===================================");
         return (result > 0) ? "배너 업데이트 성공" : "배너 업데이트 실패";
     }
 
     /* 배너 삭제 */
-//    public Object deleteBanner(BannerDTO bannerDTO) {
-//        log.info("[BannerService] deleteBanner() 시작");
-//
-//        bannerRepository.deleteById(bannerDTO.getBannerId());
-//
-//        log.info("[BannerService] deleteBanner() 종료");
-//
-//        return ResponseEntity.noContent().build();
-//    }
+    @Transactional
+    public Object deleteBanner(BannerDTO bannerDTO) {
+        log.info("[BannerService] deleteBanner() 시작");
 
-//    public Object updateReturning(BannerDTO bannerDTO) {
-//
-//        String replaceFileName = null;
-//        int result = 0;
-//
-//        /* 설명. update 할 엔티티 조회 */
-//        TblBanner banner = bannerRepository.findById(bannerDTO.getBannerId()).get();
-//
-//        /* 설명. update를 위한 엔티티 값 수정 */
-//        banner.setBannerAcceptStatus(bannerDTO.getBannerAcceptStatus());
-//
-//        log.info("[ProductService] updateProduct End ===================================");
-//        return (result > 0) ? "배너 업데이트 성공" : "배너 업데이트 실패";
-//    }
+        bannerRepository.deleteById(bannerDTO.getBannerId());
+
+        log.info("[BannerService] deleteBanner() 종료");
+
+        return ResponseEntity.noContent().build();
+    }
+
+    public Object updateReturning(BannerDTO bannerDTO) {
+
+        String replaceFileName = null;
+        int result = 0;
+
+        /* 설명. update 할 엔티티 조회 */
+        TblBanner banner = bannerRepository.findById(bannerDTO.getBannerId()).get();
+
+        /* 설명. update를 위한 엔티티 값 수정 */
+        banner.setBannerAcceptStatus(bannerDTO.getBannerAcceptStatus());
+
+        log.info("[ProductService] updateProduct End ===================================");
+        return (result > 0) ? "배너 업데이트 성공" : "배너 업데이트 실패";
+    }
 }
