@@ -157,7 +157,27 @@ public class BannerService {
         return (result > 0) ? "배너 신청 성공" : "배너 신청 실패";
     }
 
-//    /* 배너 삭제 */
+    /* 관리자 배너 등록 */
+    public Object updateBanner(BannerDTO bannerDTO) {
+        log.info("[BannerService] BannerDTO() 시작");
+        log.info("[BannerService] BannerDTO : {}", bannerDTO);
+
+        int result = 0;
+
+        /* 설명. update 할 엔티티 조회 */
+//        TblBanner banner = bannerRepository.findById(bannerDTO.getBannerId()).get();
+        TblBanner banner = bannerRepository.findById(bannerDTO.getBannerId()).get();
+        log.info("???: {}", banner);
+
+        /* 설명. update를 위한 엔티티 값 수정 */
+        banner.setBannerAcceptStatus(bannerDTO.getBannerAcceptStatus());
+        banner.setApproverId(bannerDTO.getApproverId());
+
+        log.info("[ProductService] updateProduct End ===================================");
+        return (result > 0) ? "배너 업데이트 성공" : "배너 업데이트 실패";
+    }
+
+    /* 배너 삭제 */
 //    public Object deleteBanner(BannerDTO bannerDTO) {
 //        log.info("[BannerService] deleteBanner() 시작");
 //
@@ -166,25 +186,6 @@ public class BannerService {
 //        log.info("[BannerService] deleteBanner() 종료");
 //
 //        return ResponseEntity.noContent().build();
-//    }
-
-//    /* 관리자 배너 등록 */
-//    public Object updateBanner(BannerDTO bannerDTO) {
-//        log.info("[BannerService] BannerDTO() 시작");
-//        log.info("[BannerService] BannerDTO : {}", bannerDTO);
-//
-//        String replaceFileName = null;
-//        int result = 0;
-//
-//        /* 설명. update 할 엔티티 조회 */
-//        TblBanner banner = bannerRepository.findById(bannerDTO.getBannerId()).get();
-//
-//        /* 설명. update를 위한 엔티티 값 수정 */
-//        banner.setBannerAcceptStatus(bannerDTO.getBannerAcceptStatus());
-//        banner.setApproverId(bannerDTO.getApproverId());
-//
-//        log.info("[ProductService] updateProduct End ===================================");
-//        return (result > 0) ? "배너 업데이트 성공" : "배너 업데이트 실패";
 //    }
 
 //    public Object updateReturning(BannerDTO bannerDTO) {

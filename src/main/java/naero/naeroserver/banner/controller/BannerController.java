@@ -80,12 +80,12 @@ public class BannerController {
     }
 
     /* 관리자 배너 등록 */
-//    @Operation(summary = "관리자 배너 등록", description = "관리자 페이지에서 배너 등록 처리", tags = { "BannerController" })
-//    @PutMapping("/admin")
-//    public ResponseEntity<ResponseDTO> updateBannerListAdminPage(@ModelAttribute BannerDTO bannerDTO){
-//
-//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 등록 성공", bannerService.updateBanner(bannerDTO)));
-//    }
+    @Operation(summary = "관리자 배너 등록", description = "관리자 페이지에서 배너 등록 처리", tags = { "BannerController" })
+    @PutMapping("/admin")
+    public ResponseEntity<ResponseDTO> updateBannerListAdminPage(@ModelAttribute BannerDTO bannerDTO){
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "배너 등록 성공", bannerService.updateBanner(bannerDTO)));
+    }
 
 //    /* 관리자 배너 반려 */
 //    @Operation(summary = "관리자 배너 등록", description = "관리자 페이지에서 배너 등록 처리", tags = { "BannerController" })
