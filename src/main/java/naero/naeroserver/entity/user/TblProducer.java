@@ -9,7 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 public class TblProducer {
     @Id
     @Column(name = "producer_id", nullable = false)
-    private Integer id;
+    private Integer producerId;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
@@ -42,12 +42,12 @@ public class TblProducer {
     @Column(name = "delivery_crit")
     private Integer deliveryCrit;
 
-    public Integer getId() {
-        return id;
+    public Integer getProducerId() {
+        return producerId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setProducerId(Integer id) {
+        this.producerId = id;
     }
 
     public TblUser getProducer() {
