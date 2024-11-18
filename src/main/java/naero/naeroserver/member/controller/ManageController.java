@@ -2,6 +2,7 @@ package naero.naeroserver.member.controller;
 
 import naero.naeroserver.common.ResponseDTO;
 import naero.naeroserver.member.dto.ManageSearchDTO;
+import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +26,18 @@ public class ManageController {
         ));
     }
 
-
-
     @GetMapping("/detail/{username}")
     public ResponseEntity<ResponseDTO> userDetail(@PathVariable String username){
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
                 userService.findByusername(username)
         ));
+    }
+    @PostMapping("/update")
+    public ResponseEntity<ResponseDTO> updateDetail(@RequestBody UserDTO user){
+
+        System.out.println("수정요청");
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
+                userService.updateDetail(user)));
     }
 
     @GetMapping("/search/{page}")
