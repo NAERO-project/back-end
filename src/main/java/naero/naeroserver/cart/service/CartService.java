@@ -51,7 +51,7 @@ public class CartService {
             if (option.getOptionQuantity() < cartDTO.getCount()) throw new IllegalStateException("상품 재고가 부족합니다.");
 
             // 장바구니에 해당 상품이 이미 있는지 확인
-            TblUser user = userRepository.findById(cartDTO.getUserId());
+            TblUser user = userRepository.findTblUserByUserId(cartDTO.getUserId());
             naero.naeroserver.entity.cart.TblCart cart = cartRepository.findByOptionIdAndUserId(option.getOptionId(), user.getUserId());
 
             if (cart != null) { // 장바구니에 해당 상품이 이미 있을 경우 수량만 추가
@@ -119,9 +119,4 @@ public class CartService {
         return (result > 0) ? "장바구니 상품 삭제 완료" : "장바구니 상품 삭제 실패";
     }
 
-    // 장바구니 상품 주문 페이지로 넘길때 사용하는 메서드
-    public TblOrder startCartOrder(List<CartDTO> cartDTOList) {
-        // TODO
-        return null;
-    }
 }

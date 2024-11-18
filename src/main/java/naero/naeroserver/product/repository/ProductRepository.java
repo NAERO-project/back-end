@@ -1,6 +1,7 @@
 package naero.naeroserver.product.repository;
 
 import naero.naeroserver.entity.product.TblProduct;
+import naero.naeroserver.order.dto.OrderPageProductDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -51,5 +52,16 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "ORDER BY p.productId DESC")
     List<TblProduct> findByIdWithLimit(@Param("producerId") Integer producerId, Pageable pageable);
 
-    TblProduct findById(int productId);
+    // 주문 페이지 내 주문할 상품 정보 전달용
+    @Query("SELECT new naero.naeroserver.order.dto.OrderPageProductDTO(o.optionId, o.productId, p.producerId, " +
+            "pd.producerName, pd.deliveryFee, pd.deliveryCrit, p.productName, " +
+            "p.productImg, p.productThumbnail, p.productPrice, o.addPrice, o.optionDesc, sc.smallCategoryId, sc.smallCategoryName) " +
+            "FROM TblProduct p " +
+            "JOIN TblProducer pd ON p.producerId = pd.producerId " +
+            "JOIN TblOption o ON p.productId = o.productId " +
+            "JOIN TblCategorySmall sc ON p.smallCategoryId = sc.smallCategoryId " +
+            "WHERE o.optionId = :optionId")
+    OrderPageProductDTO findProductDetailForOrder(@Param("optionId") Integer optionId);
+
+    TblProduct findTblProductByProductId(Integer productId);
 }

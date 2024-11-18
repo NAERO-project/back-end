@@ -2,16 +2,16 @@ package naero.naeroserver.cart.dto;
 
 public class CartDTO {
 
-    private int cartId;
-    private int optionId;
-    private int count;
-    private int price;
-    private int userId;
+    private Integer cartId;
+    private Integer optionId;
+    private Integer count;
+    private Integer price;
+    private Integer userId;
 
     public CartDTO() {
     }
 
-    public CartDTO(int cartId, int optionId, int count, int price, int userId) {
+    public CartDTO(Integer cartId, Integer optionId, Integer count, Integer price, Integer userId) {
         this.cartId = cartId;
         this.optionId = optionId;
         this.count = count;
@@ -19,43 +19,43 @@ public class CartDTO {
         this.userId = userId;
     }
 
-    public int getCartId() {
+    public Integer getCartId() {
         return cartId;
     }
 
-    public void setCartId(int cartId) {
+    public void setCartId(Integer cartId) {
         this.cartId = cartId;
     }
 
-    public int getOptionId() {
+    public Integer getOptionId() {
         return optionId;
     }
 
-    public void setOptionId(int optionId) {
+    public void setOptionId(Integer optionId) {
         this.optionId = optionId;
     }
 
-    public int getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

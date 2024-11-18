@@ -20,11 +20,9 @@ public class CartController {
 
     private static final Logger log = LoggerFactory.getLogger(CartController.class);
     private final CartService cartService;
-    private final HttpSession httpSession;
 
-    public CartController(CartService cartService, HttpSession httpSession) {
+    public CartController(CartService cartService) {
         this.cartService = cartService;
-        this.httpSession = httpSession;
     }
 
     @Operation(summary = "장바구니 등록 요청", description = "장바구니에 상품 정보가 등록됩니다.", tags = { "CartController" })
@@ -63,14 +61,5 @@ public class CartController {
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, "장바구니 삭제 완료", cartService.deleteCartItems(cartIds)));
     }
-
-    public ResponseEntity<ResponseDTO> startCartOrder(@ModelAttribute List<CartDTO> cartDTOList) {
-        TblOrder tempOrder = cartService.startCartOrder(cartDTOList);
-
-        httpSession.setAttribute("tempOrder", tempOrder);
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문 페이지로 이동", null));
-    }
-
 
 }

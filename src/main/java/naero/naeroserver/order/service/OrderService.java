@@ -1,15 +1,17 @@
 package naero.naeroserver.order.service;
 
+import naero.naeroserver.cart.dto.CartDTO;
+import naero.naeroserver.entity.order.TblAddress;
 import naero.naeroserver.entity.order.TblOrder;
 import naero.naeroserver.entity.order.TblOrderDetail;
 import naero.naeroserver.entity.order.TblPayment;
 import naero.naeroserver.entity.product.TblOption;
+import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.entity.user.TblUser;
-import naero.naeroserver.member.repository.ProducerRepository;
+import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.repository.UserRepository;
-import naero.naeroserver.order.dto.OrderDTO;
-import naero.naeroserver.order.dto.OrderDetailProductDTO;
-import naero.naeroserver.order.dto.PaymentDTO;
+import naero.naeroserver.order.dto.*;
+import naero.naeroserver.order.repository.AddressRepository;
 import naero.naeroserver.order.repository.OrderDetailRepository;
 import naero.naeroserver.order.repository.OrderRepository;
 import naero.naeroserver.order.repository.PaymentRepository;
@@ -21,7 +23,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -29,10 +34,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -43,11 +45,10 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
-//    private final PaymentService paymentService;
     private final OrderDetailRepository orderDetailRepository;
     private final PaymentRepository paymentRepository;
     private final OptionRepository optionRepository;
-    private final ProducerRepository producerRepository;
+    private final AddressRepository addressRepository;
 
     @Value("${portone.api-key}")
     private String API_KEY;
@@ -64,7 +65,7 @@ public class OrderService {
 
     @Autowired
     public OrderService(ModelMapper modelMapper, OrderRepository orderRepository, UserRepository userRepository,
-                        ProductRepository productRepository, OrderDetailRepository orderDetailRepository, PaymentRepository paymentRepository, OptionRepository optionRepository, ProducerRepository producerRepository) {
+                        ProductRepository productRepository, OrderDetailRepository orderDetailRepository, PaymentRepository paymentRepository, OptionRepository optionRepository, AddressRepository addressRepository) {
         this.modelMapper = modelMapper;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
@@ -72,11 +73,119 @@ public class OrderService {
         this.orderDetailRepository = orderDetailRepository;
         this.paymentRepository = paymentRepository;
         this.optionRepository = optionRepository;
-        this.producerRepository = producerRepository;
+        this.addressRepository = addressRepository;
+    }
+
+    // 주문 페이지로 이동 시 들고갈 정보 생성
+    public OrderPageDTO startOrder(List<CartDTO> cartDTOList) {
+
+        Integer userId = cartDTOList.get(0).getUserId();    // 회원번호
+
+        OrderDTO newOrder = new OrderDTO();
+        UserDTO orderUser = new UserDTO();
+
+        TblUser userInfo = userRepository.findTblUserByUserId(userId);
+        List<TblAddress> userAddressInfo = addressRepository.findTblAddressByUserId(userId);
+
+        // 주문자 정보 저장
+        orderUser.setUserId(userId);
+        orderUser.setUserFullName(userInfo.getUserFullname());
+        orderUser.setUserEmail(userInfo.getUserEmail());
+        orderUser.setUserPhone(userInfo.getUserPhone());
+
+        // 배송지 정보 + 할인 정보(잔여 포인트)
+        newOrder.setUserId(userId);
+        newOrder.setRecipientName(userInfo.getUserFullname());
+        newOrder.setRecipientPhoneNumber(userInfo.getUserPhone());
+        newOrder.setPointDiscount(userInfo.getUserPoint());
+        newOrder.setPostalCode(userAddressInfo.get(0).getPostalCode());
+        newOrder.setAddressRoad(userAddressInfo.get(0).getAddressRoad());
+        newOrder.setAddressDetail(userAddressInfo.get(0).getAddressDetail());
+        newOrder.setAddressName(userAddressInfo.get(0).getAddressName());
+
+        // 주문할 상품 정보 조회해서 리스트에 담기
+        List<OrderPageProductDTO> orderProductsInfo = new ArrayList<>();
+
+        for (CartDTO product : cartDTOList) {
+            OrderPageProductDTO foundProduct = productRepository.findProductDetailForOrder(product.getOptionId());
+            foundProduct.setCount(product.getCount());
+            foundProduct.setProductImg(IMG_URL + foundProduct.getProductImg());
+            foundProduct.setProductThumbnail(IMG_URL + foundProduct.getProductThumbnail());
+            orderProductsInfo.add(foundProduct);
+        }
+
+        // 배송비 계산하기
+        Map<Integer, Integer> deliveryFeeList = new HashMap<>();
+        Map<Integer, Integer> productPriceByProducer = new HashMap<>();
+
+//        for (OrderPageProductDTO orderProduct : orderProductsInfo) {
+//            if (!deliveryFeeList.containsKey(orderProduct.getProducerId())) {
+//                deliveryFeeList.put(orderProduct.getProducerId(), orderProduct.getDeliveryFee());
+//
+//                // 해당 상품 총 주문 금액 = (기본 상품 금액 + 옵션 추가 금액) * 주문 수량
+//                int productPrice = (orderProduct.getAmount() + orderProduct.getAddPrice()) * orderProduct.getCount();
+//                productPriceByProducer.put(orderProduct.getProducerId(), productPrice);
+//            } else {
+//                int productPrice = (orderProduct.getAmount() + orderProduct.getAddPrice()) * orderProduct.getCount();
+//                productPriceByProducer.put(orderProduct.getProducerId(), productPriceByProducer.get(orderProduct.getProducerId()) + productPrice);
+//            }
+//        }
+
+        int totalOrderCount = 0;
+
+        // 위의 코드 리팩토링
+        for (OrderPageProductDTO orderProduct : orderProductsInfo) {
+            // 현재 상품의 총 주문 금액 계산: (기본 상품 금액 + 옵션 추가 금액) * 주문 수량
+            int addPrice = (orderProduct.getAddPrice() != null) ? orderProduct.getAddPrice() : 0;
+            int productPrice = (orderProduct.getAmount() + addPrice) * orderProduct.getCount();
+
+            // deliveryFeeList에 생산자 ID가 없으면 초기화
+            deliveryFeeList.putIfAbsent(orderProduct.getProducerId(), orderProduct.getDeliveryFee());
+
+            // productPriceByProducer에 생산자별 주문 금액 누적
+            productPriceByProducer.merge(orderProduct.getProducerId(), productPrice, Integer::sum);
+
+            // for문 한 번 돌리는 김에..총 주문 수량 구하기
+            totalOrderCount += orderProduct.getCount();
+
+        }
+
+        // 무료 배송 기준 비교 및 배송비 업데이트
+        for (Map.Entry<Integer, Integer> entry : productPriceByProducer.entrySet()) {
+            Integer producerId = entry.getKey();
+            Integer totalPrice = entry.getValue();
+
+            // producerId별 무료 배송 기준을 비교하여 배송비 수정
+            for (OrderPageProductDTO orderProduct : orderProductsInfo) {
+                if (orderProduct.getProducerId().equals(producerId)) {
+                    if (totalPrice >= orderProduct.getDeliveryCrit()) {
+                        deliveryFeeList.put(producerId, 0); // 배송비를 0으로 설정
+                    }
+                    break; // 같은 판매자에 대해 한 번만 확인
+                }
+            }
+        }
+
+        // 판매자별 배송비 금액 구해서 총 배송비 금액 계산
+        int totalDeliveryFee = 0;
+        for (int deliveryFee : deliveryFeeList.values()) {
+            totalDeliveryFee += deliveryFee;
+        }
+
+        int totalPrice = 0;
+        for (int price : productPriceByProducer.values()) {
+            totalPrice += price;
+        }
+
+        newOrder.setDeliveryFee(totalDeliveryFee);
+        newOrder.setOrderTotalAmount(totalPrice);
+        newOrder.setOrderTotalCount(totalOrderCount);
+
+        return new OrderPageDTO(newOrder, orderUser, orderProductsInfo);
     }
 
     @Transactional
-    public Object insertOrder(OrderDTO orderDTO, PaymentDTO paymentDTO, int optionId) {
+    public Object insertOrder(OrderDTO orderDTO, PaymentDTO paymentDTO, Map<Integer, Integer> optionIds) {
         log.info("[OrderService] insertOrder() 시작");
         log.info("[OrderService] orderDTO : {}", orderDTO);
 
@@ -96,14 +205,17 @@ public class OrderService {
             paymentDTO.setReceiptUrl("sample_url");
 
             // 2. 옵션 조회 및 재고 확인
-            TblOption option = optionRepository.findById(optionId).orElseThrow(()
-                    -> new IllegalArgumentException("해당 상품에 대한 옵션이 존재하지 않습니다."));;
+            // <옵션아이디, 옵션 주문수량>
+            for (Map.Entry<Integer, Integer> entry : optionIds.entrySet()) {
+                TblOption option = optionRepository.findById(entry.getKey()).orElseThrow(()
+                        -> new IllegalArgumentException("해당 상품에 대한 옵션이 존재하지 않습니다."));;
 
-            System.out.println(option.getOptionQuantity());
-            if (option.getOptionQuantity() < orderDTO.getOrderTotalCount()) {
-                throw new IllegalStateException("재고가 부족합니다.");
-            } else {
-                option.setOptionQuantity(option.getOptionQuantity() - orderDTO.getOrderTotalCount());
+                if (option.getOptionQuantity() < entry.getValue()) {
+                    throw new IllegalStateException("재고가 부족합니다.");
+                } else {
+                    option.setOptionQuantity(option.getOptionQuantity() - entry.getValue());
+                }
+
             }
 
             TblUser user = userRepository.findTblUserByUserId(orderDTO.getUserId());
@@ -115,7 +227,7 @@ public class OrderService {
 //
 //            orderRepository.saveAndFlush(order); // order 즉시 persisted(payment에서 참조하기 위해)
 
-            // 영속성 문제로 일일이 모든 컬럼 명시적으로 작성함...
+            // 영속성 문제로 일일이 모든 컬럼 명시적으로 작성해야 함
             TblOrder order = new TblOrder();
             order.setUserId(user.getUserId());
             order.setOrderDatetime(Instant.now());
@@ -124,7 +236,8 @@ public class OrderService {
             order.setDeliveryStatus(orderDTO.getDeliveryStatus());
             order.setOrderStatus(orderDTO.getOrderStatus());
             order.setDeliveryFee(orderDTO.getDeliveryFee());
-            order.setDiscountAmount(orderDTO.getDiscountAmount());
+            order.setPointDiscount(orderDTO.getPointDiscount());
+            order.setCouponDiscount(orderDTO.getCouponDiscount());
             order.setRecipientName(orderDTO.getRecipientName());
             order.setRecipientPhoneNumber(orderDTO.getRecipientPhoneNumber());
             order.setPostalCode(orderDTO.getPostalCode());
@@ -157,13 +270,27 @@ public class OrderService {
             paymentRepository.save(payment);
 
             // 4. 주문 상세 정보 저장
-            TblOrderDetail orderDetail = new TblOrderDetail();
-            orderDetail.setAmount(orderDTO.getDiscountAmount());
-            orderDetail.setCount(orderDTO.getOrderTotalCount());
-            orderDetail.setOrderId(order.getOrderId());
-            orderDetail.setOptionId(option.getOptionId());
+            for (Map.Entry<Integer, Integer> entry : optionIds.entrySet()) {
+                TblOption option = optionRepository.findById(entry.getKey()).orElseThrow(()
+                        -> new IllegalArgumentException("해당 상품에 대한 옵션이 존재하지 않습니다."));;
 
-            orderDetailRepository.save(orderDetail);
+                TblProduct product = productRepository.findTblProductByProductId(option.getProductId());
+
+                int addPrice = (option.getAddPrice() != null) ? option.getAddPrice() : 0;
+                int amount = product.getProductPrice() + addPrice;
+
+                TblOrderDetail orderDetail = new TblOrderDetail();
+                orderDetail.setAmount(amount);
+                orderDetail.setCount(entry.getValue());
+                orderDetail.setOrderId(order.getOrderId());
+                orderDetail.setOptionId(entry.getKey());
+
+                orderDetailRepository.save(orderDetail);
+            }
+
+            // 쿠폰, 할인금액 소진
+            user.setUserPoint(user.getUserPoint() - order.getPointDiscount());
+            // TODO 쿠폰번호 tbl_order 에 컬럼으로 추가 후 구현필요
 
             return modelMapper.map(order, OrderDTO.class);
         } catch (Exception e) {
@@ -345,10 +472,16 @@ public class OrderService {
                 order.setOrderStatus("canceled");
                 order.setUpdatedAt(Instant.now());
 
+                // 쿠폰, 할임금액 원복
+                TblUser user = userRepository.findTblUserByUserId(order.getUserId());
+                user.setUserPoint(user.getUserPoint() + order.getPointDiscount());
+                // TODO 쿠폰번호 tbl_order에 저장해야 함
+
                 // 4. 상품 정보(재고 원복) 업데이트
                 TblOrderDetail orderProduct = orderDetailRepository.findByOrderId(order.getOrderId());
                 TblOption option = optionRepository.findTblOptionByOptionId(orderProduct.getOptionId());
                 option.setOptionQuantity(option.getOptionQuantity() + order.getOrderTotalCount());
+
 
 //            } else {
 //                log.error("결제 취소 실패: {}", response.getBody());
@@ -412,5 +545,6 @@ public class OrderService {
 
         return allOrderList.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
     }
+
 
 }

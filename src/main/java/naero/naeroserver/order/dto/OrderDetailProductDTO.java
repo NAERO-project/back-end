@@ -1,16 +1,16 @@
 package naero.naeroserver.order.dto;
 
 public class OrderDetailProductDTO {
-    private int orderDetailId;
-    private int optionId;
-    private int count;
-    private int amount;
+    private Integer orderDetailId;
+    private Integer optionId;
+    private Integer count;
+    private Integer amount;
     private String productName;
     private String productImg;
     private String productThumbnail;
-    private int smallCategoryId;
+    private Integer smallCategoryId;
 
-    public OrderDetailProductDTO(int orderDetailId, int optionId, int count, int amount, String productName, String productImg, String productThumbnail, int smallCategoryId) {
+    public OrderDetailProductDTO(Integer orderDetailId, Integer optionId, Integer count, Integer amount, String productName, String productImg, String productThumbnail, Integer smallCategoryId) {
         this.orderDetailId = orderDetailId;
         this.optionId = optionId;
         this.count = count;
@@ -22,35 +22,35 @@ public class OrderDetailProductDTO {
     }
 
     // Getters and setters
-    public int getOrderDetailId() {
+    public Integer getOrderDetailId() {
         return orderDetailId;
     }
 
-    public void setOrderDetailId(int orderDetailId) {
+    public void setOrderDetailId(Integer orderDetailId) {
         this.orderDetailId = orderDetailId;
     }
 
-    public int getOptionId() {
+    public Integer getOptionId() {
         return optionId;
     }
 
-    public void setOptionId(int optionId) {
+    public void setOptionId(Integer optionId) {
         this.optionId = optionId;
     }
 
-    public int getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 
-    public int getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
@@ -70,11 +70,11 @@ public class OrderDetailProductDTO {
         this.productImg = productImg;
     }
 
-    public int getSmallCategoryId() {
+    public Integer getSmallCategoryId() {
         return smallCategoryId;
     }
 
-    public void setSmallCategoryId(int smallCategoryId) {
+    public void setSmallCategoryId(Integer smallCategoryId) {
         this.smallCategoryId = smallCategoryId;
     }
 

@@ -2,7 +2,11 @@ package naero.naeroserver.order.repository;
 
 import naero.naeroserver.entity.order.TblOrder;
 import naero.naeroserver.entity.order.TblOrderDetail;
+import naero.naeroserver.entity.product.TblProduct;
+import naero.naeroserver.entity.user.TblProducer;
 import naero.naeroserver.entity.user.TblUser;
+import naero.naeroserver.order.dto.OrderDetailProductDTO;
+import naero.naeroserver.product.dto.ProductDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,13 +20,6 @@ public interface OrderRepository extends JpaRepository<TblOrder, Integer> {
     List<TblOrder> findByUserOrderByRecent(@Param("userId") Integer userId);
 
     // 판매자 주문 건 조회
-//    @Query("SELECT o FROM TblOrder o " +
-//            "JOIN o.tblOrderDetails od " + // TblOrder와 TblOrderDetail의 관계
-//            "JOIN od.option op " + // TblOrderDetail과 TblOption의 관계
-//            "JOIN op.product p " + // TblOption과 TblProduct의 관계
-//            "WHERE p.producer.id = :producerId " +
-//            "ORDER BY o.createdAt DESC")
-//    List<TblOrder> findOrdersByProducerId(@Param("producerId") Integer producerId);
     @Query("SELECT o FROM TblOrder o " +
             "JOIN TblOrderDetail od ON o.orderId = od.orderId " + // TblOrder와 TblOrderDetail의 관계를 명시적으로 매핑
             "JOIN TblOption op ON od.optionId = op.optionId " + // TblOrderDetail과 TblOption의 관계

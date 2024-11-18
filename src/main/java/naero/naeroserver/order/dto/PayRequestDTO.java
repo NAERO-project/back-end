@@ -1,18 +1,21 @@
 package naero.naeroserver.order.dto;
 
+import java.util.List;
+import java.util.Map;
+
 public class PayRequestDTO {
 
     private OrderDTO orderDTO;
     private PaymentDTO paymentDTO;
-    private int optionId;
+    private Map<Integer, Integer> optionIds;
 
     public PayRequestDTO() {
     }
 
-    public PayRequestDTO(OrderDTO orderDTO, PaymentDTO paymentDTO, int productId) {
+    public PayRequestDTO(OrderDTO orderDTO, PaymentDTO paymentDTO, Map<Integer, Integer> productId) {
         this.orderDTO = orderDTO;
         this.paymentDTO = paymentDTO;
-        this.optionId = productId;
+        this.optionIds = productId;
     }
 
     public OrderDTO getOrderDTO() {
@@ -31,12 +34,12 @@ public class PayRequestDTO {
         this.paymentDTO = paymentDTO;
     }
 
-    public int getOptionId() {
-        return optionId;
+    public Map<Integer, Integer> getOptionIds() {
+        return optionIds;
     }
 
-    public void setOptionId(int optionId) {
-        this.optionId = optionId;
+    public void setOptionIds(Map<Integer, Integer> optionIds) {
+        this.optionIds = optionIds;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class PayRequestDTO {
         return "PayRequestDTO{" +
                 "orderDTO=" + orderDTO +
                 ", paymentDTO=" + paymentDTO +
-                ", productID=" + optionId +
+                ", productID=" + optionIds +
                 '}';
     }
 }

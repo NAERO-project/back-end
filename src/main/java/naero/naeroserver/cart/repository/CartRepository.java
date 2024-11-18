@@ -7,9 +7,10 @@ import naero.naeroserver.entity.user.TblUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
 public interface CartRepository extends JpaRepository<TblCart, Integer> {
 
     // 옵션번호와 회원번호로 장바구니 상품 조회

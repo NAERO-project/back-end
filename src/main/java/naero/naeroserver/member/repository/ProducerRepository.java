@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ProducerRepository extends JpaRepository<TblProducer, Integer> {
-    TblProducer findTblProducerById(int i);
 
+    // 판매자번호로 구매할 상품의 판매자 정보 조회
+    TblProducer findByProducerId(Integer producerId);
 }
