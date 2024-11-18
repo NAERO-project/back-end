@@ -14,9 +14,9 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
 
     @Query("SELECT new map(pr.producerName AS producer_name, CAST(SUM(od.amount) AS double) AS total_amount) " +
             "FROM TblProducer pr " +
-            "LEFT JOIN TblProduct pt ON pr.id = pt.producerId " +
+            "LEFT JOIN TblProduct pt ON pr.producerId = pt.producerId " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
-            "LEFT JOIN TblOrderDetail od ON op.optionId = od.option " +
+            "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
             "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "GROUP BY pr.producerName " +
             "ORDER BY SUM(od.amount) DESC")
@@ -25,9 +25,9 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
 
     @Query("SELECT new map(pr.producerName AS producer_name, CAST(SUM(od.count) AS double) AS total_count) " +
             "FROM TblProducer pr " +
-            "LEFT JOIN TblProduct pt ON pr.id = pt.producerId " +
+            "LEFT JOIN TblProduct pt ON pr.producerId = pt.producerId " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
-            "LEFT JOIN TblOrderDetail od ON op.optionId = od.option " +
+            "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
             "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "GROUP BY pr.producerName " +
             "ORDER BY SUM(od.count) DESC")
@@ -36,9 +36,9 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
 
     @Query("SELECT new map(DATE(od.createdAt) AS order_date, SUM(od.amount) AS total_amount) " +
             "FROM TblProducer pr " +
-            "LEFT JOIN TblProduct pt ON pr.id = pt.producerId " +
+            "LEFT JOIN TblProduct pt ON pr.producerId = pt.producerId " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
-            "LEFT JOIN TblOrderDetail od ON op.optionId = od.option " +
+            "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
             "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "AND pr.producerName = :specification " +
             "GROUP BY DATE(od.createdAt) " +
@@ -49,9 +49,9 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
 
     @Query("SELECT new map(DATE(od.createdAt) AS order_date, SUM(od.count) AS total_count) " +
             "FROM TblProducer pr " +
-            "LEFT JOIN TblProduct pt ON pr.id = pt.producerId " +
+            "LEFT JOIN TblProduct pt ON pr.producerId = pt.producerId " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
-            "LEFT JOIN TblOrderDetail od ON op.optionId = od.option " +
+            "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
             "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "AND pr.producerName = :specification " +
             "GROUP BY DATE(od.createdAt) " +

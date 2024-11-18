@@ -14,7 +14,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
     @Query("SELECT new map(pt.productName AS product_name, CAST(SUM(od.amount) AS double) AS total_amount) " +
             "FROM TblProduct pt " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
-            "LEFT JOIN TblOrderDetail od ON op.optionId = od.option " +
+            "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
             "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "GROUP BY pt.productName " +
             "ORDER BY SUM(od.amount) DESC")
@@ -24,7 +24,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
     @Query("SELECT new map(pt.productName AS product_name, CAST(SUM(od.count) AS double) AS total_count) " +
             "FROM TblProduct pt " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
-            "LEFT JOIN TblOrderDetail od ON op.optionId = od.option " +
+            "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
             "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "GROUP BY pt.productName " +
             "ORDER BY SUM(od.count) DESC")
@@ -34,7 +34,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
     @Query("SELECT new map(DATE(od.createdAt) AS order_date, SUM(od.amount) AS total_amount) " +
             "FROM TblProduct pt " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
-            "LEFT JOIN TblOrderDetail od ON op.optionId = od.option " +
+            "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
             "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "AND pt.productName = :specification " +
             "GROUP BY DATE(od.createdAt) " +
@@ -46,7 +46,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
     @Query("SELECT new map(DATE(od.createdAt) AS order_date, SUM(od.count) AS total_count) " +
             "FROM TblProduct pt " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
-            "LEFT JOIN TblOrderDetail od ON op.optionId = od.option " +
+            "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
             "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "AND pt.productName = :specification " +
             "GROUP BY DATE(od.createdAt) " +
