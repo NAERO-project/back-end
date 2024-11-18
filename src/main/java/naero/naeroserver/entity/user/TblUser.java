@@ -7,6 +7,7 @@ import naero.naeroserver.entity.auth.TblUserRole;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -45,7 +46,7 @@ public class TblUser {
     private Integer userPoint;
 
     @Column(name = "enroll_date")
-    private LocalDate enrollDate;
+    private Date enrollDate;
 
     @Size(max = 1)
     @ColumnDefault("'N'")
@@ -54,7 +55,7 @@ public class TblUser {
 
     @ColumnDefault("1")
     @Column(name = "grade_id")
-    private Integer gradeId;
+    private Integer gradeId = 1;
 
     @OneToMany(mappedBy = "user")
     private Set<TblUserRole> tblUserRoles = new LinkedHashSet<>();
@@ -116,11 +117,11 @@ public class TblUser {
         this.userPoint = userPoint;
     }
 
-    public LocalDate getEnrollDate() {
+    public Date getEnrollDate() {
         return enrollDate;
     }
 
-    public void setEnrollDate(LocalDate enrollDate) {
+    public void setEnrollDate(Date enrollDate) {
         this.enrollDate = enrollDate;
     }
 
