@@ -4,8 +4,10 @@ import jakarta.transaction.Transactional;
 import naero.naeroserver.entity.user.TblUser;
 import naero.naeroserver.exception.LoginFailedException;
 import naero.naeroserver.exception.UpdateUserException;
+import naero.naeroserver.member.dto.ManageSearchDTO;
 import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.dto.UserGradeDTO;
+import naero.naeroserver.member.repository.SearchRepository;
 import naero.naeroserver.member.repository.UserGradeRepository;
 import naero.naeroserver.member.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -16,6 +18,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class UserService {
 
@@ -23,12 +29,14 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final UserGradeRepository userGradeRepository;
+    private final SearchRepository searchRepository;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, UserGradeRepository userGradeRepository) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, UserGradeRepository userGradeRepository, SearchRepository searchRepository) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.userGradeRepository = userGradeRepository;
+        this.searchRepository = searchRepository;
     }
 
     public Object findByusername(String username) {
@@ -78,6 +86,28 @@ public class UserService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("username").ascending());
         Page<TblUser> usersPage =userRepository.findAll(pageable);
         return usersPage.map(user -> modelMapper.map(user, UserDTO.class));
+    }
+
+    public  Map<String, Object> searchUser(Integer page, int size, ManageSearchDTO crit) {
+        List<Object[]> result = searchRepository.search(crit, page, size);
+
+        // 전체 데이터 개수 계산 (총 페이지 수나 총 항목 수를 구할 때 사용)
+        String countQuery = "SELECT COUNT(*) FROM your_table WHERE 1=1";
+        // countQuery에서 filter 및 keyword 조건을 적용해서 전체 데이터 수를 구할 수 있습니다.
+        int totalCount = searchRepository.getTotalCount(crit);
+
+        // 전체 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalCount / size);
+
+        // 결과 반환
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", result);
+        response.put("totalCount", totalCount);
+        response.put("totalPages", totalPages);
+        response.put("currentPage", page);
+
+        System.out.println(response);
+        return response;
     }
 
     public Object findByUserEmail(String email) {

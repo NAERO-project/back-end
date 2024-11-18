@@ -36,8 +36,9 @@ public class ManageController {
 
     @GetMapping("/search/{page}")
     public ResponseEntity<ResponseDTO> userSearch(@PathVariable Integer page, @RequestBody ManageSearchDTO crit){
+        System.out.println("crit 확인"+ crit);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
-                userService.getAllUserPage(page,SIZE)
+                userService.searchUser(page,SIZE , crit)
         ));
     }
     @GetMapping("/withdraw/{username}")
@@ -46,5 +47,7 @@ public class ManageController {
         userService.withdrawUser(username);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "message", null));
     }
+
+
 
 }
