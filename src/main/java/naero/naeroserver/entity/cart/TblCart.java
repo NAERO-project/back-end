@@ -13,7 +13,7 @@ public class TblCart {
 
     @NotNull
     @Column(name = "option_id", nullable = false)
-    private Integer option;
+    private Integer optionId;
 
     @NotNull
     @Column(name = "count", nullable = false)
@@ -35,12 +35,12 @@ public class TblCart {
         this.cartId = id;
     }
 
-    public Integer getOption() {
-        return option;
+    public Integer getOptionId() {
+        return optionId;
     }
 
-    public void setOption(Integer option) {
-        this.option = option;
+    public void setOptionId(Integer option) {
+        this.optionId = option;
     }
 
     public Integer getCount() {

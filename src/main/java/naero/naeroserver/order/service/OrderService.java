@@ -4,7 +4,6 @@ import naero.naeroserver.entity.order.TblOrder;
 import naero.naeroserver.entity.order.TblOrderDetail;
 import naero.naeroserver.entity.order.TblPayment;
 import naero.naeroserver.entity.product.TblOption;
-import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.entity.user.TblUser;
 import naero.naeroserver.member.repository.ProducerRepository;
 import naero.naeroserver.member.repository.UserRepository;
@@ -21,16 +20,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -52,6 +54,8 @@ public class OrderService {
     @Value("${portone.api-secret}")
     private String API_SECRET;
     private static final long TOKEN_EXPIRY_DURATION = 3600 * 1000; // 1시간
+    @Value("${image.image-url}")
+    private String IMG_URL;
 
     private final AtomicReference<String> cachedToken = new AtomicReference<>();
     private long tokenFetchTime = 0;
@@ -87,9 +91,9 @@ public class OrderService {
             paymentDTO.setCurrency("KRW");
             paymentDTO.setPaymentStatus("completed"); // 예: 결제 완료로 설정
 //            paymentDTO.setTransaction_id((String) paymentInfo.get("transaction_id"));
-            paymentDTO.setTransaction_id("transid_1223423423422");
+            paymentDTO.setTransactionId("transid_1223423423422");
 //            paymentDTO.setReceipt_url((String) paymentInfo.get("receipt_url"));
-            paymentDTO.setReceipt_url("sample_url");
+            paymentDTO.setReceiptUrl("sample_url");
 
             // 2. 옵션 조회 및 재고 확인
             TblOption option = optionRepository.findById(optionId).orElseThrow(()
@@ -102,11 +106,18 @@ public class OrderService {
                 option.setOptionQuantity(option.getOptionQuantity() - orderDTO.getOrderTotalCount());
             }
 
-            TblUser user = userRepository.findTblUserById(orderDTO.getUserId());
+            TblUser user = userRepository.findTblUserByUserId(orderDTO.getUserId());
 
             // 2. 주문 정보 저장
+//            TblOrder order = modelMapper.map(orderDTO, TblOrder.class);
+//            order.setUserId(user.getUserId());
+//            order.setOrderDatetime(Instant.now());
+//
+//            orderRepository.saveAndFlush(order); // order 즉시 persisted(payment에서 참조하기 위해)
+
+            // 영속성 문제로 일일이 모든 컬럼 명시적으로 작성함...
             TblOrder order = new TblOrder();
-            order.setUser(user);
+            order.setUserId(user.getUserId());
             order.setOrderDatetime(Instant.now());
             order.setOrderTotalAmount(orderDTO.getOrderTotalAmount());
             order.setOrderTotalCount(orderDTO.getOrderTotalCount());
@@ -121,48 +132,40 @@ public class OrderService {
             order.setAddressDetail(orderDTO.getAddressDetail());
             order.setAddressName(orderDTO.getAddressName());
             order.setDeliveryNote(orderDTO.getDeliveryNote());
-
-            log.info(String.valueOf(orderDTO));
-//            TblOrder order = modelMapper.map(orderDTO, TblOrder.class);
-//            order.setUser(user);
-//            order.setOrderDatetime(Instant.now());
-
             orderRepository.save(order);
 
+            log.info("Order ID after saving: {}", order.getOrderId()); // 확인
+
             // 3. 결제 정보 저장
+//            TblPayment payment = modelMapper.map(paymentDTO, TblPayment.class);
+//            payment.setUserId(user.getUserId());
+//            payment.setOrderId(order.getOrderId()); // 저장된 order의 ID 참조
+//            payment.setAmount(orderDTO.getOrderTotalAmount());
+
             TblPayment payment = new TblPayment();
             payment.setUserId(paymentDTO.getUserId());
-            payment.setOrder(order); // 저장된 order의 ID 참조
-            payment.setAmount(orderDTO.getOrderTotalAmount());
+            payment.setOrderId(order.getOrderId());
+            payment.setAmount(order.getOrderTotalAmount());
             payment.setCurrency(paymentDTO.getCurrency());
             payment.setPaymentMethod(paymentDTO.getPaymentMethod());
             payment.setPaymentStatus(paymentDTO.getPaymentStatus());
-            payment.setImpUid(paymentDTO.getImp_uid());
-            payment.setMerchantUid(paymentDTO.getMerchant_uid());
-            payment.setReceiptUrl(paymentDTO.getReceipt_url());
-            payment.setTransactionId(paymentDTO.getTransaction_id());
+            payment.setImpUid(paymentDTO.getImpUid());
+            payment.setMerchantUid(paymentDTO.getMerchantUid());
+            payment.setReceiptUrl(paymentDTO.getReceiptUrl());
+            payment.setTransactionId(paymentDTO.getTransactionId());
 
             paymentRepository.save(payment);
-
-//            TblProduct product = productRepository.findById(productId);
-//            TblOption option = optionRepository.findByProduct(product);
-//            if (option.getId() == null) {
-//                throw new IllegalStateException("해당 상품에 대한 옵션이 존재하지 않습니다.");
-//            }
 
             // 4. 주문 상세 정보 저장
             TblOrderDetail orderDetail = new TblOrderDetail();
             orderDetail.setAmount(orderDTO.getDiscountAmount());
             orderDetail.setCount(orderDTO.getOrderTotalCount());
-            orderDetail.setOrder(order);
-            orderDetail.setOption(option);
+            orderDetail.setOrderId(order.getOrderId());
+            orderDetail.setOptionId(option.getOptionId());
 
             orderDetailRepository.save(orderDetail);
 
             return modelMapper.map(order, OrderDTO.class);
-        } catch (IllegalStateException e) {
-            log.error("[OrderService] Exception: {}", e.getMessage());
-            throw e; // 예외를 다시 던져서 호출하는 쪽에서 처리하도록 함
         } catch (Exception e) {
             log.error("[OrderService] Exception: {}", e.getMessage());
             throw new RuntimeException("주문 처리 중 오류가 발생했습니다."); // 일반 예외 처리
@@ -186,27 +189,55 @@ public class OrderService {
 //                    }
 //                });
 //    }
+//    private Map<String, Object> validatePayment(String impUid, int orderTotalAmount, String portoneToken) {
+//        RestTemplate restTemplate = new RestTemplate();
+//        String url = "https://api.portone.io/v2/payments/" + impUid;
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization", portoneToken);
+//
+//        ResponseEntity<Map> response = restTemplate.exchange(
+//                url,
+//                HttpMethod.GET,
+//                new HttpEntity<>(headers),
+//                Map.class
+//        );
+//
+//        Map<String, Object> paymentData = response.getBody();
+//        int amount = (int) paymentData.get("amount");
+//        if (orderTotalAmount != amount) {
+//            throw new IllegalStateException("결제 금액 불일치");
+//        }
+//
+//        return paymentData;
+//    }
     private Map<String, Object> validatePayment(String impUid, int orderTotalAmount, String portoneToken) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = "https://api.portone.io/v2/payments/" + impUid;
+        WebClient webClient = WebClient.builder()
+                .baseUrl("https://api.portone.io/v2/payments/")
+                .defaultHeader("Authorization", portoneToken)
+                .build();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", portoneToken);
+        try {
+            Map<String, Object> paymentData = webClient.get()
+                    .uri(impUid)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .block(); // Synchronous operation
 
-        ResponseEntity<Map> response = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                Map.class
-        );
+            int amount = (int) paymentData.get("amount");
+            if (orderTotalAmount != amount) {
+                throw new IllegalStateException("결제 금액 불일치: 요청 금액(" + orderTotalAmount + ") vs 결제 금액(" + amount + ")");
+            }
 
-        Map<String, Object> paymentData = response.getBody();
-        int amount = (int) paymentData.get("amount");
-        if (orderTotalAmount != amount) {
-            throw new IllegalStateException("결제 금액 불일치");
+            return paymentData;
+
+        } catch (WebClientResponseException e) {
+            // Handle HTTP errors
+            throw new IllegalStateException("결제 정보 조회 실패: " + e.getStatusCode() + " " + e.getResponseBodyAsString(), e);
+        } catch (Exception e) {
+            // Handle other errors
+            throw new IllegalStateException("결제 검증 중 알 수 없는 오류 발생", e);
         }
-
-        return paymentData;
     }
 
     // 포트원 토큰 요청 메서드
@@ -269,7 +300,7 @@ public class OrderService {
                 Map.class
         );
 
-        return "Bearer " + response.getBody().get("accessToken").toString();
+        return "Bearer " + Objects.requireNonNull(response.getBody()).get("accessToken").toString();
     }
 
     // 결제 취소
@@ -280,13 +311,11 @@ public class OrderService {
         TblPayment payment = paymentRepository.findById(Integer.valueOf(paymentId))
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보가 존재하지 않습니다."));
 
-        TblOrder order = orderRepository.findById(payment.getOrder().getId())
+        TblOrder order = orderRepository.findById(payment.getOrderId())
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보가 존재하지 않습니다."));
 
-        System.out.println(order.getOrderStatus());
-
         if (!order.getDeliveryStatus().equals("pending") || order.getOrderStatus().equals("canceled")) {
-            throw new IllegalStateException("취소가 불가한 주문 건 입니다.");
+            throw new IllegalStateException("취소 불가한 주문 건 입니다.");
         }
 
         try {
@@ -311,16 +340,14 @@ public class OrderService {
                 // 2. 결제 정보 업데이트
                 payment.setPaymentStatus("canceled");
                 payment.setUpdatedAt(Instant.now());
-//                paymentRepository.save(payment);
 
                 // 3. 주문 정보 업데이트
                 order.setOrderStatus("canceled");
                 order.setUpdatedAt(Instant.now());
-//                orderRepository.save(order);
 
                 // 4. 상품 정보(재고 원복) 업데이트
-                TblOrderDetail orderProduct = orderDetailRepository.findByOrderId(order.getId());
-                TblOption option = orderProduct.getOption();
+                TblOrderDetail orderProduct = orderDetailRepository.findByOrderId(order.getOrderId());
+                TblOption option = optionRepository.findTblOptionByOptionId(orderProduct.getOptionId());
                 option.setOptionQuantity(option.getOptionQuantity() + order.getOrderTotalCount());
 
 //            } else {
@@ -337,8 +364,7 @@ public class OrderService {
 
     // 마이페이지 내 구매자별 주문 리스트 조회 (최신순으로)
     public Object selectOrderList(String userId) {
-        TblUser user = userRepository.findTblUserById(Integer.parseInt(userId));
-        List<TblOrder> orderList = orderRepository.findByUserOrderByRecent(user); // 최신순으로 정렬된 주문 리스트 조회
+        List<TblOrder> orderList = orderRepository.findByUserOrderByRecent(Integer.valueOf(userId));
 
         log.info("[OrderService] orderList {}", orderList);
 
@@ -361,10 +387,15 @@ public class OrderService {
 
         log.info("[OrderService] orderDetails {}", orderDetails);
 
+        for(int i = 0 ; i < orderDetails.size() ; i++) {
+            orderDetails.get(i).setProductImg(IMG_URL + orderDetails.get(i).getProductImg());
+            orderDetails.get(i).setProductThumbnail(IMG_URL + orderDetails.get(i).getProductThumbnail());
+        }
+
         return orderDetails;
     }
 
-    // 판매자 주문 건 조회
+    // 해당 판매자의 주문 건 전체 조회
     public Object getOrderListByProducer(String producerId) {
         List<TblOrder> orderListByProducer = orderRepository.findOrdersByProducerId(Integer.valueOf(producerId));
 
