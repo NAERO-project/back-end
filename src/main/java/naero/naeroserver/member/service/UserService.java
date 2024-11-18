@@ -9,6 +9,10 @@ import naero.naeroserver.member.dto.UserGradeDTO;
 import naero.naeroserver.member.repository.UserGradeRepository;
 import naero.naeroserver.member.repository.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +72,12 @@ public class UserService {
 
         return modelMapper.map(getUser, UserDTO.class);
 
+    }
+
+    public Page<UserDTO> getAllUserPage(Integer page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("username").ascending());
+        Page<TblUser> usersPage =userRepository.findAll(pageable);
+        return usersPage.map(user -> modelMapper.map(user, UserDTO.class));
     }
 
     public Object findByUserEmail(String email) {
