@@ -3,12 +3,8 @@ package naero.naeroserver.entity.order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.ship.TblShipping;
-import naero.naeroserver.entity.user.TblUser;
 
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "tbl_order")
@@ -16,7 +12,7 @@ public class TblOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", nullable = false)
-    private Integer id;
+    private Integer orderId;
 
     @Column(name = "order_datetime")
     private Instant orderDatetime;
@@ -43,8 +39,11 @@ public class TblOrder {
     @Column(name = "delivery_fee", nullable = false)
     private Integer deliveryFee;
 
-    @Column(name = "discount_amount")
-    private Integer discountAmount;
+    @Column(name = "point_discount")
+    private Integer pointDiscount;
+
+    @Column(name = "coupon_discount")
+    private Integer couponDiscount;
 
     @Size(max = 20)
     @NotNull
@@ -90,25 +89,15 @@ public class TblOrder {
     private Instant updatedAt;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private TblUser user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
-    @OneToMany(mappedBy = "order")
-    private Set<TblOrderDetail> tblOrderDetails = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "order")
-    private Set<TblPayment> tblPayments = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "order")
-    private Set<TblShipping> tblShippings = new LinkedHashSet<>();
-
-    public Integer getId() {
-        return id;
+    public Integer getOrderId() {
+        return orderId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setOrderId(Integer id) {
+        this.orderId = id;
     }
 
     public Instant getOrderDatetime() {
@@ -159,12 +148,20 @@ public class TblOrder {
         this.deliveryFee = deliveryFee;
     }
 
-    public Integer getDiscountAmount() {
-        return discountAmount;
+    public Integer getPointDiscount() {
+        return pointDiscount;
     }
 
-    public void setDiscountAmount(Integer discountAmount) {
-        this.discountAmount = discountAmount;
+    public void setPointDiscount(Integer pointDiscount) {
+        this.pointDiscount = pointDiscount;
+    }
+
+    public Integer getCouponDiscount() {
+        return couponDiscount;
+    }
+
+    public void setCouponDiscount(Integer couponDiscount) {
+        this.couponDiscount = couponDiscount;
     }
 
     public String getRecipientName() {
@@ -247,36 +244,12 @@ public class TblOrder {
         this.updatedAt = updatedAt;
     }
 
-    public TblUser getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(TblUser user) {
-        this.user = user;
-    }
-
-    public Set<TblOrderDetail> getTblOrderDetails() {
-        return tblOrderDetails;
-    }
-
-    public void setTblOrderDetails(Set<TblOrderDetail> tblOrderDetails) {
-        this.tblOrderDetails = tblOrderDetails;
-    }
-
-    public Set<TblPayment> getTblPayments() {
-        return tblPayments;
-    }
-
-    public void setTblPayments(Set<TblPayment> tblPayments) {
-        this.tblPayments = tblPayments;
-    }
-
-    public Set<TblShipping> getTblShippings() {
-        return tblShippings;
-    }
-
-    public void setTblShippings(Set<TblShipping> tblShippings) {
-        this.tblShippings = tblShippings;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
 }

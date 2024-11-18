@@ -3,16 +3,13 @@ package naero.naeroserver.entity.user;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Entity
 @Table(name = "tbl_grade")
 public class TblGrade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grade_id", nullable = false)
-    private Integer id;
+    private Integer gradeId;
 
     @Size(max = 20)
     @Column(name = "grade_name", length = 20)
@@ -21,13 +18,12 @@ public class TblGrade {
     @Column(name = "crit_exp")
     private Integer critExp;
 
-
-    public Integer getId() {
-        return id;
+    public Integer getGradeId() {
+        return gradeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setGradeId(Integer id) {
+        this.gradeId = id;
     }
 
     public String getGradeName() {
@@ -45,6 +41,5 @@ public class TblGrade {
     public void setCritExp(Integer critExp) {
         this.critExp = critExp;
     }
-
 
 }

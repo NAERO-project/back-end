@@ -69,7 +69,7 @@ CREATE TABLE `tbl_user` (
                             `user_email`	varchar(255)	NULL	COMMENT '이메일',
                             `user_phone`	varchar(20)	NULL	COMMENT '연락처',
                             `user_point`	int	NULL DEFAULT 0	COMMENT '보유 포인트',
-                            `enroll_date`	 DATE	 NULL 	COMMENT '가입일',
+                            `enroll_date`	 DATETIME	 NULL 	COMMENT '가입일',
                             `with_status`	varchar(1)	NULL DEFAULT 'N'	COMMENT '탈퇴여부',
                             `grade_id`	int NULL	DEFAULT 1	COMMENT '회원 등급 번호'
 );
@@ -77,7 +77,7 @@ CREATE TABLE `tbl_user` (
 CREATE TRIGGER before_insert_tbl_user
     BEFORE INSERT ON `tbl_user`
     FOR EACH ROW
-    SET NEW.enroll_date = IFNULL(NEW.enroll_date, CURRENT_DATE),
+    SET NEW.enroll_date = IFNULL(NEW.enroll_date, CURRENT_TIMESTAMP),
     NEW.with_status = 'N',
     NEW.user_point = 0;
 ;
@@ -310,6 +310,7 @@ CREATE TABLE `tbl_banner` (
                               `banner_create_at`	DateTime	NULL	COMMENT '등록 날짜',
                               `banner_delete_at`	DateTime	NULL	COMMENT '철회 날짜',
                               `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
+                              `banner_accept_status`  varchar(1)	NULL DEFAULT 'N'	COMMENT '승인여부',
                               `banner_accept_at`	DateTime	NULL	COMMENT '승인 날짜',
                               `approver_id`	int	NULL	COMMENT '승인자'
 );
@@ -324,7 +325,7 @@ CREATE TABLE `tbl_magazine` (
 
 
 CREATE TABLE tbl_liked_seller (
-                                  `likeSeller_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '찜번호',
+                                  `like_seller_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '찜번호',
                                   `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
                                   `user_id`	int	NOT NULL	COMMENT '회원 번호',
                                   `brand_like_date`	DateTime NULL	COMMENT '등록일시'
@@ -402,6 +403,8 @@ CREATE TABLE `tbl_order` (
                              `delivery_status`	varchar(50)	NOT NULL	COMMENT '배송 상태',
                              `order_status`	varchar(50)	NOT NULL	COMMENT '주문 상태',
                              `delivery_fee`	int	NOT NULL	COMMENT '배송비',
+                            `point_discount` int NULL COMMENT '포인트 할인',
+                            `coupon_discount` int NULL COMMENT '쿠폰 할인',
                              `discount_amount`	int	NULL	COMMENT '할인 금액',
                              `recipient_name`	varchar(20)	NOT NULL	COMMENT '수령인 이름',
                              `recipient_phone_number`	varchar(50)	NOT NULL	COMMENT '수령인 연락처',

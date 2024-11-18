@@ -12,7 +12,7 @@ public class TblAuth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "auth_id", nullable = false)
-    private Integer id;
+    private Integer authId;
 
     @Size(max = 20)
     @NotNull
@@ -23,21 +23,17 @@ public class TblAuth {
     @Column(name = "start_time", nullable = false)
     private LocalTime startTime;
 
-    @Size(max = 20)
-    @Column(name = "Field", length = 20)
-    private String field;
-
     @Size(max = 1)
     @NotNull
     @Column(name = "auth_status", nullable = false, length = 1)
     private String authStatus;
 
-    public Integer getId() {
-        return id;
+    public Integer getAuthId() {
+        return authId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setAuthId(Integer id) {
+        this.authId = id;
     }
 
     public String getAuthKey() {
@@ -54,14 +50,6 @@ public class TblAuth {
 
     public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
-    }
-
-    public String getField() {
-        return field;
-    }
-
-    public void setField(String field) {
-        this.field = field;
     }
 
     public String getAuthStatus() {

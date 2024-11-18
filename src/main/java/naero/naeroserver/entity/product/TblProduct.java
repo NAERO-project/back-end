@@ -3,13 +3,9 @@ package naero.naeroserver.entity.product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.liked.TblLikedProduct;
-import naero.naeroserver.entity.inquiry.TblReview;
-import naero.naeroserver.entity.user.TblProducer;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "tbl_product")
@@ -17,7 +13,7 @@ public class TblProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id", nullable = false)
-    private Integer id;
+    private Integer productId;
 
     @Size(max = 50)
     @Column(name = "product_name", length = 50)
@@ -45,37 +41,24 @@ public class TblProduct {
     private Instant productDeleteAt;
 
     @Size(max = 1)
+    @ColumnDefault("'Y'")
     @Column(name = "product_check", length = 1)
     private String productCheck;
 
-    @Column(name = "product_quantity")
-    private Integer productQuantity;
+    @NotNull
+    @Column(name = "producer_id", nullable = false)
+    private Integer producerId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "producer_id", nullable = false, referencedColumnName = "producer_id")
-    private TblProducer producer;
+    @Column(name = "small_category_id", nullable = false)
+    private Integer smallCategory;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "small_category_id", nullable = false)
-    private TblCategorySmall smallCategory;
-
-    @OneToMany(mappedBy = "product")
-    private Set<TblLikedProduct> tblLikedProducts = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "product")
-    private Set<TblOption> tblOptions = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "product")
-    private Set<TblReview> tblReviews = new LinkedHashSet<>();
-
-    public Integer getId() {
-        return id;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setId(Integer productId) {
-        this.id = productId;
+    public void setProductId(Integer id) {
+        this.productId = id;
     }
 
     public String getProductName() {
@@ -142,52 +125,20 @@ public class TblProduct {
         this.productCheck = productCheck;
     }
 
-    public Integer getProductQuantity() {
-        return productQuantity;
+    public Integer getProducerId() {
+        return producerId;
     }
 
-    public void setProductQuantity(Integer productQuantity) {
-        this.productQuantity = productQuantity;
+    public void setProducerId(Integer producerId) {
+        this.producerId = producerId;
     }
 
-    public TblProducer getProducer() {
-        return producer;
-    }
-
-    public void setProducer(TblProducer producer) {
-        this.producer = producer;
-    }
-
-    public TblCategorySmall getSmallCategory() {
+    public Integer getSmallCategory() {
         return smallCategory;
     }
 
-    public void setSmallCategory(TblCategorySmall smallCategory) {
+    public void setSmallCategory(Integer smallCategory) {
         this.smallCategory = smallCategory;
-    }
-
-    public Set<TblLikedProduct> getTblLikedProducts() {
-        return tblLikedProducts;
-    }
-
-    public void setTblLikedProducts(Set<TblLikedProduct> tblLikedProducts) {
-        this.tblLikedProducts = tblLikedProducts;
-    }
-
-    public Set<TblOption> getTblOptions() {
-        return tblOptions;
-    }
-
-    public void setTblOptions(Set<TblOption> tblOptions) {
-        this.tblOptions = tblOptions;
-    }
-
-    public Set<TblReview> getTblReviews() {
-        return tblReviews;
-    }
-
-    public void setTblReviews(Set<TblReview> tblReviews) {
-        this.tblReviews = tblReviews;
     }
 
 }

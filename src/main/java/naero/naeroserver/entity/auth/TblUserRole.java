@@ -10,7 +10,7 @@ public class TblUserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_role_id", nullable = false)
-    private Integer id;
+    private Integer userRoleId;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -22,12 +22,12 @@ public class TblUserRole {
     @JoinColumn(name = "role_id", nullable = false)
     private TblRole role;
 
-    public Integer getId() {
-        return id;
+    public Integer getUserRoleId() {
+        return userRoleId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUserRoleId(Integer id) {
+        this.userRoleId = id;
     }
 
     public TblUser getUser() {

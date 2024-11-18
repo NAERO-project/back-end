@@ -2,8 +2,6 @@ package naero.naeroserver.entity.order;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import naero.naeroserver.entity.product.TblOption;
-import naero.naeroserver.entity.ship.TblShipping;
 
 import java.time.Instant;
 
@@ -13,12 +11,11 @@ public class TblOrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_detail_id", nullable = false)
-    private Integer id;
+    private Integer orderDetailId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "option_id", nullable = false)
-    private TblOption option;
+    @Column(name = "option_id", nullable = false)
+    private Integer optionId;
 
     @NotNull
     @Column(name = "count", nullable = false)
@@ -34,29 +31,27 @@ public class TblOrderDetail {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shipping_id")
-    private TblShipping shipping;
+    @Column(name = "shipping_id")
+    private Integer shippingId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
-    private TblOrder order;
+    @Column(name = "order_id", nullable = false)
+    private Integer orderId;
 
-    public Integer getId() {
-        return id;
+    public Integer getOrderDetailId() {
+        return orderDetailId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setOrderDetailId(Integer id) {
+        this.orderDetailId = id;
     }
 
-    public TblOption getOption() {
-        return option;
+    public Integer getOptionId() {
+        return optionId;
     }
 
-    public void setOption(TblOption option) {
-        this.option = option;
+    public void setOptionId(Integer option) {
+        this.optionId = option;
     }
 
     public Integer getCount() {
@@ -91,20 +86,20 @@ public class TblOrderDetail {
         this.updatedAt = updatedAt;
     }
 
-    public TblShipping getShipping() {
-        return shipping;
+    public Integer getShippingId() {
+        return shippingId;
     }
 
-    public void setShipping(TblShipping shipping) {
-        this.shipping = shipping;
+    public void setShippingId(Integer shippingId) {
+        this.shippingId = shippingId;
     }
 
-    public TblOrder getOrder() {
-        return order;
+    public Integer getOrderId() {
+        return orderId;
     }
 
-    public void setOrder(TblOrder order) {
-        this.order = order;
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
 }
