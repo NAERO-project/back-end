@@ -2,6 +2,7 @@ package naero.naeroserver.member.dto;
 
 public class ProducerDTO {
     private int producerId;
+    private UserDTO user;
     private String busiNo;
     private String producerAdd;
     private String producerName;
@@ -13,8 +14,9 @@ public class ProducerDTO {
     public ProducerDTO() {
     }
 
-    public ProducerDTO(int producerId, String busiNo, String producerAdd, String producerName, String producerPhone, ProducerGradeDTO producerGrade, int deliveryFee, int deliveryCrit) {
+    public ProducerDTO(int producerId, UserDTO user, String busiNo, String producerAdd, String producerName, String producerPhone, ProducerGradeDTO producerGrade, int deliveryFee, int deliveryCrit) {
         this.producerId = producerId;
+        this.user = user;
         this.busiNo = busiNo;
         this.producerAdd = producerAdd;
         this.producerName = producerName;
@@ -22,6 +24,14 @@ public class ProducerDTO {
         this.producerGrade = producerGrade;
         this.deliveryFee = deliveryFee;
         this.deliveryCrit = deliveryCrit;
+    }
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
     }
 
     public int getProducerId() {
@@ -92,6 +102,7 @@ public class ProducerDTO {
     public String toString() {
         return "ProducerDTO{" +
                 "producerId=" + producerId +
+                ", user=" + user +
                 ", busiNo='" + busiNo + '\'' +
                 ", producerAdd='" + producerAdd + '\'' +
                 ", producerName='" + producerName + '\'' +

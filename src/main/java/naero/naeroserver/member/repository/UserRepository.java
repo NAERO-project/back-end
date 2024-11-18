@@ -27,15 +27,4 @@ public interface UserRepository extends JpaRepository<TblUser, Integer> {
     Page<TblUser> findAll(Pageable pageable);
 
 
-    /*@Query("""
-            SELECT *  
-            FROM your_table
-            WHERE  +
-                (filter1.key = :filter1Value)
-                OR (filter2.key = :filter2Value)
-                OR (filter3.key = :filter3Value)
-                AND keyword.key LIKE CONCAT('%', :keywordValue, '%')
-            ORDER BY :critColum :orderDirection; """)*/
-
-
 }
