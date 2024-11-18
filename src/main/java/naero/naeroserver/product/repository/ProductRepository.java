@@ -1,6 +1,7 @@
 package naero.naeroserver.product.repository;
 
 import naero.naeroserver.entity.product.TblProduct;
+import naero.naeroserver.product.dto.ProductOptionDTO;
 import naero.naeroserver.order.dto.OrderPageProductDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,40 +13,96 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
     //    상품 리스트 전체 조회 (페이징)
-    @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.productId DESC")
+    @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.productCreateAt DESC")
     List<TblProduct> findByProductCheck();
 
-    @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.productId DESC")
-    Page<TblProduct> findByProductCheck(Pageable paging);
+    @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.productCreateAt DESC")
+    Page<TblProduct> findPagedByProductCheck(Pageable paging);
 
-    @Query("SELECT p FROM TblProduct p " +
-            "JOIN TblCategorySmall sc ON p.smallCategoryId = sc.smallCategoryId " +
-            "JOIN TblCategoryMedium mc ON sc.mediumCategoryId = mc.mediumCategoryId " +
-            "JOIN TblCategoryLarge lc ON mc.largeCategoryId = lc.largeCategoryId " +
-            "WHERE lc.largeCategoryId = :largeCategoryId AND p.productCheck = 'Y' " +
-            "ORDER BY p.productId DESC")
-    List<TblProduct> findByProductCheckAndSmallCategoryId(@Param("largeCategoryId") Integer largeCategoryId);
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "JOIN TblCategorySmall cs ON p.smallCategory = cs.smallCategoryId " +
+            "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
+            "AND cm.mediumCategoryId = :mediumId " +
+            "AND p.productCheck = 'Y' " +
+            "ORDER BY p.productCreateAt desc ")
+    List<TblProduct> findByProductCheckAndSmallCategory(@Param("mediumId") Integer mediumId);
 
-    @Query("SELECT p FROM TblProduct p " +
-            "JOIN TblCategorySmall sc ON p.smallCategoryId = sc.smallCategoryId " +
-            "JOIN TblCategoryMedium mc ON sc.mediumCategoryId = mc.mediumCategoryId " +
-            "JOIN TblCategoryLarge lc ON mc.largeCategoryId = lc.largeCategoryId " +
-            "WHERE lc.largeCategoryId = :largeCategoryId AND p.productCheck = 'Y' " +
-            "ORDER BY p.productId DESC")
-    Page<TblProduct> findByProductCheckAndSmallCategoryId(@Param("largeCategoryId") Integer largeCategoryId, Pageable paging);
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "JOIN TblCategorySmall cs ON p.smallCategory = cs.smallCategoryId " +
+            "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
+            "AND cm.mediumCategoryId = :mediumId " +
+            "AND p.productCheck = 'Y' " +
+            "ORDER BY p.productCreateAt desc ")
+    Page<TblProduct> findPagedProductCheckAndSmallCategory(@Param("mediumId") Integer mediumId,
+                                                          Pageable paging);
 
     //    상품 리스트 미리보기 조회
-    @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.id DESC")
+    @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.productCreateAt DESC")
     List<TblProduct> findAllProductWithLimit(Pageable pageable);
 
-    @Query("SELECT p FROM TblProduct p " +
-            "JOIN TblCategorySmall sc ON p.smallCategoryId = sc.smallCategoryId " +
-            "JOIN TblCategoryMedium mc ON sc.mediumCategoryId = mc.mediumCategoryId " +
-            "JOIN TblCategoryLarge lc ON mc.largeCategoryId = lc.largeCategoryId " +
-            "WHERE lc.largeCategoryId = :largeCategoryId AND p.productCheck = 'Y' " +
-            "ORDER BY p.productId DESC")
-    List<TblProduct> findByFoodProductWithLimit(@Param("largeCategoryId") Integer largeCategoryId, Pageable pageable);
+    @Query("SELECT p FROM TblProduct p, TblCategorySmall sc, TblCategoryMedium mc " +
+            "WHERE p.smallCategory = sc.smallCategoryId " +
+            "AND sc.mediumCategoryId = mc.mediumCategoryId AND mc.mediumCategoryId = :mediumId " +
+            "AND p.productCheck = 'Y' " +
+            "ORDER BY p.productCreateAt DESC")
+    List<TblProduct> findByFoodProductWithLimit(@Param("mediumId") Integer mediumId, Pageable pageable);
 
+    //    브랜드 전체 페이지 상품 조회 (미리보기)
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "WHERE p.producerId = :producerId " +
+            "AND p.productCheck = 'Y' " +
+            "ORDER BY p.productCreateAt desc ")
+    List<TblProduct> findByProducerIdWithLimit(@Param("producerId") Integer producerId,
+                                               Pageable pageable);
+
+    //    브랜드별 페이지 전체 상품 조회 (페이징)
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "WHERE p.producerId = :producerId " +
+            "AND p.productCheck = 'Y' " +
+            "ORDER BY p.productCreateAt desc ")
+    List<TblProduct> findByProductCheckAndId(@Param("producerId") Integer producerId);
+
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "WHERE p.producerId = :producerId " +
+            "AND p.productCheck = 'Y' " +
+            "ORDER BY p.productCreateAt desc ")
+    Page<TblProduct> findByPageProductCheckAndId(@Param("producerId") Integer producerId,
+                                                     Pageable paging);
+
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "JOIN TblCategorySmall cs ON p.smallCategory = cs.smallCategoryId " +
+            "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
+            "WHERE p.producerId = :producerId " +
+            "AND cm.mediumCategoryId = :mediumId " +
+            "AND p.productCheck = 'Y' " +
+            "ORDER BY p.productCreateAt desc ")
+    List<TblProduct> findByProductCheckAndSmallCategoryIdAndProducerId(@Param("producerId") Integer producerId,
+                                                                       @Param("mediumId") Integer mediumId);
+
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "JOIN TblCategorySmall cs ON p.smallCategory = cs.smallCategoryId " +
+            "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
+            "WHERE p.producerId = :producerId " +
+            "AND cm.mediumCategoryId = :mediumId " +
+            "AND p.productCheck = 'Y' " +
+            "ORDER BY p.productCreateAt desc ")
+    Page<TblProduct> findByProductCheckAndSmallCategoryIdAndProducerId(@Param("producerId") Integer producerId,
+                                                                               @Param("mediumId") Integer mediumId,
+                                                                               Pageable paging);
+
+
+    @Query("SELECT new naero.naeroserver.product.dto.ProductOptionDTO(p, op.addPrice, op.optionDesc, op.optionQuantity) " +
+            "FROM TblProduct p " +
+            "JOIN TblOption op ON p.productId = op.productId " +
+            "WHERE p.productId = :productId")
+    List<ProductOptionDTO> findByIdAndOption(@Param("productId") Integer productId);
     @Query("SELECT p, pi.producer FROM TblProduct p " +
             "JOIN TblProducer pi ON p.productId = pi.id " +
             "WHERE pi.id = :producerId AND p.productCheck = 'Y' " +
