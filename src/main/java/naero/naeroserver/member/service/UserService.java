@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import naero.naeroserver.entity.user.TblProducer;
 import naero.naeroserver.entity.user.TblProducerGrade;
 import naero.naeroserver.entity.user.TblUser;
+import naero.naeroserver.exception.DuplicatedUsernameException;
 import naero.naeroserver.exception.LoginFailedException;
 import naero.naeroserver.exception.UpdateUserException;
 import naero.naeroserver.manage.DTO.ManageUserDTO;
@@ -33,17 +34,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
-    private final UserGradeRepository userGradeRepository;
     private final SearchRepository searchRepository;
     private final ProducerRepository producerRepository;
+    private final AuthService authService;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, UserGradeRepository userGradeRepository, SearchRepository searchRepository, ProducerRepository producerRepository) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, UserGradeRepository userGradeRepository, SearchRepository searchRepository, ProducerRepository producerRepository, AuthService authService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
-        this.userGradeRepository = userGradeRepository;
         this.searchRepository = searchRepository;
         this.producerRepository = producerRepository;
+        this.authService = authService;
     }
 
     public Object findByusername(String username) {
@@ -198,4 +199,16 @@ public class UserService {
 
         return modelMapper.map(getUser, ProducerDTO.class);
     }
+
+    @Transactional
+    public Object convertToProducer(ProducerDTO producer, String username) {
+        int userId = userRepository.findByUsername(username).getUserId();
+        if(producerRepository.existsById(userId)){
+            throw new DuplicatedUsernameException("같은 아이디로 가입된 판매자가 있습니다.");
+        }
+        TblProducer newProducer = modelMapper.map(producer, TblProducer.class);
+
+        return producerRepository.save(newProducer);
+    }
+
 }
