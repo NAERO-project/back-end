@@ -99,6 +99,10 @@ CREATE TABLE `tbl_producer` (
                                 `delivery_fee`	int	NULL	COMMENT '배송비',
                                 `delivery_crit`	int	NULL	COMMENT '무료 배송 기준'
 );
+CREATE TRIGGER after_insert_tbl_producer
+    AFTER INSERT ON `tbl_producer`
+    FOR EACH ROW
+    INSERT INTO tbl_user_role (user_id, role_id) VALUE (NEW.producer_id , 2);
 
 
 CREATE TABLE `tbl_role` (

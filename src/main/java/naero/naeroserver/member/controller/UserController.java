@@ -81,6 +81,19 @@ public class UserController {
                 userService.updateProducerDetail(producer, username)));
     }
 
+    @PostMapping("/insert/producer")
+    public ResponseEntity<ResponseDTO> insertProducerDetail(@RequestBody ProducerDTO producer){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        System.out.println("판매자 계정으로 전환");
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
+                userService.convertToProducer(producer, username)));
+    }
+
+
+
+
   /*  @GetMapping("/detail")
     public ResponseEntity<ResponseDTO> name(@RequestBody Object var){
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message", "data"));
