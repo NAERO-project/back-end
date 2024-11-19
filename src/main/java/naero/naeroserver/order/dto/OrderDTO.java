@@ -12,6 +12,7 @@ public class OrderDTO {
     private String orderStatus;
     private Integer deliveryFee;
     private Integer pointDiscount;
+    private Integer couponId;
     private Integer couponDiscount;
     private String recipientName;
     private String recipientPhoneNumber;
@@ -28,7 +29,7 @@ public class OrderDTO {
     public OrderDTO() {
     }
 
-    public OrderDTO(Integer orderId, LocalDateTime orderDatetime, Integer orderTotalAmount, Integer orderTotalCount, String deliveryStatus, String orderStatus, Integer deliveryFee, Integer poIntegerDiscount, Integer couponDiscount, String recipientName, String recipientPhoneNumber, String postalCode, String addressRoad, String addressDetail, String addressName, String deliveryNote, String trackingNumber, LocalDateTime createdAt, LocalDateTime updatedAt, Integer userId) {
+    public OrderDTO(Integer orderId, LocalDateTime orderDatetime, Integer orderTotalAmount, Integer orderTotalCount, String deliveryStatus, String orderStatus, Integer deliveryFee, Integer pointDiscount, Integer couponId, Integer couponDiscount, String recipientName, String recipientPhoneNumber, String postalCode, String addressRoad, String addressDetail, String addressName, String deliveryNote, String trackingNumber, LocalDateTime createdAt, LocalDateTime updatedAt, Integer userId) {
         this.orderId = orderId;
         this.orderDatetime = orderDatetime;
         this.orderTotalAmount = orderTotalAmount;
@@ -36,7 +37,8 @@ public class OrderDTO {
         this.deliveryStatus = deliveryStatus;
         this.orderStatus = orderStatus;
         this.deliveryFee = deliveryFee;
-        this.pointDiscount = poIntegerDiscount;
+        this.pointDiscount = pointDiscount;
+        this.couponId = couponId;
         this.couponDiscount = couponDiscount;
         this.recipientName = recipientName;
         this.recipientPhoneNumber = recipientPhoneNumber;
@@ -113,6 +115,14 @@ public class OrderDTO {
 
     public void setPointDiscount(Integer poIntegerDiscount) {
         this.pointDiscount = poIntegerDiscount;
+    }
+
+    public Integer getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Integer couponId) {
+        this.couponId = couponId;
     }
 
     public Integer getCouponDiscount() {
@@ -221,7 +231,8 @@ public class OrderDTO {
                 ", deliveryStatus='" + deliveryStatus + '\'' +
                 ", orderStatus='" + orderStatus + '\'' +
                 ", deliveryFee=" + deliveryFee +
-                ", poIntegerDiscount=" + pointDiscount +
+                ", pointDiscount=" + pointDiscount +
+                ", couponId=" + couponId +
                 ", couponDiscount=" + couponDiscount +
                 ", recipientName='" + recipientName + '\'' +
                 ", recipientPhoneNumber='" + recipientPhoneNumber + '\'' +

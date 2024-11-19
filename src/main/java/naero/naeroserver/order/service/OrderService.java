@@ -1,6 +1,8 @@
 package naero.naeroserver.order.service;
 
 import naero.naeroserver.cart.dto.CartDTO;
+import naero.naeroserver.coupon.repository.CouponListRepository;
+import naero.naeroserver.entity.coupon.TblCouponList;
 import naero.naeroserver.entity.order.TblAddress;
 import naero.naeroserver.entity.order.TblOrder;
 import naero.naeroserver.entity.order.TblOrderDetail;
@@ -49,6 +51,7 @@ public class OrderService {
     private final PaymentRepository paymentRepository;
     private final OptionRepository optionRepository;
     private final AddressRepository addressRepository;
+    private final CouponListRepository couponListRepository;
 
     @Value("${portone.api-key}")
     private String API_KEY;
@@ -65,7 +68,7 @@ public class OrderService {
 
     @Autowired
     public OrderService(ModelMapper modelMapper, OrderRepository orderRepository, UserRepository userRepository,
-                        ProductRepository productRepository, OrderDetailRepository orderDetailRepository, PaymentRepository paymentRepository, OptionRepository optionRepository, AddressRepository addressRepository) {
+                        ProductRepository productRepository, OrderDetailRepository orderDetailRepository, PaymentRepository paymentRepository, OptionRepository optionRepository, AddressRepository addressRepository, CouponListRepository couponListRepository) {
         this.modelMapper = modelMapper;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
@@ -74,6 +77,7 @@ public class OrderService {
         this.paymentRepository = paymentRepository;
         this.optionRepository = optionRepository;
         this.addressRepository = addressRepository;
+        this.couponListRepository = couponListRepository;
     }
 
     // 주문 페이지로 이동 시 들고갈 정보 생성
@@ -288,9 +292,11 @@ public class OrderService {
                 orderDetailRepository.save(orderDetail);
             }
 
-            // 쿠폰, 할인금액 소진
+            // 사용된 포인트 소진
             user.setUserPoint(user.getUserPoint() - order.getPointDiscount());
-            // TODO 쿠폰번호 tbl_order 에 컬럼으로 추가 후 구현필요
+            // 사용된 쿠폰 소진
+            TblCouponList usedCoupon = couponListRepository.findTblCouponListByUserIdAndCouponId(user.getUserId(), orderDTO.getCouponId());
+            usedCoupon.setUseStatus("Y");
 
             return modelMapper.map(order, OrderDTO.class);
         } catch (Exception e) {
@@ -472,10 +478,12 @@ public class OrderService {
                 order.setOrderStatus("canceled");
                 order.setUpdatedAt(Instant.now());
 
-                // 쿠폰, 할임금액 원복
+                // 포인트 원복
                 TblUser user = userRepository.findTblUserByUserId(order.getUserId());
                 user.setUserPoint(user.getUserPoint() + order.getPointDiscount());
-                // TODO 쿠폰번호 tbl_order에 저장해야 함
+                // 쿠폰 원복
+                TblCouponList coupon = couponListRepository.findTblCouponListByUserIdAndCouponId(user.getUserId(), order.getCouponId());
+                coupon.setUseStatus("N");
 
                 // 4. 상품 정보(재고 원복) 업데이트
                 TblOrderDetail orderProduct = orderDetailRepository.findByOrderId(order.getOrderId());

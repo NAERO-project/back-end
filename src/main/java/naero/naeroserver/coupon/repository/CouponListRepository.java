@@ -23,4 +23,9 @@ public interface CouponListRepository extends JpaRepository<TblCouponList, Integ
             "JOIN TblCoupon c ON c.couponId = cl.couponId " +
             "WHERE cl.userId = :userId")
     Page<MyPageCouponListDTO> findCouponListByUserId(int userId, Pageable paging);
+
+    // 회원 번호로 쿠폰리스트 조회
+    TblCouponList findTblCouponListByUserId(Integer userId);
+
+    TblCouponList findTblCouponListByUserIdAndCouponId(Integer userId, Integer couponId);
 }
