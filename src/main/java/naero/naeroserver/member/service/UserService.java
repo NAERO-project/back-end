@@ -167,4 +167,35 @@ public class UserService {
         getProducer.setWithStatus("Y");
 
     }
+
+    //유저와 관리자 공용으로 사용할 것
+    @Transactional
+    public Object updateProducerDetail(ProducerDTO producer, String username) {
+        //사용자 정보중에 바꿀 수 있는 데이터...
+        //busi_no producer_add producer_name producer_phone delivery_fee delivery_crit
+        int userId = userRepository.findByUsername(username).getUserId();
+        TblProducer getUser = producerRepository.findByProducerId(userId);
+
+        if (getUser == null) {
+            throw new UpdateUserException("사용자를 찾을 수 없습니다.");
+        }
+
+        if (producer.getProducerName() != null) {
+            getUser.setProducerName(producer.getProducerName());
+        }
+        if (producer.getDeliveryFee() != null) {
+            getUser.setDeliveryFee(producer.getDeliveryFee());
+        }
+        if (producer.getDeliveryCrit() != null) {
+            getUser.setDeliveryCrit(producer.getDeliveryCrit());
+        }
+        if (producer.getProducerAdd() != null) {
+            getUser.setProducerAdd(producer.getProducerAdd());
+        }
+        if (producer.getBusiNo() != null) {
+            getUser.setBusiNo(producer.getBusiNo());
+        }
+
+        return modelMapper.map(getUser, ProducerDTO.class);
+    }
 }
