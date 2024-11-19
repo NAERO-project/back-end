@@ -2,6 +2,7 @@ package naero.naeroserver.product.repository;
 
 import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.product.dto.ProductOptionDTO;
+import naero.naeroserver.product.dto.ProductSearchDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
     //    상품 리스트 전체 조회 (페이징)
@@ -102,4 +104,6 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "JOIN TblOption op ON p.productId = op.productId " +
             "WHERE p.productId = :productId")
     List<ProductOptionDTO> findByIdAndOption(@Param("productId") Integer productId);
+
+    List<TblProduct> findByProductNameContaining(String search);
 }

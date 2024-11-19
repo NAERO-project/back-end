@@ -4,7 +4,9 @@ import naero.naeroserver.common.Criteria;
 import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.product.dto.ProductDTO;
 import naero.naeroserver.product.dto.ProductOptionDTO;
+import naero.naeroserver.product.dto.ProductSearchDTO;
 import naero.naeroserver.product.repository.ProductRepository;
+import naero.naeroserver.product.repository.SearchRepository;
 import naero.naeroserver.util.FileUploadUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -31,11 +33,13 @@ public class ProductService {
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
+    private final SearchRepository searchRepository;
 
     @Autowired
-    public ProductService(ModelMapper modelMapper, ProductRepository productRepository) {
+    public ProductService(ModelMapper modelMapper, ProductRepository productRepository, SearchRepository searchRepository) {
         this.modelMapper = modelMapper;
         this.productRepository = productRepository;
+        this.searchRepository = searchRepository;
     }
 
     /* 설명. 이미지 파일 저장 경로와 응답용 URL (WebConfig 설정파일 참고) */
@@ -341,6 +345,40 @@ public class ProductService {
 
         return ResponseEntity.noContent().build();
     }
+
+    /* 상품 검색 기능 */
+    public Object selectSearchProductList(String search) {
+        log.info("[ProductService] selectSearchProductList() Start");
+        log.info("[ProductService] searchValue : {}", search);
+
+        List<TblProduct> productListWithSearchValue = productRepository.findByProductNameContaining(search);
+
+        log.info("[ProductService] productListWithSearchValue : {}", productListWithSearchValue);
+
+        for(int i = 0 ; i < productListWithSearchValue.size() ; i++) {
+            productListWithSearchValue.get(i).setProductThumbnail(IMAGE_URL + productListWithSearchValue.get(i).getProductThumbnail());
+        }
+
+        log.info("[ProductService] selectSearchProductList() End");
+
+        return productListWithSearchValue.stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    public String searchProductPage(Integer page, int size, ProductSearchDTO crit) {
+        // 전체 페이지 수 계산 < 동시 반환이 안됨. 따로 호출
+        int totalCount = searchRepository.getTotalCount(crit);
+        int totalPages = (int) Math.ceil((double) totalCount / size);
+
+        return  (page+1)+"/"+totalPages;
+    }
+
+    public Object searchProduct(Integer page, int size, ProductSearchDTO crit) {
+        List<ProductDTO> result = searchRepository.searchProduct(crit, page, size);
+
+
+        return result;
+    }
+
 
 
 
