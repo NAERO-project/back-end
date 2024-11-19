@@ -26,21 +26,15 @@ public class ManageController {
         ));
     }
 
+    //username으로 사업자 정보까지 가져와지면 사업자 정보로 리턴함 > 사업자의 detail 컨트롤러 필요 X
     @GetMapping("/detail/{username}")
     public ResponseEntity<ResponseDTO> userDetail(@PathVariable String username){
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
                 userService.findByusername(username)
         ));
     }
-    //판매자 등록이 되어있는지 확인
-    @GetMapping("/check/producer/{username}")
-    public ResponseEntity<ResponseDTO> check(@PathVariable String username){
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
-                userService.findByusername(username)
-        ));
-    }
-    
-    @PostMapping("/update")
+
+    @PostMapping("/update/user")
     public ResponseEntity<ResponseDTO> updateDetail(@RequestBody UserDTO user){
 
         System.out.println("수정요청");
@@ -51,13 +45,14 @@ public class ManageController {
     @GetMapping("/search/user/{page}")
     public ResponseEntity<ResponseDTO> userSearch(@PathVariable Integer page, @RequestBody ManageSearchDTO crit){
         System.out.println("crit 확인"+ crit);
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,
+                userService.searchUserPage(page,SIZE , crit),
                 userService.searchUser(page,SIZE , crit)
         ));
     }
 
-    @GetMapping("/withdraw/{username}")
-    public ResponseEntity<ResponseDTO> withdraw(@PathVariable String username) {
+    @GetMapping("/withdraw/user/{username}")
+    public ResponseEntity<ResponseDTO> withdrawUser(@PathVariable String username) {
         System.out.println("임의 유저 탈퇴 요청");
         userService.withdrawUser(username);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "message", null));
@@ -72,14 +67,13 @@ public class ManageController {
         ));
     }
 
-    //판매자 회원 정보
+/*    //판매자 회원 정보
     @GetMapping("/detail/producer/{username}")
     public ResponseEntity<ResponseDTO> producerDetail(@PathVariable String username) {
-
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "message",
-                userService.findByusername(username)
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
+                userService.findProducerByusername(username)
         ));
-    }
+    }*/
 
     //판매자 회원만 검색
     @GetMapping("/search/producer/{page}")
@@ -90,14 +84,13 @@ public class ManageController {
         ));
     }
 
-
-    /* //producer 에 따로 컬럼 추가할 수도 있음
-    @GetMapping("/withdraw/{username}")
-    public ResponseEntity<ResponseDTO> withdraw(@PathVariable String username) {
+    //사업장 정지 요청
+    @GetMapping("/withdraw/producer/{username}")
+    public ResponseEntity<ResponseDTO> withdrawProducer(@PathVariable String username) {
         System.out.println("임의 유저 탈퇴 요청");
-        userService.withdrawUser(username);
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "message", null));
+        userService.withdrawProducer(username);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "사업장 정지처리 완료되었습니다.", null));
     }
-*/
+
 
 }

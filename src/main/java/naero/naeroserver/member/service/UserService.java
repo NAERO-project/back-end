@@ -47,10 +47,22 @@ public class UserService {
     }
 
     public Object findByusername(String username) {
-
-        UserDTO result =  modelMapper.map( userRepository.findByUsername(username) , UserDTO.class);
-        result.setGrade(modelMapper.map(userGradeRepository.findByGradeId(result.getGrade().getGradeId()), UserGradeDTO.class));
+        UserDTO result =  modelMapper.map(userRepository.findByUsername(username) , UserDTO.class);
+        if(producerRepository.existsById(result.getUserId())){
+            return modelMapper.map(producerRepository.findByProducerId(result.getUserId()), ProducerDTO.class);
+        }
+//        result.setGrade(modelMapper.map(userGradeRepository.findByGradeId(result.getGrade().getGradeId()), UserGradeDTO.class));
         return result;
+    }
+
+    public Object findProducerByusername(String username) {
+
+        TblUser getUser =  userRepository.findByUsername(username);
+        TblProducer result = producerRepository.findByProducerId(getUser.getUserId());
+        if (result == null){
+            throw new LoginFailedException("사업자 등록이 되지 않은 사용자입니다.");
+        }
+        return modelMapper.map( result, ProducerDTO.class);
     }
 
 /*    @Transactional
@@ -103,44 +115,29 @@ public class UserService {
     public List<ManageUserDTO> searchUser(Integer page, int size, ManageSearchDTO crit) {
         List<ManageUserDTO> result = searchRepository.searchUser(crit, page, size);
 
-        // 전체 데이터 개수 계산 (총 페이지 수나 총 항목 수를 구할 때 사용)
-        String countQuery = "SELECT COUNT(*) FROM your_table WHERE 1=1";
-        // countQuery에서 filter 및 keyword 조건을 적용해서 전체 데이터 수를 구할 수 있습니다.
-        int totalCount = searchRepository.getTotalCount(crit);
-
-        // 전체 페이지 수 계산
-        int totalPages = (int) Math.ceil((double) totalCount / size);
-
-        // 결과 반환
-        Map<String, Object> response = new HashMap<>();
-        response.put("data", result);
-        response.put("totalCount", totalCount);
-        response.put("totalPages", totalPages);
-        response.put("currentPage", page);
-
-        System.out.println(response);
         return result;
     }
 
-    public  Map<String, Object> searchProducer(Integer page, int size, ManageSearchDTO crit) {
-        List<Object[]> result = searchRepository.searchProducer(crit, page, size);
-
-        // 전체 데이터 개수 계산 (총 페이지 수나 총 항목 수를 구할 때 사용)
-        String countQuery = "SELECT COUNT(*) FROM your_table WHERE 1=1";
+    public String searchUserPage(Integer page, int size, ManageSearchDTO crit){
+        // 전체 페이지 수 계산 < 동시 반환이 안됨. 따로 호출
         int totalCount = searchRepository.getTotalCount(crit);
-
-        // 전체 페이지 수 계산
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
-        // 결과 반환
-        Map<String, Object> response = new HashMap<>();
-        response.put("data", result);
-        response.put("totalCount", totalCount);
-        response.put("totalPages", totalPages);
-        response.put("currentPage", page);
+        return  (page+1)+"/"+totalPages;
+    }
 
-        System.out.println(response);
-        return response;
+    public   List<ManageUserDTO> searchProducer(Integer page, int size, ManageSearchDTO crit) {
+        List<ManageUserDTO> result = searchRepository.searchProducer(crit, page, size);
+
+        return result;
+    }
+
+    public String searchProducerPage(Integer page, int size, ManageSearchDTO crit){
+        // 전체 페이지 수 계산 < 동시 반환이 안됨. 따로 호출
+        int totalCount = searchRepository.getTotalCount(crit);
+        int totalPages = (int) Math.ceil((double) totalCount / size);
+
+        return  (page+1)+"/"+totalPages;
     }
 
     public Object findByUserEmail(String email) {
@@ -157,5 +154,17 @@ public class UserService {
         List<TblProducer> users = usersPage.getContent();
         System.out.println("Users on this page: " + users);
         return usersPage.map(user -> modelMapper.map(user, ProducerDTO.class));
+    }
+
+    @Transactional
+    public void withdrawProducer(String username) {
+
+        int userId = userRepository.findByUsername(username).getUserId();
+        TblProducer getProducer = producerRepository.findByProducerId(userId);
+        if (getProducer == null) {
+            throw new UpdateUserException("사용자를 찾을 수 없습니다.");
+        }
+        getProducer.setWithStatus("Y");
+
     }
 }

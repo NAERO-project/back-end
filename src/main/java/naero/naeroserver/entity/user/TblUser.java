@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import naero.naeroserver.entity.auth.TblUserRole;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;

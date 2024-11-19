@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProducerRepository extends JpaRepository<TblProducer, Integer> {
     Page<TblProducer> findAll(Pageable pageable);
+    TblProducer findByProducerId(int id);
 }
