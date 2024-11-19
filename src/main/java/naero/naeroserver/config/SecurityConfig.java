@@ -51,10 +51,11 @@ public class SecurityConfig {
             exception.accessDeniedHandler(jwtAccessDeniedHandler);
         });
         http.authorizeHttpRequests(auth -> {
+                    auth.anyRequest().permitAll();
 
-                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    //모두가 요청 가능한 페이지
-                    auth.requestMatchers("/auth/**").permitAll();
+//                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+//                    //모두가 요청 가능한 페이지
+//                    auth.requestMatchers("/auth/**").permitAll();
 //                    auth.requestMatchers("").permitAll();
 
                     //로그인한 유저부터 요청 가능한 api
@@ -67,7 +68,6 @@ public class SecurityConfig {
                     //swagger 사용시
 //            auth.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
 
-            auth.anyRequest().permitAll();
                 }).sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> {
