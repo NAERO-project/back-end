@@ -1,117 +1,71 @@
-package naero.naeroserver.entity.order;
+package naero.naeroserver.order.dto;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.ship.TblShipping;
-import naero.naeroserver.entity.user.TblUser;
+import java.time.LocalDateTime;
 
-import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
+public class OrderDTO {
 
-@Entity
-@Table(name = "tbl_order")
-public class TblOrder {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id", nullable = false)
     private Integer orderId;
-
-    @Column(name = "order_datetime")
-    private Instant orderDatetime;
-
-    @NotNull
-    @Column(name = "order_total_amount", nullable = false)
+    private LocalDateTime orderDatetime;
     private Integer orderTotalAmount;
-
-    @NotNull
-    @Column(name = "order_total_count", nullable = false)
     private Integer orderTotalCount;
-
-    @Size(max = 50)
-    @NotNull
-    @Column(name = "delivery_status", nullable = false, length = 50)
     private String deliveryStatus;
-
-    @Size(max = 50)
-    @NotNull
-    @Column(name = "order_status", nullable = false, length = 50)
     private String orderStatus;
-
-    @NotNull
-    @Column(name = "delivery_fee", nullable = false)
     private Integer deliveryFee;
-
-    @Column(name = "point_discount")
     private Integer pointDiscount;
-
-    @Column(name="coupon_id")
     private Integer couponId;
-
-    @Column(name = "coupon_discount")
     private Integer couponDiscount;
-
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "recipient_name", nullable = false, length = 20)
     private String recipientName;
-
-    @Size(max = 50)
-    @NotNull
-    @Column(name = "recipient_phone_number", nullable = false, length = 50)
     private String recipientPhoneNumber;
-
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "postal_code", nullable = false, length = 20)
     private String postalCode;
-
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "address_road", nullable = false)
     private String addressRoad;
-
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "address_detail", nullable = false)
     private String addressDetail;
-
-    @Size(max = 255)
-    @Column(name = "address_name")
     private String addressName;
-
-    @Size(max = 255)
-    @Column(name = "delivery_note")
     private String deliveryNote;
-
-    @Size(max = 255)
-    @Column(name = "tracking_number")
     private String trackingNumber;
-
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @Column(name = "updated_at")
-    private Instant updatedAt;
-
-    @NotNull
-    @Column(name = "user_id", nullable = false)
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private Integer userId;
+
+    public OrderDTO() {
+    }
+
+    public OrderDTO(Integer orderId, LocalDateTime orderDatetime, Integer orderTotalAmount, Integer orderTotalCount, String deliveryStatus, String orderStatus, Integer deliveryFee, Integer pointDiscount, Integer couponId, Integer couponDiscount, String recipientName, String recipientPhoneNumber, String postalCode, String addressRoad, String addressDetail, String addressName, String deliveryNote, String trackingNumber, LocalDateTime createdAt, LocalDateTime updatedAt, Integer userId) {
+        this.orderId = orderId;
+        this.orderDatetime = orderDatetime;
+        this.orderTotalAmount = orderTotalAmount;
+        this.orderTotalCount = orderTotalCount;
+        this.deliveryStatus = deliveryStatus;
+        this.orderStatus = orderStatus;
+        this.deliveryFee = deliveryFee;
+        this.pointDiscount = pointDiscount;
+        this.couponId = couponId;
+        this.couponDiscount = couponDiscount;
+        this.recipientName = recipientName;
+        this.recipientPhoneNumber = recipientPhoneNumber;
+        this.postalCode = postalCode;
+        this.addressRoad = addressRoad;
+        this.addressDetail = addressDetail;
+        this.addressName = addressName;
+        this.deliveryNote = deliveryNote;
+        this.trackingNumber = trackingNumber;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.userId = userId;
+    }
 
     public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Integer id) {
-        this.orderId = id;
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
-    public Instant getOrderDatetime() {
+    public LocalDateTime getOrderDatetime() {
         return orderDatetime;
     }
 
-    public void setOrderDatetime(Instant orderDatetime) {
+    public void setOrderDatetime(LocalDateTime orderDatetime) {
         this.orderDatetime = orderDatetime;
     }
 
@@ -159,8 +113,16 @@ public class TblOrder {
         return pointDiscount;
     }
 
-    public void setPointDiscount(Integer pointDiscount) {
-        this.pointDiscount = pointDiscount;
+    public void setPointDiscount(Integer poIntegerDiscount) {
+        this.pointDiscount = poIntegerDiscount;
+    }
+
+    public Integer getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Integer couponId) {
+        this.couponId = couponId;
     }
 
     public Integer getCouponDiscount() {
@@ -235,19 +197,19 @@ public class TblOrder {
         this.trackingNumber = trackingNumber;
     }
 
-    public Instant getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Instant getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -259,11 +221,30 @@ public class TblOrder {
         this.userId = userId;
     }
 
-    public Integer getCouponId() {
-        return couponId;
-    }
-
-    public void setCouponId(Integer couponId) {
-        this.couponId = couponId;
+    @Override
+    public String toString() {
+        return "OrderDTO{" +
+                "orderId=" + orderId +
+                ", orderDatetime=" + orderDatetime +
+                ", orderTotalAmount=" + orderTotalAmount +
+                ", orderTotalCount=" + orderTotalCount +
+                ", deliveryStatus='" + deliveryStatus + '\'' +
+                ", orderStatus='" + orderStatus + '\'' +
+                ", deliveryFee=" + deliveryFee +
+                ", pointDiscount=" + pointDiscount +
+                ", couponId=" + couponId +
+                ", couponDiscount=" + couponDiscount +
+                ", recipientName='" + recipientName + '\'' +
+                ", recipientPhoneNumber='" + recipientPhoneNumber + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", addressRoad='" + addressRoad + '\'' +
+                ", addressDetail='" + addressDetail + '\'' +
+                ", addressName='" + addressName + '\'' +
+                ", deliveryNote='" + deliveryNote + '\'' +
+                ", trackingNumber='" + trackingNumber + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", userId=" + userId +
+                '}';
     }
 }

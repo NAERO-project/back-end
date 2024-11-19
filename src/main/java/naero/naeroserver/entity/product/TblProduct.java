@@ -51,7 +51,7 @@ public class TblProduct {
 
     @NotNull
     @Column(name = "small_category_id", nullable = false)
-    private Integer smallCategory;
+    private Integer smallCategoryId;
 
     public Integer getProductId() {
         return productId;
@@ -133,12 +133,12 @@ public class TblProduct {
         this.producerId = producerId;
     }
 
-    public Integer getSmallCategory() {
-        return smallCategory;
+    public Integer getSmallCategoryId() {
+        return smallCategoryId;
     }
 
-    public void setSmallCategory(Integer smallCategory) {
-        this.smallCategory = smallCategory;
+    public void setSmallCategoryId(Integer smallCategory) {
+        this.smallCategoryId = smallCategory;
     }
 
 }
