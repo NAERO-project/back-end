@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import naero.naeroserver.common.ResponseDTO;
 import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.service.AuthService;
+import naero.naeroserver.member.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -11,15 +12,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;
+    private final UserService userService;
 
     @Autowired
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, UserService userService) {
         this.authService = authService;
+        this.userService = userService;
     }
 
     @Operation(summary = "로그인 인증", tags = {"AuthController"})
@@ -53,13 +56,28 @@ public class AuthController {
                 .body(new ResponseDTO(HttpStatus.OK, "이메일 중복 체크 성공", null));
     }
 
+   @GetMapping("/find/username/{email}")
+    public ResponseEntity<ResponseDTO> findUsername(@PathVariable String email){
+        return ResponseEntity
+                .ok()
+                .body(new ResponseDTO(HttpStatus.OK, "조회한 아이디를 전송합니다", userService.findByUserEmail(email)));
+    }
+
+    //password와 함께 username, email을 같이 보내야함
+    @PostMapping("/find/password")
+    public ResponseEntity<ResponseDTO> resetUserPassword(@RequestBody UserDTO user){
+        return ResponseEntity
+                .ok()
+                .body(new ResponseDTO(HttpStatus.OK, "비밀번호 초기화에 성공했습니다.",  authService.resetPassword(user)));
+    }
+
     @Operation(summary = "회원 가입 요청", tags = {"AuthController"})
     @PostMapping("/signup")
     public ResponseEntity<ResponseDTO> singnup(@RequestBody UserDTO user){
         //여기서 이메일 인증 ID 확인해도 될 듯
         return ResponseEntity
                 .ok()
-                .body(new ResponseDTO(HttpStatus.OK, "회원 가입 성공", authService.signup(user)));
+                .body(new ResponseDTO(HttpStatus.CREATED, "회원 가입 성공", authService.signup(user)));
     }
 
 

@@ -14,9 +14,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class FileUploadUtils {
-
-    private static final Logger log = LoggerFactory.getLogger(FileUploadUtils.class);
-    public static String saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
+	
+	private static final Logger log = LoggerFactory.getLogger(FileUploadUtils.class);
+	public static String saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
 
         Path uploadPath = Paths.get(uploadDir);
 

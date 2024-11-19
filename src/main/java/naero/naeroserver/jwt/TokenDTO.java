@@ -4,7 +4,7 @@ public class TokenDTO {
 
 	//토큰 안에 더 넣어야할 정보가 있을 수 있음
 	private String grantType;			// 토큰 타입
-	private String memberName; 			// 인증받은 회원 이름? 아이디.(username)
+	private String userFullName; 			// 인증받은 회원 이름? 이름!(userFullName)
 	private String accessToken; 		// 액세스 토큰
 	private Long accessTokenExpiresIn;	// Long 형의 만료 시간
 	
@@ -12,7 +12,7 @@ public class TokenDTO {
 	}
 	public TokenDTO(String grantType, String memberName, String accessToken, Long accessTokenExpiresIn) {
 		this.grantType = grantType;
-		this.memberName = memberName;
+		this.userFullName = memberName;
 		this.accessToken = accessToken;
 		this.accessTokenExpiresIn = accessTokenExpiresIn;
 	}
@@ -25,12 +25,12 @@ public class TokenDTO {
 		this.grantType = grantType;
 	}
 
-	public String getMemberName() {
-		return memberName;
+	public String getUserFullName() {
+		return userFullName;
 	}
 
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
+	public void setUserFullName(String userFullName) {
+		this.userFullName = userFullName;
 	}
 
 	public String getAccessToken() {
@@ -53,7 +53,7 @@ public class TokenDTO {
 	public String toString() {
 		return "TokenDTO{" +
 				"grantType='" + grantType + '\'' +
-				", memberName='" + memberName + '\'' +
+				", memberName='" + userFullName + '\'' +
 				", accessToken='" + accessToken + '\'' +
 				", accessTokenExpiresIn=" + accessTokenExpiresIn +
 				'}';

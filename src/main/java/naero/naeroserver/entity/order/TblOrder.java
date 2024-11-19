@@ -3,8 +3,12 @@ package naero.naeroserver.entity.order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import naero.naeroserver.entity.ship.TblShipping;
+import naero.naeroserver.entity.user.TblUser;
 
 import java.time.Instant;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tbl_order")
@@ -41,6 +45,9 @@ public class TblOrder {
 
     @Column(name = "point_discount")
     private Integer pointDiscount;
+
+    @Column(name="coupon_id")
+    private Integer couponId;
 
     @Column(name = "coupon_discount")
     private Integer couponDiscount;
@@ -252,4 +259,11 @@ public class TblOrder {
         this.userId = userId;
     }
 
+    public Integer getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Integer couponId) {
+        this.couponId = couponId;
+    }
 }

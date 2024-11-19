@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -18,6 +19,7 @@ import java.io.IOException;
  *  유효한 경우 인증 정보를 설정하는 역할을 수행한다.
  *  OncePerRequestFilter를 상속받았기 때문에 클라이언트의 각 요청에 대해 딱 한 번만 실행된다.
  * */
+
 public class JwtFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtFilter.class);
