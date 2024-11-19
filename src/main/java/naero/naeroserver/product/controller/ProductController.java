@@ -208,7 +208,7 @@ public class ProductController {
     }
 
     /* 상품 전체 검색, 필터링 기능 */
-    @GetMapping("/product/search/{page}")
+    @GetMapping("/products/search/{page}")
     public ResponseEntity<ResponseDTO> userSearch(@PathVariable Integer page, @RequestBody ProductSearchDTO crit){
         System.out.println("crit 확인"+ crit);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,
@@ -217,4 +217,12 @@ public class ProductController {
         ));
     }
 
+    /* 상품 카테고리와 연관된 상품 조회 */
+//    @Operation(summary = "카테고리와 연관된 상품 조회 요청", description = "카테고리와 연관된 상품 조회가 진행됩니다.", tags = { "ProductController" })
+//    @GetMapping("/productList/{detail}/{smallId}")
+//    public ResponseEntity<ResponseDTO> selectProductCategory(@PathVariable("detail") int detail,
+//                                                             @PathVariable("smallId") int smallId){
+//
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "연관된 상품 정보 조회 성공", productService.selectProductCategory(detail, smallId)));
+//    }
 }
