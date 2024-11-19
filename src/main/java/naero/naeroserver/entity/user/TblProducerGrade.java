@@ -3,16 +3,13 @@ package naero.naeroserver.entity.user;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Entity
 @Table(name = "tbl_producer_grade")
 public class TblProducerGrade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pgrade_id", nullable = false)
-    private Integer id;
+    private Integer pgradeId;
 
     @Size(max = 20)
     @Column(name = "pgrade_name", length = 20)
@@ -24,15 +21,12 @@ public class TblProducerGrade {
     @Column(name = "crit_review")
     private Integer critReview;
 
-    @OneToMany(mappedBy = "pgrade")
-    private Set<TblProducer> tblProducers = new LinkedHashSet<>();
-
-    public Integer getId() {
-        return id;
+    public Integer getPgradeId() {
+        return pgradeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPgradeId(Integer id) {
+        this.pgradeId = id;
     }
 
     public String getPgradeName() {
@@ -57,14 +51,6 @@ public class TblProducerGrade {
 
     public void setCritReview(Integer critReview) {
         this.critReview = critReview;
-    }
-
-    public Set<TblProducer> getTblProducers() {
-        return tblProducers;
-    }
-
-    public void setTblProducers(Set<TblProducer> tblProducers) {
-        this.tblProducers = tblProducers;
     }
 
 }

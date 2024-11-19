@@ -78,8 +78,8 @@ CREATE TRIGGER before_insert_tbl_user
     BEFORE INSERT ON `tbl_user`
     FOR EACH ROW
     SET NEW.enroll_date = IFNULL(NEW.enroll_date, CURRENT_TIMESTAMP),
-        NEW.with_status = 'N',
-        NEW.user_point = 0;
+    NEW.with_status = 'N',
+    NEW.user_point = 0;
 ;
 
 CREATE TRIGGER after_insert_tbl_user
@@ -95,6 +95,7 @@ CREATE TABLE `tbl_producer` (
                                 `producer_name`	varchar(20)	NULL	COMMENT '브랜드 명',
                                 `producer_phone`	varchar(20)	NULL	COMMENT '연락처',
                                 `pgrade_id`	int	 NULL	DEFAULT 1	COMMENT '판매자 등급 번호',
+                                `with_status`	varchar(1)	NULL DEFAULT 'N'	COMMENT '운영탈퇴여부',
                                 `delivery_fee`	int	NULL	COMMENT '배송비',
                                 `delivery_crit`	int	NULL	COMMENT '무료 배송 기준'
 );
@@ -403,8 +404,9 @@ CREATE TABLE `tbl_order` (
                              `delivery_status`	varchar(50)	NOT NULL	COMMENT '배송 상태',
                              `order_status`	varchar(50)	NOT NULL	COMMENT '주문 상태',
                              `delivery_fee`	int	NOT NULL	COMMENT '배송비',
-                             `point_discount` int NULL COMMENT '포인트 할인',
-                             `coupon_discount` int NULL COMMENT '쿠폰 할인',
+                            `point_discount` int NULL COMMENT '포인트 할인',
+                            `coupon_id` int NULL COMMENT '사용한 쿠폰 번호',
+                            `coupon_discount` int NULL COMMENT '쿠폰 할인',
                              `discount_amount`	int	NULL	COMMENT '할인 금액',
                              `recipient_name`	varchar(20)	NOT NULL	COMMENT '수령인 이름',
                              `recipient_phone_number`	varchar(50)	NOT NULL	COMMENT '수령인 연락처',
@@ -735,6 +737,7 @@ ALTER TABLE `tbl_coupon_list` ADD CONSTRAINT `FK_tbl_coupon_TO_tbl_coupon_list_1
                              `coupon_id`
         );
 
+
 ALTER TABLE `tbl_option` ADD CONSTRAINT `FK_tbl_product_TO_tbl_option_1` FOREIGN KEY (
                                                                                       `product_id`
     )
@@ -770,3 +773,4 @@ ALTER TABLE `tbl_shipping` ADD CONSTRAINT `FK_tbl_ship_com_TO_tbl_shipping_1` FO
     REFERENCES `tbl_ship_com` (
                                `ship_com_id`
         );
+

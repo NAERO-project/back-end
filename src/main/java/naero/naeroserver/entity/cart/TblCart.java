@@ -2,8 +2,6 @@ package naero.naeroserver.entity.cart;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import naero.naeroserver.entity.product.TblOption;
-import naero.naeroserver.entity.user.TblUser;
 
 @Entity
 @Table(name = "tbl_cart")
@@ -11,12 +9,11 @@ public class TblCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_id", nullable = false)
-    private Integer id;
+    private Integer cartId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "option_id", nullable = false)
-    private TblOption option;
+    @Column(name = "option_id", nullable = false)
+    private Integer optionId;
 
     @NotNull
     @Column(name = "count", nullable = false)
@@ -27,24 +24,23 @@ public class TblCart {
     private Integer price;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private TblUser user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
-    public Integer getId() {
-        return id;
+    public Integer getCartId() {
+        return cartId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCartId(Integer id) {
+        this.cartId = id;
     }
 
-    public TblOption getOption() {
-        return option;
+    public Integer getOptionId() {
+        return optionId;
     }
 
-    public void setOption(TblOption option) {
-        this.option = option;
+    public void setOptionId(Integer option) {
+        this.optionId = option;
     }
 
     public Integer getCount() {
@@ -63,12 +59,12 @@ public class TblCart {
         this.price = price;
     }
 
-    public TblUser getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(TblUser user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
 }
