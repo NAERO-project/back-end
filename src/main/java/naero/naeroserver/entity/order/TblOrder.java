@@ -42,6 +42,9 @@ public class TblOrder {
     @Column(name = "point_discount")
     private Integer pointDiscount;
 
+    @Column(name="coupon_id")
+    private Integer couponId;
+
     @Column(name = "coupon_discount")
     private Integer couponDiscount;
 
@@ -252,4 +255,11 @@ public class TblOrder {
         this.userId = userId;
     }
 
+    public Integer getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Integer couponId) {
+        this.couponId = couponId;
+    }
 }
