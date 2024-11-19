@@ -149,6 +149,7 @@ public class ProductController {
     }
 
     /* 상품별 상세 조회 */
+    // smallCategortId로 바꿔서 같은 API사용하면 연관 검색 가능할거 같다.
     @Operation(summary = "상품별 상세 조회 요청", description = "상품별로 상세 내용이 담긴 페이지 처리가 진행됩니다.", tags = { "ProductController" })
     @GetMapping("/products/{productId}")
     public ResponseEntity<ResponseDTO> selectProductDetail(@PathVariable int productId){
@@ -191,11 +192,10 @@ public class ProductController {
     }
 
     /* 상품 카테고리와 연관된 상품 조회 */
-//    @Operation(summary = "카테고리와 연관된 상품 조회 요청", description = "카테고리와 연관된 상품 조회가 진행됩니다.", tags = { "ProductController" })
-//    @GetMapping("/productList/{detail}/{smallId}")
-//    public ResponseEntity<ResponseDTO> selectProductCategory(@PathVariable("detail") int detail,
-//                                                             @PathVariable("smallId") int smallId){
-//
-//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "연관된 상품 정보 조회 성공", productService.selectProductCategory(detail, smallId)));
-//    }
+    @Operation(summary = "카테고리와 연관된 상품 조회 요청", description = "카테고리와 연관된 상품 조회가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/productList/{smallId}")
+    public ResponseEntity<ResponseDTO> selectProductCategory(@PathVariable("smallId") int smallId){
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "연관된 상품 정보 조회 성공", productService.selectProductCategory(smallId)));
+    }
 }
