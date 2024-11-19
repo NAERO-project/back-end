@@ -1,6 +1,6 @@
 package naero.naeroserver.shipping.dto;
 
-public class TblShippingDTO {
+public class ShippingDTO {
 
     private int shippingId;
     private String trackingNumber;
@@ -8,11 +8,11 @@ public class TblShippingDTO {
     private int orderId;
     private int shipComId;
 
-    public TblShippingDTO() {
+    public ShippingDTO() {
     }
 
-    public TblShippingDTO(int shippingId, String trackingNumber,
-                          String shippingStatus, int orderId, int shipComId) {
+    public ShippingDTO(int shippingId, String trackingNumber,
+                       String shippingStatus, int orderId, int shipComId) {
         this.shippingId = shippingId;
         this.trackingNumber = trackingNumber;
         this.shippingStatus = shippingStatus;

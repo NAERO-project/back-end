@@ -1,7 +1,7 @@
 package naero.naeroserver.shipping.service;
 
 import naero.naeroserver.entity.ship.TblShipping;
-import naero.naeroserver.shipping.dto.TblShippingDTO;
+import naero.naeroserver.shipping.dto.ShippingDTO;
 import naero.naeroserver.shipping.repository.TblShippingRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
@@ -75,7 +74,7 @@ public class ShippingService {
         log.info("[ShippingService] shippingList {}", shippingDetail);
         log.info("[ShippingService] selectShippingList() End");
 
-        return modelMapper.map(shippingDetail, TblShippingDTO.class);
+        return modelMapper.map(shippingDetail, ShippingDTO.class);
     }
 
     public Object getTrackingInformation(String trackingNumber, String shipComCode) {
@@ -94,7 +93,7 @@ public class ShippingService {
     }
 
     @Transactional
-    public Object updateShipping(TblShippingDTO tblShippingDTO) {
+    public Object updateShipping(ShippingDTO tblShippingDTO) {
         log.info("[ShippingService] updateShipping() Start");
         log.info("[ShippingService] tblShippingDTO {}", tblShippingDTO);
 

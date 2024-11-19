@@ -404,9 +404,9 @@ CREATE TABLE `tbl_order` (
                              `delivery_status`	varchar(50)	NOT NULL	COMMENT '배송 상태',
                              `order_status`	varchar(50)	NOT NULL	COMMENT '주문 상태',
                              `delivery_fee`	int	NOT NULL	COMMENT '배송비',
-                            `point_discount` int NULL COMMENT '포인트 할인',
-                            `coupon_id` int NULL COMMENT '사용한 쿠폰 번호',
-                            `coupon_discount` int NULL COMMENT '쿠폰 할인',
+                             `point_discount` int NULL COMMENT '포인트 할인',
+                             `coupon_id` int NULL COMMENT '사용한 쿠폰 번호',
+                             `coupon_discount` int NULL COMMENT '쿠폰 할인',
                              `discount_amount`	int	NULL	COMMENT '할인 금액',
                              `recipient_name`	varchar(20)	NOT NULL	COMMENT '수령인 이름',
                              `recipient_phone_number`	varchar(50)	NOT NULL	COMMENT '수령인 연락처',
@@ -471,7 +471,7 @@ CREATE TABLE `tbl_shipping` (
                                 `tracking_number`	varchar(50)	NULL	COMMENT '송장 번호',
                                 `shipping_status`	varchar(50)	NOT NULL	COMMENT '배송 상태',
                                 `order_id`	int	NOT NULL	COMMENT '주문 번호',
-                                `ship_com_id`	int	NOT NULL	COMMENT '택배사 번호'
+                                `ship_com_id`	int	NULL	COMMENT '택배사 번호'
 );
 
 CREATE TABLE `tbl_payment` (

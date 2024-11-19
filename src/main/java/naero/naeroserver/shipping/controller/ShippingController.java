@@ -2,7 +2,7 @@ package naero.naeroserver.shipping.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import naero.naeroserver.common.ResponseDTO;
-import naero.naeroserver.shipping.dto.TblShippingDTO;
+import naero.naeroserver.shipping.dto.ShippingDTO;
 import naero.naeroserver.shipping.service.ShippingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +88,7 @@ public class ShippingController {
      *  */
     @Operation(summary = "배송 수정 요청", description = "해당 배송 수정이 진행됩니다.", tags = {"ShippingController"})
     @PutMapping(value = "/shipping")
-    public ResponseEntity<ResponseDTO> updateShipping(@RequestBody TblShippingDTO tblShippingDTO) {
+    public ResponseEntity<ResponseDTO> updateShipping(@RequestBody ShippingDTO tblShippingDTO) {
 
         return ResponseEntity
                 .ok()

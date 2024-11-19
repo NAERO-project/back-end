@@ -1,15 +1,15 @@
 package naero.naeroserver.shipping.dto;
 
-public class TblShipComDTO {
+public class ShipComDTO {
     private int shippingId;
     private String shippingComCode;
     private String shippingComName;
     private String shippingComContact;
 
-    public TblShipComDTO() {
+    public ShipComDTO() {
     }
 
-    public TblShipComDTO(int shippingId, String shippingComCode, String shippingComName, String shippingComContact) {
+    public ShipComDTO(int shippingId, String shippingComCode, String shippingComName, String shippingComContact) {
         this.shippingId = shippingId;
         this.shippingComCode = shippingComCode;
         this.shippingComName = shippingComName;
