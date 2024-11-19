@@ -3,8 +3,12 @@ package naero.naeroserver.entity.order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import naero.naeroserver.entity.ship.TblShipping;
+import naero.naeroserver.entity.user.TblUser;
 
 import java.time.Instant;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tbl_order")
