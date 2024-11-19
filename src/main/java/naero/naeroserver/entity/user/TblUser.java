@@ -45,7 +45,7 @@ public class TblUser {
     private Integer userPoint;
 
     @Column(name = "enroll_date")
-    private LocalDate enrollDate;
+    private Date enrollDate;
 
     @Size(max = 1)
     @ColumnDefault("'N'")
@@ -116,11 +116,11 @@ public class TblUser {
         this.userPoint = userPoint;
     }
 
-    public LocalDate getEnrollDate() {
+    public Date getEnrollDate() {
         return enrollDate;
     }
 
-    public void setEnrollDate(LocalDate enrollDate) {
+    public void setEnrollDate(Date enrollDate) {
         this.enrollDate = enrollDate;
     }
 

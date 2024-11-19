@@ -36,6 +36,11 @@ public class TblProducer {
     @JoinColumn(name = "pgrade_id")
     private TblProducerGrade pgrade;
 
+    @Size(max = 1)
+    @ColumnDefault("'N'")
+    @Column(name = "with_status", length = 1)
+    private String withStatus;
+
     @Column(name = "delivery_fee")
     private Integer deliveryFee;
 
@@ -114,4 +119,11 @@ public class TblProducer {
         this.deliveryCrit = deliveryCrit;
     }
 
+    public @Size(max = 1) String getWithStatus() {
+        return withStatus;
+    }
+
+    public void setWithStatus(@Size(max = 1) String withStatus) {
+        this.withStatus = withStatus;
+    }
 }
