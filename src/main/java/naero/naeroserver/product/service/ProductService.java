@@ -379,19 +379,19 @@ public class ProductService {
     }
 
     /* 상품 카테고리와 연관된 상품 조회 */
-//    public Object selectProductCategory(int detail, int smallId) {
-//        log.info("[ProductService] selectProductCategory() 시작");
-//
-//        List<TblProduct> productListPreview = productRepository.findByProductIdAndSmallCategory(detail, smallId);
-//
-//        for (TblProduct tblProduct : productListPreview) {
-//            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
-//        }
-//
-//        log.info("[ProductService] selectProductCategory() 종료");
-//
-//        return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
-//                .collect(Collectors.toList());
-//    }
+    public Object selectProductCategory(int smallId) {
+        log.info("[ProductService] selectProductCategory() 시작");
+
+        List<TblProduct> productListPreview = productRepository.findByProductIdAndSmallCategory(smallId);
+
+        for (TblProduct tblProduct : productListPreview) {
+            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
+        }
+
+        log.info("[ProductService] selectProductCategory() 종료");
+
+        return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
+    }
 
 }
