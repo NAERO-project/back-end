@@ -5,7 +5,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import naero.naeroserver.product.dto.ProductDTO;
 import naero.naeroserver.product.dto.ProductSearchDTO;
-import org.apache.ibatis.jdbc.Null;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class SearchRepository {
+public class ProductSearchRepository {
 
     @PersistenceContext
     private EntityManager entityManager;

@@ -11,7 +11,6 @@ public class ProductDTO {
     private String productCreateAt;
     private String productDeleteAt;
     private String productCheck;
-    private int productQuantity;
     private int producerId;
     private int smallCategoryId;
 
@@ -28,7 +27,6 @@ public class ProductDTO {
         this.productCreateAt = productCreateAt;
         this.productDeleteAt = productDeleteAt;
         this.productCheck = productCheck;
-        this.productQuantity = productQuantity;
         this.producerId = producerId;
         this.smallCategoryId = smallCategoryId;
     }
@@ -105,14 +103,6 @@ public class ProductDTO {
         this.productCheck = productCheck;
     }
 
-    public int getProductQuantity() {
-        return productQuantity;
-    }
-
-    public void setProductQuantity(int productQuantity) {
-        this.productQuantity = productQuantity;
-    }
-
     public int getProducerId() {
         return producerId;
     }
@@ -141,7 +131,6 @@ public class ProductDTO {
                 ", productCreateAt='" + productCreateAt + '\'' +
                 ", productDeleteAt='" + productDeleteAt + '\'' +
                 ", productCheck='" + productCheck + '\'' +
-                ", productQuantity=" + productQuantity +
                 ", producerId=" + producerId +
                 ", smallCategoryId=" + smallCategoryId +
                 '}';

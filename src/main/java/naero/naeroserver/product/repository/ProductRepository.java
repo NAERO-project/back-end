@@ -106,4 +106,13 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
     List<ProductOptionDTO> findByIdAndOption(@Param("productId") Integer productId);
 
     List<TblProduct> findByProductNameContaining(String search);
+
+//    @Query("SELECT p " +
+//            "FROM TblProduct p " +
+//            "JOIN TblCategorySmall cs ON p.smallCategory = cs.smallCategoryId " +
+//            "WHERE cs.smallCategoryId = :smallId " +
+//            "AND p.productCheck = 'Y' " +
+//            "ORDER BY p.productId desc ")
+//    List<TblProduct> findByProductIdAndSmallCategory(@Param("detail") Integer detail,
+//                                                     @Param("smallId") Integer smallId);
 }
