@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Repository
 public interface UserRepository extends JpaRepository<TblUser, Integer> {
+    TblUser findById(int Id);
     TblUser findByUsername(String username);
     boolean existsByUsername(String username);
     boolean existsByUserEmail(String email);
@@ -20,4 +21,7 @@ public interface UserRepository extends JpaRepository<TblUser, Integer> {
     Page<TblUser> findAll(Pageable pageable);
 
 
+//    TblUser findTblUserByUserId(int userId);
+
+    TblUser findTblUserByUserId(int userId);
 }
