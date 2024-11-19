@@ -39,7 +39,7 @@ public class InquiryService {
     @Transactional
     public String updateInquiry(Integer userId, Integer inquiryId, Integer productId, InquiryDTO inquiryDTO) {
         // 특정 사용자, 문의 ID, 상품 ID로 문의를 조회하여 유효성 검증
-        TblInquiry inquiry = inquiryRepository.findByInquiryIdAndUserUserIdAndProductId(inquiryId, userId, productId)
+        TblInquiry inquiry = inquiryRepository.findByInquiryIdAndUserIdAndProductId(inquiryId, userId, productId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 문의를 찾을 수 없거나 권한이 없습니다."));
 
         // 답변 완료 상태면 수정 불가
@@ -61,11 +61,11 @@ public class InquiryService {
     @Transactional
     public String deleteInquiry(Integer userId, Integer inquiryId, Integer productId) {
         // 특정 사용자, 문의 ID, 상품 ID로 문의를 조회하여 유효성 검증
-        TblInquiry inquiry = (TblInquiry) inquiryRepository.findByInquiryIdAndUserUserIdAndProductId(inquiryId, userId, productId)
+        TblInquiry inquiry = inquiryRepository.findByInquiryIdAndUserIdAndProductId(inquiryId, userId, productId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 문의를 찾을 수 없거나 권한이 없습니다."));
 
         // 답변부터 삭제
-        responseRepository.deleteByInquiry(inquiry);
+        responseRepository.deleteByInquiryId(inquiry.getInquiryId());
 
         inquiryRepository.delete(inquiry);
 

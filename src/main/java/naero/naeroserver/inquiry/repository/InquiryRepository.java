@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface InquiryRepository extends JpaRepository<TblInquiry, Integer> {
 
     // 수정
-    Optional<TblInquiry> findByInquiryIdAndUserUserIdAndProductId(Integer inquiryId, Integer userId, Integer productId);
+    Optional<TblInquiry> findByInquiryIdAndUserIdAndProductId(Integer inquiryId, Integer userId, Integer productId);
 
     // 페이지 개수
     int countByProductId(Integer productId);

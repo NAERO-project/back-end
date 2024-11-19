@@ -1,5 +1,6 @@
 package naero.naeroserver.question.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import naero.naeroserver.common.Criteria;
 import naero.naeroserver.common.PageDTO;
 import naero.naeroserver.common.PagingResponseDTO;
@@ -27,6 +28,7 @@ public class AnswerController {
     }
 
     // 모든 문의 목록 조회 (페이징 처리)
+    @Operation(summary = "1:1 문의 답변 전체 조회 요청", description = "1:1 문의 답변 전체 조회가 진행됩니다.", tags = { "AnswerController" })
     @GetMapping("/questions")
     public ResponseEntity<ResponseDTO> getAllQuestions(
             @RequestParam(name = "page", defaultValue = "1") int page,
@@ -41,6 +43,7 @@ public class AnswerController {
     }
 
     // 특정 문의 상세 조회
+    @Operation(summary = "1:1 문의 답변 상세 조회 요청", description = "1:1 문의 답변 상세 조회가 진행됩니다.", tags = { "AnswerController" })
     @GetMapping("/questions/{questionId}")
     public ResponseEntity<ResponseDTO> getQuestionById(@PathVariable Integer questionId) {
 
@@ -50,7 +53,8 @@ public class AnswerController {
     }
 
     // 답변 등록
-    @PostMapping("/questions/{questionId}/answers")
+    @Operation(summary = "1:1 문의 답변 등록 요청", description = "1:1 문의 답변 등록이 진행됩니다.", tags = { "AnswerController" })
+    @PostMapping("/questions/{questionId}/{answerEmpId}/answers")
     public ResponseEntity<ResponseDTO> createAnswer(@PathVariable Integer questionId, @RequestBody AnswerDTO answerDTO) {
 
         String result = answerService.createAnswer(questionId, answerDTO);
@@ -59,7 +63,8 @@ public class AnswerController {
     }
 
     // 답변 수정
-    @PutMapping("/answers/{questionId}")
+    @Operation(summary = "1:1 문의 답변 수정 요청", description = "1:1 문의 답변 수정이 진행됩니다.", tags = { "AnswerController" })
+    @PutMapping("/answers/{questionId}/")
     public ResponseEntity<ResponseDTO> updateAnswer(@PathVariable Integer questionId, @RequestBody AnswerDTO answerDTO) {
 
         String result = answerService.updateAnswer(questionId, answerDTO);
@@ -68,6 +73,7 @@ public class AnswerController {
     }
 
     // 답변 삭제
+    @Operation(summary = "1:1 문의 답변 삭제 요청", description = "1:1 문의 답변 삭제가 진행됩니다.", tags = { "AnswerController" })
     @DeleteMapping("/answers/{questionId}")
     public ResponseEntity<ResponseDTO> deleteAnswer(@PathVariable Integer questionId) {
 

@@ -78,7 +78,7 @@ public class AnswerService {
             question.setQuestionStatus(true);
 
             TblAnswer answer = modelMapper.map(answerDTO, TblAnswer.class);
-            answer.setQuestion(question);
+            answer.setQuestionId(question.getQuestionId());
 
             answerRepository.save(answer);
 

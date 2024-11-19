@@ -3,12 +3,9 @@ package naero.naeroserver.entity.inquiry;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.user.TblUser;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "tbl_question")
@@ -36,19 +33,15 @@ public class TblQuestion {
 
     @ColumnDefault("0")
     @Column(name = "question_status")
-    private Boolean questionStatus = false;
+    private Boolean questionStatus;
 
     @Size(max = 255)
     @Column(name = "question_image")
     private String questionImage;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private TblUser user;
-
-    @OneToMany(mappedBy = "question")
-    private Set<TblAnswer> tblAnswers = new LinkedHashSet<>();
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     public Integer getQuestionId() {
         return questionId;
@@ -106,20 +99,12 @@ public class TblQuestion {
         this.questionImage = questionImage;
     }
 
-    public TblUser getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(TblUser user) {
-        this.user = user;
-    }
-
-    public Set<TblAnswer> getTblAnswers() {
-        return tblAnswers;
-    }
-
-    public void setTblAnswers(Set<TblAnswer> tblAnswers) {
-        this.tblAnswers = tblAnswers;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
 }

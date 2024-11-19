@@ -44,20 +44,20 @@ public class QuestionService {
     // 1:1 문의 전체 조회
     public Page<QuestionDTO> getUserQuestions(Integer userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<TblQuestion> questionsPage = questionRepository.findByUserUserId(userId, pageable);
+        Page<TblQuestion> questionsPage = questionRepository.findByUserId(userId, pageable);
         return questionsPage.map(question -> modelMapper.map(question, QuestionDTO.class));
     }
 
     // 1:1 문의 상세 조회
     public QuestionDTO getUserQuestionById(Integer userId, Integer questionId) {
-        TblQuestion question = questionRepository.findByQuestionIdAndUserUserId(questionId, userId);
+        TblQuestion question = questionRepository.findByQuestionIdAndUserId(questionId, userId);
         return question == null ? null : modelMapper.map(question, QuestionDTO.class);
     }
 
     // 1:1 문의 수정
     @Transactional
     public String updateQuestion(Integer userId, Integer questionId, QuestionDTO questionDTO) {
-        TblQuestion question = questionRepository.findByQuestionIdAndUserUserId(questionId, userId);
+        TblQuestion question = questionRepository.findByQuestionIdAndUserId(questionId, userId);
 
         // 예외?
         if (question == null || question.getQuestionStatus()) {
@@ -83,12 +83,12 @@ public class QuestionService {
     // 1:1 문의 삭제
     @Transactional
     public String deleteQuestion(Integer userId, Integer questionId) {
-        TblQuestion question = questionRepository.findByQuestionIdAndUserUserId(questionId, userId);
+        TblQuestion question = questionRepository.findByQuestionIdAndUserId(questionId, userId);
         if (question == null) {
             return "삭제 실패: 문의를 찾을 수 없습니다.";
         }
 
-        answerRepository.deleteByQuestion_QuestionId(questionId);
+        answerRepository.deleteByQuestionId(questionId);
 
         questionRepository.delete(question);
         return "문의 삭제 성공";
@@ -96,7 +96,7 @@ public class QuestionService {
 
     // 1:1 문의 개수
     public int getTotalQuestions(Integer userId) {
-        return (int) questionRepository.countByUserUserId(userId);
+        return (int) questionRepository.countByUserId(userId);
     }
 }
 

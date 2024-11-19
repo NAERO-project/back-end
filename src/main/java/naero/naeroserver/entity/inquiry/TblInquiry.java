@@ -3,7 +3,6 @@ package naero.naeroserver.entity.inquiry;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.user.TblUser;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
@@ -38,12 +37,11 @@ public class TblInquiry {
 
     @ColumnDefault("0")
     @Column(name = "inquiry_status")
-    private Boolean inquiryStatus = false;
+    private Boolean inquiryStatus;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private TblUser user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     @NotNull
     @Column(name = "product_id", nullable = false)
@@ -53,8 +51,8 @@ public class TblInquiry {
         return inquiryId;
     }
 
-    public void setInquiryId(Integer inquiryId) {
-        this.inquiryId = inquiryId;
+    public void setInquiryId(Integer getInquiryId) {
+        this.inquiryId = getInquiryId;
     }
 
     public String getInquiryTitle() {
@@ -105,12 +103,12 @@ public class TblInquiry {
         this.inquiryStatus = inquiryStatus;
     }
 
-    public TblUser getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(TblUser user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Integer getProductId() {

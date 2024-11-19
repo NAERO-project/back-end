@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 
 public class InquiryDTO {
 
-    private Integer InquiryId;
-    private String InquiryTitle;
-    private String InquiryContent;
-    private LocalDateTime InquiryDate;
-    private LocalDateTime InquiryUpdate;
+    private Integer inquiryId;
+    private String inquiryTitle;
+    private String inquiryContent;
+    private LocalDateTime inquiryDate;
+    private LocalDateTime inquiryUpdate;
     private Boolean inquiryLock;
     private Boolean inquiryStatus;
 
@@ -19,11 +19,11 @@ public class InquiryDTO {
     }
 
     public InquiryDTO(Integer inquiryId, String inquiryTitle, String inquiryContent, LocalDateTime inquiryDate, LocalDateTime inquiryUpdate, Boolean inquiryLock, Boolean inquiryStatus, Integer userId, Integer productId) {
-        InquiryId = inquiryId;
-        InquiryTitle = inquiryTitle;
-        InquiryContent = inquiryContent;
-        InquiryDate = inquiryDate;
-        InquiryUpdate = inquiryUpdate;
+        this.inquiryId = inquiryId;
+        this.inquiryTitle = inquiryTitle;
+        this.inquiryContent = inquiryContent;
+        this.inquiryDate = inquiryDate;
+        this.inquiryUpdate = inquiryUpdate;
         this.inquiryLock = inquiryLock;
         this.inquiryStatus = inquiryStatus;
         this.userId = userId;
@@ -31,43 +31,43 @@ public class InquiryDTO {
     }
 
     public Integer getInquiryId() {
-        return InquiryId;
+        return inquiryId;
     }
 
     public void setInquiryId(Integer inquiryId) {
-        InquiryId = inquiryId;
+        inquiryId = inquiryId;
     }
 
     public String getInquiryTitle() {
-        return InquiryTitle;
+        return inquiryTitle;
     }
 
     public void setInquiryTitle(String inquiryTitle) {
-        InquiryTitle = inquiryTitle;
+        this.inquiryTitle = inquiryTitle;
     }
 
     public String getInquiryContent() {
-        return InquiryContent;
+        return inquiryContent;
     }
 
     public void setInquiryContent(String inquiryContent) {
-        InquiryContent = inquiryContent;
+        this.inquiryContent = inquiryContent;
     }
 
     public LocalDateTime getInquiryDate() {
-        return InquiryDate;
+        return inquiryDate;
     }
 
     public void setInquiryDate(LocalDateTime inquiryDate) {
-        InquiryDate = inquiryDate;
+        this.inquiryDate = inquiryDate;
     }
 
     public LocalDateTime getInquiryUpdate() {
-        return InquiryUpdate;
+        return inquiryUpdate;
     }
 
     public void setInquiryUpdate(LocalDateTime inquiryUpdate) {
-        InquiryUpdate = inquiryUpdate;
+        this.inquiryUpdate = inquiryUpdate;
     }
 
     public Boolean getInquiryLock() {
@@ -105,11 +105,11 @@ public class InquiryDTO {
     @Override
     public String toString() {
         return "InquiryDTO{" +
-                "InquiryId=" + InquiryId +
-                ", InquiryTitle='" + InquiryTitle + '\'' +
-                ", InquiryContent='" + InquiryContent + '\'' +
-                ", InquiryDate=" + InquiryDate +
-                ", InquiryUpdate=" + InquiryUpdate +
+                "inquiryId=" + inquiryId +
+                ", inquiryTitle='" + inquiryTitle + '\'' +
+                ", inquiryContent='" + inquiryContent + '\'' +
+                ", inquiryDate=" + inquiryDate +
+                ", inquiryUpdate=" + inquiryUpdate +
                 ", inquiryLock=" + inquiryLock +
                 ", inquiryStatus=" + inquiryStatus +
                 ", userId=" + userId +

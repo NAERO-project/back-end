@@ -2,7 +2,7 @@ package naero.naeroserver.inquiry.dto;
 
 import java.time.LocalDateTime;
 
-public class ResponseDTO {
+public class RespDTO {
 
     private Integer responseId;
     private String responseTitle;
@@ -13,10 +13,10 @@ public class ResponseDTO {
     private Integer inquiryId;
     private Integer producerId;
 
-    public ResponseDTO() {
+    public RespDTO() {
     }
 
-    public ResponseDTO(Integer responseId, String responseTitle, String responseContent, LocalDateTime responseDate, LocalDateTime responseUpdate, Integer inquiryId, Integer producerId) {
+    public RespDTO(Integer responseId, String responseTitle, String responseContent, LocalDateTime responseDate, LocalDateTime responseUpdate, Integer inquiryId, Integer producerId) {
         this.responseId = responseId;
         this.responseTitle = responseTitle;
         this.responseContent = responseContent;
@@ -91,7 +91,7 @@ public class ResponseDTO {
                 ", responseDate=" + responseDate +
                 ", responseUpdate=" + responseUpdate +
                 ", inquiryId=" + inquiryId +
-                ", producerId=" + producerId +
+                ", producer=" + producerId +
                 '}';
     }
 }

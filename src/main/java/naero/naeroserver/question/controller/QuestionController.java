@@ -1,5 +1,6 @@
 package naero.naeroserver.question.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import naero.naeroserver.common.Criteria;
 import naero.naeroserver.common.PageDTO;
 import naero.naeroserver.common.PagingResponseDTO;
@@ -26,6 +27,7 @@ public class QuestionController {
     }
 
     // 1:1 문의 등록
+    @Operation(summary = "1:1 문의 등록 요청", description = "1:1 문의 등록이 진행됩니다.", tags = { "QuestionController" })
     @PostMapping("/")
     public ResponseEntity<ResponseDTO> createQuestion(@RequestBody QuestionDTO questionDTO) {
 
@@ -35,6 +37,7 @@ public class QuestionController {
     }
 
     // 1:1 문의 전체 조회
+    @Operation(summary = "1:1 문의 전체 조회 요청", description = "1:1 전체 조회가 진행됩니다.", tags = { "QuestionController" })
     @GetMapping
     public ResponseEntity<ResponseDTO> getUserQuestions(
             @RequestParam Integer userId,
@@ -50,6 +53,7 @@ public class QuestionController {
     }
 
     // 특정 문의 상세 조회
+    @Operation(summary = "1:1 문의 상세 조회 요청", description = "1:1 문의 상세 조회가 진행됩니다.", tags = { "QuestionController" })
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDTO> getUserQuestionById(@RequestParam Integer userId, @PathVariable Integer id) {
 
@@ -59,6 +63,7 @@ public class QuestionController {
     }
 
     // 1:1 문의 수정
+    @Operation(summary = "1:1 문의 수정 요청", description = "1:1 문의 수정이 진행됩니다.", tags = { "QuestionController" })
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDTO> updateQuestion(@RequestParam Integer userId, @PathVariable Integer id, @RequestBody QuestionDTO questionDTO) {
 
@@ -68,6 +73,7 @@ public class QuestionController {
     }
 
     // 1:1 문의 삭제
+    @Operation(summary = "1:1 문의 삭제 요청", description = "1:1 문의 삭제가 진행됩니다.", tags = { "QuestionController" })
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDTO> deleteQuestion(@RequestParam Integer userId, @PathVariable Integer id) {
 

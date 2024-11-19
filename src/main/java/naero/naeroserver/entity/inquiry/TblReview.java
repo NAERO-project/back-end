@@ -3,8 +3,6 @@ package naero.naeroserver.entity.inquiry;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import naero.naeroserver.entity.product.TblProduct;
-import naero.naeroserver.entity.user.TblUser;
 
 import java.time.Instant;
 
@@ -37,14 +35,12 @@ public class TblReview {
     private Instant reviewDate;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
-    private TblProduct product;
+    @Column(name = "product_id", nullable = false)
+    private Integer productId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private TblUser user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     public Integer getReviewId() {
         return reviewId;
@@ -94,20 +90,20 @@ public class TblReview {
         this.reviewDate = reviewDate;
     }
 
-    public TblProduct getProduct() {
-        return product;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setProduct(TblProduct product) {
-        this.product = product;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 
-    public TblUser getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(TblUser user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
 }

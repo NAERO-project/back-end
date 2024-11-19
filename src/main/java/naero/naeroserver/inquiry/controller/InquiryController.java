@@ -1,5 +1,6 @@
 package naero.naeroserver.inquiry.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import naero.naeroserver.common.Criteria;
 import naero.naeroserver.common.PageDTO;
 import naero.naeroserver.common.PagingResponseDTO;
@@ -27,6 +28,7 @@ public class InquiryController {
     }
 
     // 상품 문의 등록
+    @Operation(summary = "상품 문의 등록 요청", description = "상품 문의 등록이 진행됩니다.", tags = { "InquiryController" })
     @PostMapping("/inquiry")
     public ResponseEntity<ResponseDTO> createInquiry(@RequestParam Integer productId, @RequestBody InquiryDTO inquiryDTO) {
 
@@ -36,6 +38,7 @@ public class InquiryController {
     }
 
     // 상품 문의 전체 조회
+    @Operation(summary = "상품 문의 전체 조회 요청", description = "상품 문의 전체 조회가 진행됩니다.", tags = { "InquiryController" })
     @GetMapping("/product")
     public ResponseEntity<ResponseDTO> getProductInquiryList(
             @RequestParam Integer productId,
@@ -51,6 +54,7 @@ public class InquiryController {
     }
 
     // 상품 문의 상세 조회
+    @Operation(summary = "상품 문의 상세 조회 요청", description = "상품 문의 상세 조회가 진행됩니다.", tags = { "InquiryController" })
     @GetMapping("/product/{productId}/{inquiryId}")
     public ResponseEntity<ResponseDTO> getProductInquiryDetail(@RequestParam Integer productId, @PathVariable Integer inquiryId) {
 
@@ -60,6 +64,7 @@ public class InquiryController {
     }
 
     // 상품 문의 수정
+    @Operation(summary = "상품 문의 수정 요청", description = "상품 문의 수정이 진행됩니다.", tags = { "InquiryController" })
     @PutMapping("/inquiry/{inquiryId}")
     public ResponseEntity<ResponseDTO> updateInquiry(
             @RequestParam Integer userId,
@@ -73,6 +78,7 @@ public class InquiryController {
     }
 
     // 상품 문의 삭제
+    @Operation(summary = "상품 문의 삭제 요청", description = "상품 문의 삭제가 진행됩니다.", tags = { "InquiryController" })
     @DeleteMapping("/inquiry/{inquiryId}")
     public ResponseEntity<ResponseDTO> deleteInquiry(
             @RequestParam Integer userId,

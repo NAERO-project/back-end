@@ -1,3 +1,4 @@
+
 INSERT INTO tbl_grade (grade_name, crit_exp) VALUES
                                                  ('새싹',0),
                                                  ('묘목',100000),
