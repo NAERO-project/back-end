@@ -5,6 +5,8 @@ import naero.naeroserver.common.Criteria;
 import naero.naeroserver.common.PageDTO;
 import naero.naeroserver.common.PagingResponseDTO;
 import naero.naeroserver.common.ResponseDTO;
+import naero.naeroserver.member.service.ProducerService;
+import naero.naeroserver.member.service.UserService;
 import naero.naeroserver.product.dto.ProductDTO;
 import naero.naeroserver.product.dto.ProductSearchDTO;
 import naero.naeroserver.product.service.ProductService;
@@ -23,10 +25,12 @@ public class ProductController {
     private static final Logger log = LoggerFactory.getLogger(ProductController.class);
     private final ProductService productService;
     private final int SIZE =1;
+    private final UserService userService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
     /* 상품 리스트 전체 조회 (페이징) */
@@ -105,10 +109,10 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProducerProductListPreview()));
     }
 
-    /* 판매자별 페이지 전체 상품 조회 (페이징) */
-    @Operation(summary = "판매자별 페이지 상품 리스트 전체 조회 (페이징)", description = "판매자별 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
+    /* 브랜드별 페이지 전체 상품 조회 (페이징) */
+    @Operation(summary = "브랜드별 페이지 상품 리스트 전체 조회 (페이징)", description = "브랜드별 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
     @GetMapping("/products/producer/{producerId}")
-    public ResponseEntity<ResponseDTO> selectProducerProductListPage(
+    public ResponseEntity<ResponseDTO> selectProductListPageByBrand(
             @RequestParam(name = "offset", defaultValue = "1") String offset,
             @PathVariable int producerId){
 
@@ -154,6 +158,29 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> selectProductDetail(@PathVariable int productId){
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 상세정보 조회 성공", productService.selectProductDetail(productId)));
+    }
+
+    /* 판매자 페이지 전체 상품 조회 (페이징) */
+    @Operation(summary = "판매자 페이지 상품 리스트 전체 조회 (페이징)", description = "판매자 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
+    @GetMapping("/products/producer-page/{producerUsername}")
+    public ResponseEntity<ResponseDTO> selectProducerProductListPage(
+            @RequestParam(name = "offset", defaultValue = "1") String offset,
+            @PathVariable String producerUsername){
+
+        log.info("[ProductController] selectProducerProductListPage 상품 리스트 전체 조회(페이징) : " + offset);
+
+        int producerId = userService.getProducerIdFromUserName(producerUsername);
+
+        int total = productService.selectProducerProductListPage(producerId);
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+
+        pagingResponseDTO.setData(productService.selectProducerProductListPaging(producerId, cri));
+
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
     }
 
     /* 판매자 상품 등록 */

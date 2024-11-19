@@ -198,4 +198,8 @@ public class UserService {
 
         return modelMapper.map(getUser, ProducerDTO.class);
     }
+
+    public int getProducerIdFromUserName(String producerUsername) {
+        return userRepository.findUserIdByUsername(producerUsername);
+    }
 }
