@@ -171,6 +171,21 @@ GROUP BY
 ORDER BY
     total_count DESC;
 
+# Cross Product Quantity Query
+ SELECT
+     pt.product_name,
+     SUM(od.count) AS total_count
+ FROM
+     tbl_product pt
+         LEFT JOIN tbl_option op ON pt.product_id = op.product_id
+         LEFT JOIN tbl_order_detail od ON op.option_id = od.option_id
+ WHERE
+     od.created_at >= NOW() - INTERVAL 8 DAY
+ GROUP BY
+     pt.product_name
+ ORDER BY
+     total_count DESC;
+
 # Series Producer Sales Query
 SELECT
 #     pt.product_name,
@@ -182,7 +197,7 @@ FROM
         LEFT JOIN tbl_option op ON pt.product_id = op.product_id
         LEFT JOIN tbl_order_detail od ON op.option_id = od.option_id
 WHERE
-    od.created_at >= NOW() - INTERVAL 1 WEEK
+    od.created_at >= NOW() - INTERVAL 1 MONTH
   AND pr.producer_name = "ㅇㅇ상회"
 GROUP BY
     DATE(od.created_at), pr.producer_name

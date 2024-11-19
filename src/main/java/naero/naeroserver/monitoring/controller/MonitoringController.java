@@ -104,7 +104,6 @@ public class MonitoringController {
     @GetMapping("/monitoring/liked-statistics")
     public ResponseEntity<ResponseDTO> selectLikedStatisticsCross(
             @RequestParam(defaultValue = "브랜드") String categoryOption,
-//            @RequestParam String indexOption,   // 선호도는 찜 개수에 따라 집계하는 것이므로 지표선택은 적용되지 않음
             @RequestParam(required = false, defaultValue = "") String startDate,
             @RequestParam(required = false, defaultValue = "") String endDate,
             @RequestParam(required = false) String specification
@@ -134,19 +133,12 @@ public class MonitoringController {
 
         // Call the appropriate service method based on specification
         List<Map<String, Object>> response = (specification == null || specification.trim().isEmpty())
-//                ? (isSalesStatistics
-////                ? monitoringServiceStat.selectSalesStatisticsCross(categoryOption, indexOption, parsedStartInstant, parsedEndInstant)
-//                ? monitoringServiceStat.selectSalesStatisticsCross(categoryOption, indexOption, parsedStartInstant, parsedEndInstant)
-//                : monitoringServiceStat.selectLikedStatisticsCross(categoryOption, parsedStartInstant, parsedEndInstant))
-//                : (isSalesStatistics
-////                ? monitoringServiceStat.selectSalesStatisticsSeries(categoryOption, indexOption, parsedStartInstant, parsedEndInstant, specification)
-//                ? monitoringServiceStat.selectSalesStatisticsSeries(categoryOption, indexOption, parsedStartInstant, parsedEndInstant, specification)
-//                : monitoringServiceStat.selectLikedStatisticsSeries(categoryOption, parsedStartInstant, parsedEndInstant, specification));
-
-//                ? monitoringServiceStat.selectSalesStatisticsCross(categoryOption, indexOption, parsedStartInstant, parsedEndInstant)
-//                : monitoringServiceStat.selectSalesStatisticsSeries(categoryOption, indexOption, parsedStartInstant, parsedEndInstant, specification);
-                ? monitoringServiceStat.selectLikedStatisticsCross(categoryOption, parsedStartInstant, parsedEndInstant)
-                : monitoringServiceStat.selectLikedStatisticsSeries(categoryOption, parsedStartInstant, parsedEndInstant, specification);
+                ? (isSalesStatistics
+                ? monitoringServiceStat.selectSalesStatisticsCross(categoryOption, indexOption, parsedStartInstant, parsedEndInstant)
+                : monitoringServiceStat.selectLikedStatisticsCross(categoryOption, parsedStartInstant, parsedEndInstant))
+                : (isSalesStatistics
+                ? monitoringServiceStat.selectSalesStatisticsSeries(categoryOption, indexOption, parsedStartInstant, parsedEndInstant, specification)
+                : monitoringServiceStat.selectLikedStatisticsSeries(categoryOption, parsedStartInstant, parsedEndInstant, specification));
 
         String message = (specification == null || specification.trim().isEmpty()) ? "횡단면 조회 성공" : "시계열 조회 성공";
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, message, response));

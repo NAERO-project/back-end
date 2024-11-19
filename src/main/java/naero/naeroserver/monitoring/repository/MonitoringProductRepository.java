@@ -15,7 +15,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
             "FROM TblProduct pt " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
-            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
+            "WHERE (od.createdAt IS NOT NULL AND od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
             "GROUP BY pt.productName " +
             "ORDER BY SUM(od.amount) DESC")
     List<Map<String, Double>> findCrossByProductAndSales(@Param("parsedStartInstant") Instant parsedStartInstant,
@@ -25,7 +25,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
             "FROM TblProduct pt " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
-            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
+            "WHERE (od.createdAt IS NOT NULL AND od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
             "GROUP BY pt.productName " +
             "ORDER BY SUM(od.count) DESC")
     List<Map<String, Double>> findCrossByProductAndQuantity(@Param("parsedStartInstant") Instant parsedStartInstant,
@@ -34,7 +34,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
     @Query("SELECT new map(pt.productName AS product_name, CAST(COUNT(pt.productName) AS double) AS total_like) " +
             "FROM TblProduct pt " +
             "LEFT JOIN TblLikedProduct lpt ON pt.productId = lpt.productId " +
-            "WHERE (lpt.productLikeDate IS NOT NULL OR lpt.productLikeDate BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
+            "WHERE (lpt.productLikeDate IS NOT NULL AND lpt.productLikeDate BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
             "GROUP BY pt.productName " +
             "ORDER BY COUNT(pt.productName) DESC")
     List<Map<String, Double>> findCrossByProductAndLike(@Param("parsedStartInstant") Instant parsedStartInstant,
@@ -44,7 +44,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
             "FROM TblProduct pt " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
-            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
+            "WHERE (od.createdAt IS NOT NULL AND od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
             "AND pt.productName = :specification " +
             "GROUP BY DATE(od.createdAt) " +
             "ORDER BY DATE(od.createdAt)")
@@ -56,7 +56,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
             "FROM TblProduct pt " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
-            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
+            "WHERE (od.createdAt IS NOT NULL AND od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
             "AND pt.productName = :specification " +
             "GROUP BY DATE(od.createdAt) " +
             "ORDER BY DATE(od.createdAt)")
@@ -67,7 +67,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
     @Query("SELECT new map(DATE(lpt.productLikeDate) AS like_date, COUNT(pt.productName) AS total_like) " +
             "FROM TblProduct pt " +
             "LEFT JOIN TblLikedProduct lpt ON pt.productId = lpt.productId " +
-            "WHERE (lpt.productLikeDate IS NOT NULL OR lpt.productLikeDate BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
+            "WHERE (lpt.productLikeDate IS NOT NULL AND lpt.productLikeDate BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
             "AND pt.productName = :specification " +
             "GROUP BY DATE(lpt.productLikeDate), pt.productName " +
             "ORDER BY DATE(lpt.productLikeDate)")

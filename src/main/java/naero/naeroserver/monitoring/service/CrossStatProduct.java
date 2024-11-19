@@ -22,142 +22,72 @@ public class CrossStatProduct {
         this.monitoringProductRepository = monitoringProductRepository;
     }
 
-    /* Method to get PRODUCT SALES AMOUNT statistics and process the top 3 with "others" */
+    /**
+     * Helper method to process statistics and return the top 3 with an "others" category.
+     */
+    private List<Map<String, Object>> processTop3WithOthers(List<Map<String, Double>> statistics,
+                                                            String valueKey,
+                                                            String productKey) {
+        double overallTotal = statistics.stream()
+                .mapToDouble(stat -> stat.get(valueKey))
+                .sum();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        double othersTotal = 0.0;
+
+        for (int i = 0; i < statistics.size(); i++) {
+            Map<String, Double> stat = statistics.get(i);
+            double value = stat.get(valueKey);
+            if (i < 3) {
+                result.add(Map.of(
+                        "product_name", stat.get(productKey),
+                        valueKey, value,
+                        "ratio", value / overallTotal
+                ));
+            } else {
+                othersTotal += value;
+            }
+        }
+
+        if (othersTotal > 0) {
+            result.add(Map.of(
+                    "product_name", "others",
+                    valueKey, othersTotal,
+                    "ratio", othersTotal / overallTotal
+            ));
+        }
+
+        log.info("[CrossStat] Final result: {}", result);
+        return result;
+    }
+
+    /**
+     * Retrieves product sales amount statistics and processes the top 3 with "others".
+     */
     public List<Map<String, Object>> getCrossByProductAndSales(Instant parsedStartInstant, Instant parsedEndInstant) {
         log.info("[CrossStat] getCrossByProductAndSales() Start");
-
-        // Fetch product sales statistics
-        List<Map<String, Double>> salesStatistics = monitoringProductRepository.findCrossByProductAndSales(parsedStartInstant, parsedEndInstant);
-
-        // Calculate the total sum of all amounts
-        double overallTotalAmount = salesStatistics.stream()
-                .mapToDouble(stat -> stat.get("total_amount"))
-                .sum();
-
-        // Sort and split the statistics into top 3 and "others"
-        List<Map<String, Object>> result = new ArrayList<>();
-        double othersTotalAmount = 0.0;
-
-        for (int i = 0; i < salesStatistics.size(); i++) {
-            Map<String, Double> stat = salesStatistics.get(i);
-            if (i < 3) {
-                // Add top 3 products with their ratio
-                double totalAmount = stat.get("total_amount");
-                double ratio = totalAmount / overallTotalAmount;
-                result.add(Map.of(
-                        "product_name", stat.get("product_name"),
-                        "total_amount", totalAmount, // Corrected typo from "total_amout" to "total_amount"
-                        "ratio", ratio
-                ));
-            } else {
-                // Accumulate the rest as "others"
-                othersTotalAmount += stat.get("total_amount");
-            }
-        }
-
-        // Add "others" to the result if necessary
-        if (othersTotalAmount > 0) {
-            double othersRatio = othersTotalAmount / overallTotalAmount;
-            result.add(Map.of(
-                    "product_name", "others",
-                    "total_amount", othersTotalAmount,
-                    "ratio", othersRatio
-            ));
-        }
-        System.out.println("[결과확인] result = " + result);
-        return result;
+        List<Map<String, Double>> salesStatistics = monitoringProductRepository
+                .findCrossByProductAndSales(parsedStartInstant, parsedEndInstant);
+        return processTop3WithOthers(salesStatistics, "total_amount", "product_name");
     }
 
-    /* Method to get PRODUCT SALES QUANTITY statistics and process the top 3 with "others" */
+    /**
+     * Retrieves product sales quantity statistics and processes the top 3 with "others".
+     */
     public List<Map<String, Object>> getCrossByProductAndQuantity(Instant parsedStartInstant, Instant parsedEndInstant) {
         log.info("[CrossStat] getCrossByProductAndQuantity() Start");
-
-        // Fetch product sales quantity
-        List<Map<String, Double>> salesStatistics = monitoringProductRepository.findCrossByProductAndQuantity(parsedStartInstant, parsedEndInstant);
-
-        // Calculate the total sum of all quantity
-        double overallTotalCount = salesStatistics.stream()
-                .mapToDouble(stat -> stat.get("total_count"))
-                .sum();
-
-        // Sort and split the statistics into top 3 and "others"
-        List<Map<String, Object>> result = new ArrayList<>();
-        double othersTotalCount = 0.0;
-
-        for (int i = 0; i < salesStatistics.size(); i++) {
-            Map<String, Double> stat = salesStatistics.get(i);
-            if (i < 3) {
-                // Add top 3 products with their ratio
-                double totalCount = stat.get("total_count");
-                double ratio = totalCount / overallTotalCount;
-                result.add(Map.of(
-                        "product_name", stat.get("product_name"),
-                        "total_count", totalCount,
-                        "ratio", ratio
-                ));
-            } else {
-                // Accumulate the rest as "others"
-                othersTotalCount += stat.get("total_count");
-            }
-        }
-
-        // Add "others" to the result if necessary
-        if (othersTotalCount > 0) {
-            double othersRatio = othersTotalCount / overallTotalCount;
-            result.add(Map.of(
-                    "product_name", "others",
-                    "total_count", othersTotalCount,
-                    "ratio", othersRatio
-            ));
-        }
-        System.out.println("[결과확인] result = " + result);
-        return result;
+        List<Map<String, Double>> quantityStatistics = monitoringProductRepository
+                .findCrossByProductAndQuantity(parsedStartInstant, parsedEndInstant);
+        return processTop3WithOthers(quantityStatistics, "total_count", "product_name");
     }
 
-    /* Method to get PRODUCT LIKED statistics and process the top 3 with "others" */
+    /**
+     * Retrieves product liked statistics and processes the top 3 with "others".
+     */
     public List<Map<String, Object>> getCrossByProductAndLike(Instant parsedStartInstant, Instant parsedEndInstant) {
         log.info("[CrossStat] getCrossByProductAndLike() Start");
-
-        // Fetch product sales quantity
-        List<Map<String, Double>> salesStatistics = monitoringProductRepository.findCrossByProductAndLike(parsedStartInstant, parsedEndInstant);
-        System.out.println("salesStatistics = " + salesStatistics);
-
-        // Calculate the total sum of all quantity
-        double overallTotalCount = salesStatistics.stream()
-                .mapToDouble(stat -> stat.get("total_like"))
-                .sum();
-
-        // Sort and split the statistics into top 3 and "others"
-        List<Map<String, Object>> result = new ArrayList<>();
-        double othersTotalCount = 0.0;
-
-        for (int i = 0; i < salesStatistics.size(); i++) {
-            Map<String, Double> stat = salesStatistics.get(i);
-            if (i < 3) {
-                // Add top 3 products with their ratio
-                double totalCount = stat.get("total_like");
-                double ratio = totalCount / overallTotalCount;
-                result.add(Map.of(
-                        "product_name", stat.get("product_name"),
-                        "total_like", totalCount,
-                        "ratio", ratio
-                ));
-            } else {
-                // Accumulate the rest as "others"
-                othersTotalCount += stat.get("total_like");
-            }
-        }
-
-        // Add "others" to the result if necessary
-        if (othersTotalCount > 0) {
-            double othersRatio = othersTotalCount / overallTotalCount;
-            result.add(Map.of(
-                    "product_name", "others",
-                    "total_like", othersTotalCount,
-                    "ratio", othersRatio
-            ));
-        }
-        System.out.println("[결과확인] result = " + result);
-        return result;
+        List<Map<String, Double>> likeStatistics = monitoringProductRepository
+                .findCrossByProductAndLike(parsedStartInstant, parsedEndInstant);
+        return processTop3WithOthers(likeStatistics, "total_like", "product_name");
     }
 }
