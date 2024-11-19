@@ -1,6 +1,9 @@
 package naero.naeroserver.entity.liked;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
@@ -9,7 +12,6 @@ import java.time.Instant;
 @Table(name = "tbl_liked_product")
 public class TblLikedProduct {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "like_id", nullable = false)
     private Integer likeId;
 

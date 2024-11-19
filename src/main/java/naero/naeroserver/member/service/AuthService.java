@@ -64,12 +64,13 @@ public class AuthService {
 
     @Transactional
     public Object signup(UserDTO user) {
+        System.out.println("유저가 안나바"+user);
         dupulicateIdCheck(user.getUsername());
         dupulicateEmailCheck(user.getUserEmail());
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         TblUser newUser = modelMapper.map(user, TblUser.class);
-        newUser.setGradeId(1);
+//        newUser.setGradeId(1);
 
         TblUser result = userRepository.save(newUser);
 //        System.out.println(modelMapper.map(result,UserDTO.class));
@@ -91,4 +92,20 @@ public class AuthService {
         }
     }
 
+    @Transactional
+    public UserDTO resetPassword(UserDTO user) {
+        TblUser getuser =  userDao.findByUsername(user.getUsername());
+
+        if(!getuser.getUserEmail().equals( user.getUserEmail())){
+            throw new LoginFailedException("전송한 정보가 올바르지 않습니다.");
+        }
+
+        if(passwordEncoder.matches(user.getPassword(), getuser.getPassword())){
+            System.out.println("비밀번호 오류");
+            throw new LoginFailedException("원래의 비밀번호와 동일한 번호로 바꿀 수 없습니다.");
+        }
+        getuser.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        return modelMapper.map( getuser, UserDTO.class);
+    }
 }

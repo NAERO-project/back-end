@@ -53,9 +53,9 @@ public class TblUser {
     @Column(name = "with_status", length = 1)
     private String withStatus;
 
-    @ColumnDefault("1")
-    @Column(name = "grade_id")
-    private Integer gradeId = 1;
+    @ManyToOne
+    @JoinColumn(name = "grade_id")
+    private TblGrade grade;
 
     @OneToMany(mappedBy = "user")
     private Set<TblUserRole> tblUserRoles = new LinkedHashSet<>();
@@ -133,12 +133,12 @@ public class TblUser {
         this.withStatus = withStatus;
     }
 
-    public Integer getGradeId() {
-        return gradeId;
+    public TblGrade getGrade() {
+        return grade;
     }
 
-    public void setGradeId(Integer gradeId) {
-        this.gradeId = gradeId;
+    public void setGrade(TblGrade grade) {
+        this.grade = grade;
     }
 
     public Set<TblUserRole> getTblUserRoles() {
@@ -147,5 +147,22 @@ public class TblUser {
 
     public void setTblUserRoles(Set<TblUserRole> tblUserRoles) {
         this.tblUserRoles = tblUserRoles;
+    }
+
+    @Override
+    public String toString() {
+        return "TblUser{" +
+                "userId=" + userId +
+                ", userFullname='" + userFullname + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", userPhone='" + userPhone + '\'' +
+                ", userPoint=" + userPoint +
+                ", enrollDate=" + enrollDate +
+                ", withStatus='" + withStatus + '\'' +
+                ", gradeId=" + grade +
+                ", tblUserRoles=" + tblUserRoles +
+                '}';
     }
 }
