@@ -39,8 +39,14 @@ public class TblOrder {
     @Column(name = "delivery_fee", nullable = false)
     private Integer deliveryFee;
 
-    @Column(name = "discount_amount")
-    private Integer discountAmount;
+    @Column(name = "point_discount")
+    private Integer pointDiscount;
+
+    @Column(name="coupon_id")
+    private Integer couponId;
+
+    @Column(name = "coupon_discount")
+    private Integer couponDiscount;
 
     @Size(max = 20)
     @NotNull
@@ -145,12 +151,20 @@ public class TblOrder {
         this.deliveryFee = deliveryFee;
     }
 
-    public Integer getDiscountAmount() {
-        return discountAmount;
+    public Integer getPointDiscount() {
+        return pointDiscount;
     }
 
-    public void setDiscountAmount(Integer discountAmount) {
-        this.discountAmount = discountAmount;
+    public void setPointDiscount(Integer pointDiscount) {
+        this.pointDiscount = pointDiscount;
+    }
+
+    public Integer getCouponDiscount() {
+        return couponDiscount;
+    }
+
+    public void setCouponDiscount(Integer couponDiscount) {
+        this.couponDiscount = couponDiscount;
     }
 
     public String getRecipientName() {
@@ -241,4 +255,11 @@ public class TblOrder {
         this.userId = userId;
     }
 
+    public Integer getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Integer couponId) {
+        this.couponId = couponId;
+    }
 }

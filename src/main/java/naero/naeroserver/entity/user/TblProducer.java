@@ -9,12 +9,12 @@ import org.hibernate.annotations.ColumnDefault;
 public class TblProducer {
     @Id
     @Column(name = "producer_id", nullable = false)
-    private Integer id;
+    private Integer producerId;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "producer_id", nullable = false)
-    private TblUser producer;
+    private TblUser user;
 
     @Size(max = 20)
     @Column(name = "busi_no", length = 20)
@@ -32,9 +32,14 @@ public class TblProducer {
     @Column(name = "producer_phone", length = 20)
     private String producerPhone;
 
-    @ColumnDefault("1")
-    @Column(name = "pgrade_id")
-    private Integer pgrade;
+    @ManyToOne
+    @JoinColumn(name = "pgrade_id")
+    private TblProducerGrade pgrade;
+
+    @Size(max = 1)
+    @ColumnDefault("'N'")
+    @Column(name = "with_status", length = 1)
+    private String withStatus;
 
     @Column(name = "delivery_fee")
     private Integer deliveryFee;
@@ -42,20 +47,20 @@ public class TblProducer {
     @Column(name = "delivery_crit")
     private Integer deliveryCrit;
 
-    public Integer getId() {
-        return id;
+    public Integer getProducerId() {
+        return producerId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setProducerId(Integer id) {
+        this.producerId = id;
     }
 
-    public TblUser getProducer() {
-        return producer;
+    public TblUser getUser() {
+        return user;
     }
 
-    public void setProducer(TblUser producer) {
-        this.producer = producer;
+    public void setUser(TblUser producer) {
+        this.user = producer;
     }
 
     public String getBusiNo() {
@@ -90,11 +95,11 @@ public class TblProducer {
         this.producerPhone = producerPhone;
     }
 
-    public Integer getPgrade() {
+    public TblProducerGrade getPgrade() {
         return pgrade;
     }
 
-    public void setPgrade(Integer pgrade) {
+    public void setPgrade(TblProducerGrade pgrade) {
         this.pgrade = pgrade;
     }
 
@@ -114,4 +119,11 @@ public class TblProducer {
         this.deliveryCrit = deliveryCrit;
     }
 
+    public @Size(max = 1) String getWithStatus() {
+        return withStatus;
+    }
+
+    public void setWithStatus(@Size(max = 1) String withStatus) {
+        this.withStatus = withStatus;
+    }
 }

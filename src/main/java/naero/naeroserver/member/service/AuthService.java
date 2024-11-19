@@ -64,12 +64,13 @@ public class AuthService {
 
     @Transactional
     public Object signup(UserDTO user) {
+        System.out.println("유저가 안나바"+user);
         dupulicateIdCheck(user.getUsername());
         dupulicateEmailCheck(user.getUserEmail());
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         TblUser newUser = modelMapper.map(user, TblUser.class);
-        newUser.setGradeId(1);
+//        newUser.setGradeId(1);
 
         TblUser result = userRepository.save(newUser);
 //        System.out.println(modelMapper.map(result,UserDTO.class));
