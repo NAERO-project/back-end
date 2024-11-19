@@ -199,7 +199,8 @@ public class UserService {
         return modelMapper.map(getUser, ProducerDTO.class);
     }
 
-    public int getProducerIdFromUserName(String producerUsername) {
-        return userRepository.findUserIdByUsername(producerUsername);
+    public Integer getProducerIdFromUserName(String producerUsername) {
+        TblUser producer = userRepository.findUserIdByUsername(producerUsername);
+        return producer.getUserId();
     }
 }

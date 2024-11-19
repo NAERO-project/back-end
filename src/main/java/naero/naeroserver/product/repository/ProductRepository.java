@@ -127,8 +127,8 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
 
     @Query("SELECT p " +
             "FROM TblProduct p " +
-            "JOIN TblCategorySmall cs ON p.smallCategory = cs.smallCategoryId " +
-            "WHERE p.smallCategory = :smallId " +
+            "JOIN TblCategorySmall cs ON p.smallCategoryId = cs.smallCategoryId " +
+            "WHERE p.smallCategoryId = :smallId " +
             "AND p.productCheck = 'Y' " +
             "ORDER BY p.productId desc ")
     List<TblProduct> findByProductIdAndSmallCategory(@Param("smallId") Integer smallId);

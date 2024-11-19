@@ -25,5 +25,5 @@ public interface UserRepository extends JpaRepository<TblUser, Integer> {
 
     TblUser findTblUserByUserId(int userId);
 
-    int findUserIdByUsername(String producerUsername);
+    TblUser findUserIdByUsername(String producerUsername);
 }
