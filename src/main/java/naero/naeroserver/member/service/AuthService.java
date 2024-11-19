@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userDao;
-    private final UserRoleRepository userRoleRepository;
-    private final UserGradeRepository userGradeRepository;
     private final TokenProvider tokenProvider;
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
@@ -28,8 +26,6 @@ public class AuthService {
     public AuthService(PasswordEncoder passwordEncoder, UserRepository userDao, UserRoleRepository userRoleRepository, UserGradeRepository userGradeRepository, TokenProvider tokenProvider, ModelMapper modelMapper, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
-        this.userRoleRepository = userRoleRepository;
-        this.userGradeRepository = userGradeRepository;
         this.tokenProvider = tokenProvider;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
@@ -69,7 +65,7 @@ public class AuthService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         TblUser newUser = modelMapper.map(user, TblUser.class);
-        newUser.setGradeId(1);
+//        newUser.setGradeId(1);
 
         TblUser result = userRepository.save(newUser);
 //        System.out.println(modelMapper.map(result,UserDTO.class));
@@ -91,4 +87,20 @@ public class AuthService {
         }
     }
 
+    @Transactional
+    public UserDTO resetPassword(UserDTO user) {
+        TblUser getuser =  userDao.findByUsername(user.getUsername());
+
+        if(!getuser.getUserEmail().equals( user.getUserEmail())){
+            throw new LoginFailedException("전송한 정보가 올바르지 않습니다.");
+        }
+
+        if(passwordEncoder.matches(user.getPassword(), getuser.getPassword())){
+            System.out.println("비밀번호 오류");
+            throw new LoginFailedException("원래의 비밀번호와 동일한 번호로 바꿀 수 없습니다.");
+        }
+        getuser.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        return modelMapper.map( getuser, UserDTO.class);
+    }
 }

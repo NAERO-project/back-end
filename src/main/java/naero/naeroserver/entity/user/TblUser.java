@@ -6,8 +6,8 @@ import jakarta.validation.constraints.Size;
 import naero.naeroserver.entity.auth.TblUserRole;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -46,16 +46,16 @@ public class TblUser {
     private Integer userPoint;
 
     @Column(name = "enroll_date")
-    private Instant enrollDate;
+    private Date enrollDate;
 
     @Size(max = 1)
     @ColumnDefault("'N'")
     @Column(name = "with_status", length = 1)
     private String withStatus;
 
-    @ColumnDefault("1")
-    @Column(name = "grade_id")
-    private Integer gradeId;
+    @ManyToOne
+    @JoinColumn(name = "grade_id")
+    private TblGrade grade;
 
     @OneToMany(mappedBy = "user")
     private Set<TblUserRole> tblUserRoles = new LinkedHashSet<>();
@@ -117,11 +117,11 @@ public class TblUser {
         this.userPoint = userPoint;
     }
 
-    public Instant getEnrollDate() {
+    public Date getEnrollDate() {
         return enrollDate;
     }
 
-    public void setEnrollDate(Instant enrollDate) {
+    public void setEnrollDate(Date enrollDate) {
         this.enrollDate = enrollDate;
     }
 
@@ -133,12 +133,12 @@ public class TblUser {
         this.withStatus = withStatus;
     }
 
-    public Integer getGradeId() {
-        return gradeId;
+    public TblGrade getGrade() {
+        return grade;
     }
 
-    public void setGradeId(Integer gradeId) {
-        this.gradeId = gradeId;
+    public void setGrade(TblGrade grade) {
+        this.grade = grade;
     }
 
     public Set<TblUserRole> getTblUserRoles() {
@@ -147,5 +147,22 @@ public class TblUser {
 
     public void setTblUserRoles(Set<TblUserRole> tblUserRoles) {
         this.tblUserRoles = tblUserRoles;
+    }
+
+    @Override
+    public String toString() {
+        return "TblUser{" +
+                "userId=" + userId +
+                ", userFullname='" + userFullname + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", userPhone='" + userPhone + '\'' +
+                ", userPoint=" + userPoint +
+                ", enrollDate=" + enrollDate +
+                ", withStatus='" + withStatus + '\'' +
+                ", gradeId=" + grade +
+                ", tblUserRoles=" + tblUserRoles +
+                '}';
     }
 }
