@@ -6,7 +6,7 @@ public class ReviewDTO {
 
     private Integer reviewId;
     private String review;
-    private String reivewImage;
+    private String reviewImage;
     private String reviewThumbnail;
     private int reviewRating;
     private LocalDateTime date;
@@ -17,10 +17,10 @@ public class ReviewDTO {
     public ReviewDTO() {
     }
 
-    public ReviewDTO(Integer reviewId, String review, String reivewImage, String reviewThumbnail, int reviewRating, LocalDateTime date, int productId, int userId) {
+    public ReviewDTO(Integer reviewId, String review, String reviewImage, String reviewThumbnail, int reviewRating, LocalDateTime date, int productId, int userId) {
         this.reviewId = reviewId;
         this.review = review;
-        this.reivewImage = reivewImage;
+        this.reviewImage = reviewImage;
         this.reviewThumbnail = reviewThumbnail;
         this.reviewRating = reviewRating;
         this.date = date;
@@ -44,12 +44,12 @@ public class ReviewDTO {
         this.review = review;
     }
 
-    public String getReivewImage() {
-        return reivewImage;
+    public String getReviewImage() {
+        return reviewImage;
     }
 
-    public void setReivewImage(String reivewImage) {
-        this.reivewImage = reivewImage;
+    public void setReviewImage(String reviewImage) {
+        this.reviewImage = reviewImage;
     }
 
     public String getReviewThumbnail() {
@@ -97,7 +97,7 @@ public class ReviewDTO {
         return "ReviewDTO{" +
                 "reviewId=" + reviewId +
                 ", review='" + review + '\'' +
-                ", reivewImage='" + reivewImage + '\'' +
+                ", reviewImage='" + reviewImage + '\'' +
                 ", reviewThumbnail='" + reviewThumbnail + '\'' +
                 ", reviewRating=" + reviewRating +
                 ", date=" + date +
