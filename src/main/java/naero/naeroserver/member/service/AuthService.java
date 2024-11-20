@@ -1,35 +1,35 @@
 package naero.naeroserver.member.service;
 
 import jakarta.transaction.Transactional;
-import naero.naeroserver.entity.user.TblGrade;
+import naero.naeroserver.auth.DTO.AuthDTO;
+import naero.naeroserver.auth.EmailApi;
+import naero.naeroserver.auth.repository.AuthRepository;
+import naero.naeroserver.entity.auth.TblAuth;
 import naero.naeroserver.entity.user.TblUser;
-import naero.naeroserver.exception.DuplicatedMemberEmailException;
-import naero.naeroserver.exception.DuplicatedUsernameException;
-import naero.naeroserver.exception.LoginFailedException;
+import naero.naeroserver.exception.*;
 import naero.naeroserver.jwt.TokenProvider;
 import naero.naeroserver.member.dto.UserDTO;
-import naero.naeroserver.member.repository.UserGradeRepository;
 import naero.naeroserver.member.repository.UserRepository;
-import naero.naeroserver.member.repository.UserRoleRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 
 @Service
 public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userDao;
-    private final UserRoleRepository userRoleRepository;
-    private final UserGradeRepository userGradeRepository;
+    private final AuthRepository authRepository;
     private final TokenProvider tokenProvider;
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
 
-    public AuthService(PasswordEncoder passwordEncoder, UserRepository userDao, UserRoleRepository userRoleRepository, UserGradeRepository userGradeRepository, TokenProvider tokenProvider, ModelMapper modelMapper, UserRepository userRepository) {
+    public AuthService(PasswordEncoder passwordEncoder, UserRepository userDao, AuthRepository authRepository, TokenProvider tokenProvider, ModelMapper modelMapper, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
-        this.userRoleRepository = userRoleRepository;
-        this.userGradeRepository = userGradeRepository;
+        this.authRepository = authRepository;
         this.tokenProvider = tokenProvider;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
@@ -63,20 +63,26 @@ public class AuthService {
     }
 
     @Transactional
-    public Object signup(UserDTO user) {
-        System.out.println("유저가 안나바"+user);
+    public Object signup(UserDTO user, int authId) {
         dupulicateIdCheck(user.getUsername());
         dupulicateEmailCheck(user.getUserEmail());
+        authSuccessCheck(authId);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         TblUser newUser = modelMapper.map(user, TblUser.class);
-//        newUser.setGradeId(1);
 
         TblUser result = userRepository.save(newUser);
-//        System.out.println(modelMapper.map(result,UserDTO.class));
-        //DB 트리거로 자동으로 tbl_user_role 에 기본 권한 (ROLE_USER) 가 들어가도록 함
+
 
         return result;
+    }
+
+    private void authSuccessCheck(int authId) {
+        TblAuth getAuth =authRepository.findByAuthId(authId);
+        if (getAuth==null || getAuth.getAuthStatus().equals("N")){
+            throw new LoginFailedException("인증 정보가 잘못되었습니다.");
+        }
+
     }
 
     public void dupulicateIdCheck(String username) {
@@ -97,15 +103,40 @@ public class AuthService {
         TblUser getuser =  userDao.findByUsername(user.getUsername());
 
         if(!getuser.getUserEmail().equals( user.getUserEmail())){
-            throw new LoginFailedException("전송한 정보가 올바르지 않습니다.");
+            throw new AuthFailException("전송한 정보가 올바르지 않습니다.");
         }
 
         if(passwordEncoder.matches(user.getPassword(), getuser.getPassword())){
             System.out.println("비밀번호 오류");
-            throw new LoginFailedException("원래의 비밀번호와 동일한 번호로 바꿀 수 없습니다.");
+            throw new UpdateUserException("원래의 비밀번호와 동일한 번호로 바꿀 수 없습니다.");
         }
         getuser.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return modelMapper.map( getuser, UserDTO.class);
+    }
+
+    @Transactional
+    public TblAuth sendAuthEmail(String id, String key ,String email) {
+        AuthDTO newAuth = EmailApi.sendAuthEmail(id, key, email);
+
+        TblAuth savedAuth= authRepository.save(modelMapper.map(newAuth, TblAuth.class));
+        System.out.println("savedAuth"+ savedAuth);
+        return savedAuth;
+    }
+
+
+    @Transactional
+    public Object checkAuthEmail(AuthDTO auth) {
+        TblAuth getAuth = authRepository.findByAuthId(auth.getAuthId());
+        LocalDateTime now = LocalDateTime.now();
+        if(now.isAfter(ChronoLocalDateTime.from(getAuth.getEndTime()))){
+            throw new AuthFailException("만료된 인증입니다. 인증을 다시 시도해주세요.");
+        }
+        if(!getAuth.getAuthKey().equals( auth.getAuthKey())){
+            throw new AuthFailException("인증번호가 일치하지 않습니다. 다시 시도해주세요.");
+        }
+
+        getAuth.setAuthStatus("Y");
+        return getAuth;
     }
 }

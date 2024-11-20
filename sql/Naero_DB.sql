@@ -500,10 +500,16 @@ CREATE TRIGGER before_insert_tbl_payment
 CREATE TABLE `tbl_auth` (
                             `auth_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '인증 아이디',
                             `auth_key`	varchar(20)	NOT NULL	COMMENT '인증 번호',
-                            `start_time`	Time	NOT NULL	COMMENT '인증 시작 시간',
-                            `Field`	varchar(20)	NULL	COMMENT '대상 이메일',
+                            `end_time`	DATETIME	NOT NULL	COMMENT '인증 시작 시간',
+                            `email`	varchar(20)	NULL	COMMENT '대상 이메일',
                             `auth_status`	varchar(1)	NOT NULL 	COMMENT '인증 성공 여부'
 );
+CREATE TRIGGER before_insert_tbl_auth
+    BEFORE INSERT ON `tbl_auth`
+    FOR EACH ROW
+BEGIN
+    SET NEW.end_time = IFNULL(NEW.end_time, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 10 MINUTE));
+END;
 
 #관계성 추가 구문 ---------------------------
 

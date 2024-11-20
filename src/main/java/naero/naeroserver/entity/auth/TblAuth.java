@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -19,9 +20,11 @@ public class TblAuth {
     @Column(name = "auth_key", nullable = false, length = 20)
     private String authKey;
 
-    @NotNull
-    @Column(name = "start_time", nullable = false)
-    private LocalTime startTime;
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
+
+    @Column(name = "email")
+    private String email;
 
     @Size(max = 1)
     @NotNull
@@ -44,12 +47,12 @@ public class TblAuth {
         this.authKey = authKey;
     }
 
-    public LocalTime getStartTime() {
-        return startTime;
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public String getAuthStatus() {
@@ -60,4 +63,11 @@ public class TblAuth {
         this.authStatus = authStatus;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
