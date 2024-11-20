@@ -19,12 +19,10 @@ public class TblOption {
     @Column(name = "add_price")
     private Integer addPrice;
 
-    @NotNull
-    @Column(name = "product_id", nullable = false)
+    @Column(name = "product_id")
     private Integer productId;
 
-    @NotNull
-    @Column(name = "option_quantity", nullable = false)
+    @Column(name = "option_quantity")
     private Integer optionQuantity;
 
     public Integer getOptionId() {

@@ -1,6 +1,7 @@
 package naero.naeroserver.product.service;
 
 import naero.naeroserver.common.Criteria;
+import naero.naeroserver.entity.order.TblOrder;
 import naero.naeroserver.entity.product.TblCategoryMedium;
 import naero.naeroserver.entity.product.TblCategorySmall;
 import naero.naeroserver.entity.product.TblOption;
@@ -306,18 +307,20 @@ public class ProductService {
 
             // Option 저장
             List<OptionDTO> options = productDTO.getOptions();
-            List<TblOption> optionModel = new ArrayList<>();
-            for (OptionDTO option : options) {
-                System.out.println("여기여이겨이겨이깅기ㅕ기겨ㅣㄱ" + option);
-                TblOption tblOption = modelMapper.map(option, TblOption.class);
-                tblOption.setOptionQuantity(option.getOptionQuantity());
-                tblOption.setOptionDesc(option.getOptionDesc());
-                tblOption.setAddPrice(option.getAddPrice());
-                tblOption.setProductId(savedProduct.getProductId()); // 연관 관계 설정
-                optionModel.add(tblOption);
-            }
+            if (options != null && !options.isEmpty()) { // 옵션 리스트가 null이 아니고 비어있지 않을 경우
+                List<TblOption> optionModel = new ArrayList<>();
+                for (OptionDTO option : options) {
+                    log.info("옵션 정보: {}", option);
+                    TblOption tblOption = new TblOption();
+                    tblOption.setProductId(savedProduct.getProductId()); // 연관된 productId 설정
+                    tblOption.setOptionDesc(option.getOptionDesc());
+                    tblOption.setOptionQuantity(option.getOptionQuantity());
+                    tblOption.setAddPrice(option.getAddPrice());
+                    optionModel.add(tblOption);
+                }
 
-            optionRepository.saveAll(optionModel);
+                optionRepository.saveAll(optionModel);
+            }
 
             return "상품 입력 성공";
         } catch (Exception e) {
