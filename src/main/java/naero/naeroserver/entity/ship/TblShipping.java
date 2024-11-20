@@ -26,7 +26,7 @@ public class TblShipping {
     private Integer orderId;
 
     @NotNull
-    @Column(name = "ship_com_id", nullable = false)
+    @Column(name = "ship_com_id")
     private Integer shipComId;
 
     public Integer getShippingId() {

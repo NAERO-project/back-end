@@ -9,8 +9,11 @@ import naero.naeroserver.entity.order.TblOrderDetail;
 import naero.naeroserver.entity.order.TblPayment;
 import naero.naeroserver.entity.product.TblOption;
 import naero.naeroserver.entity.product.TblProduct;
+import naero.naeroserver.entity.ship.TblShipping;
+import naero.naeroserver.entity.user.TblProducer;
 import naero.naeroserver.entity.user.TblUser;
 import naero.naeroserver.member.dto.UserDTO;
+import naero.naeroserver.member.repository.ProducerRepository;
 import naero.naeroserver.member.repository.UserRepository;
 import naero.naeroserver.order.dto.*;
 import naero.naeroserver.order.repository.AddressRepository;
@@ -19,6 +22,7 @@ import naero.naeroserver.order.repository.OrderRepository;
 import naero.naeroserver.order.repository.PaymentRepository;
 import naero.naeroserver.product.repository.OptionRepository;
 import naero.naeroserver.product.repository.ProductRepository;
+import naero.naeroserver.shipping.repository.TblShippingRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +56,8 @@ public class OrderService {
     private final OptionRepository optionRepository;
     private final AddressRepository addressRepository;
     private final CouponListRepository couponListRepository;
+    private final ProducerRepository producerRepository;
+    private final TblShippingRepository tblShippingRepository;
 
     @Value("${portone.api-key}")
     private String API_KEY;
@@ -68,7 +74,7 @@ public class OrderService {
 
     @Autowired
     public OrderService(ModelMapper modelMapper, OrderRepository orderRepository, UserRepository userRepository,
-                        ProductRepository productRepository, OrderDetailRepository orderDetailRepository, PaymentRepository paymentRepository, OptionRepository optionRepository, AddressRepository addressRepository, CouponListRepository couponListRepository) {
+                        ProductRepository productRepository, OrderDetailRepository orderDetailRepository, PaymentRepository paymentRepository, OptionRepository optionRepository, AddressRepository addressRepository, CouponListRepository couponListRepository, ProducerRepository producerRepository, TblShippingRepository tblShippingRepository) {
         this.modelMapper = modelMapper;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
@@ -78,6 +84,8 @@ public class OrderService {
         this.optionRepository = optionRepository;
         this.addressRepository = addressRepository;
         this.couponListRepository = couponListRepository;
+        this.producerRepository = producerRepository;
+        this.tblShippingRepository = tblShippingRepository;
     }
 
     // 주문 페이지로 이동 시 들고갈 정보 생성
@@ -273,10 +281,41 @@ public class OrderService {
 
             paymentRepository.save(payment);
 
-            // 4. 주문 상세 정보 저장
+
+            // 4. 배송 정보 저장
+            // 4-1. 주문 정보에서 서로 다른 판매자를 추출하기
+            // 중복을 방지하기 위해 Set 데이터 타입으로 선언
+            Set<Integer> producerSet = new HashSet<>();
+
+            // 프런트에서 전달 받은 optioIds 파라미터에서 판매자 ID를 producerSet에 저장
+            for (Map.Entry<Integer, Integer> entry : optionIds.entrySet()) {
+
+                // optionIds entry 키를 이용해 option을 추출
+                TblOption option = optionRepository.findById(entry.getKey())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 상품에 대한 옵션이 존재하지 않습니다."));
+
+                // option 엔티티를 통해 product 엔티티를 추출
+                TblProduct product = productRepository.findTblProductByProductId(option.getProductId());
+
+                // product 엔티티에서 producerId를 추출하여 producerSet에 입력
+                producerSet.add(product.getProducerId());
+            }
+
+            // producerSet에서 루프를 돌려 producer별 배송 엔티티를 생성
+            for (Integer prodcer : producerSet) {
+                TblShipping shipping = new TblShipping();
+
+                shipping.setShippingStatus("pending");
+                shipping.setOrderId(order.getOrderId());
+
+                tblShippingRepository.save(shipping);
+            }
+
+
+            // 5. 주문 상세 정보 저장
             for (Map.Entry<Integer, Integer> entry : optionIds.entrySet()) {
                 TblOption option = optionRepository.findById(entry.getKey()).orElseThrow(()
-                        -> new IllegalArgumentException("해당 상품에 대한 옵션이 존재하지 않습니다."));;
+                        -> new IllegalArgumentException("해당 상품에 대한 옵션이 존재하지 않습니다."));
 
                 TblProduct product = productRepository.findTblProductByProductId(option.getProductId());
 
