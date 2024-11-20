@@ -3,12 +3,10 @@ package naero.naeroserver.product.service;
 import naero.naeroserver.common.Criteria;
 import naero.naeroserver.entity.product.TblCategoryMedium;
 import naero.naeroserver.entity.product.TblCategorySmall;
+import naero.naeroserver.entity.product.TblOption;
 import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.product.dto.*;
-import naero.naeroserver.product.repository.CategoryMediumRepository;
-import naero.naeroserver.product.repository.CategorySmallRepository;
-import naero.naeroserver.product.repository.ProductRepository;
-import naero.naeroserver.product.repository.ProductSearchRepository;
+import naero.naeroserver.product.repository.*;
 import naero.naeroserver.util.FileUploadUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -25,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,14 +37,16 @@ public class ProductService {
     private final ProductSearchRepository productSearchRepository;
     private final CategoryMediumRepository categoryMediumRepository;
     private final CategorySmallRepository categorySmallRepository;
+    private final OptionRepository optionRepository;
 
     @Autowired
-    public ProductService(ModelMapper modelMapper, ProductRepository productRepository, ProductSearchRepository productSearchRepository, CategoryMediumRepository categoryMediumRepository, CategorySmallRepository categorySmallRepository) {
+    public ProductService(ModelMapper modelMapper, ProductRepository productRepository, ProductSearchRepository productSearchRepository, CategoryMediumRepository categoryMediumRepository, CategorySmallRepository categorySmallRepository, OptionRepository optionRepository) {
         this.modelMapper = modelMapper;
         this.productRepository = productRepository;
         this.productSearchRepository = productSearchRepository;
         this.categoryMediumRepository = categoryMediumRepository;
         this.categorySmallRepository = categorySmallRepository;
+        this.optionRepository = optionRepository;
     }
 
     /* 설명. 이미지 파일 저장 경로와 응답용 URL (WebConfig 설정파일 참고) */
@@ -280,7 +281,6 @@ public class ProductService {
         return productList;
     }
 
-    /* 판매자 상품 등록 */
     @Transactional
     public Object insertProduct(ProductDTO productDTO, MultipartFile productImage) {
         log.info("[ProductService] insertProduct() 시작");
@@ -289,9 +289,9 @@ public class ProductService {
         String imageName = UUID.randomUUID().toString().replace("-", "");
         String replaceFileName = null;
         String replaceThumbnailFileName = null;
-        int result = 0;
 
         try {
+            // 이미지 저장
             replaceFileName = FileUploadUtils.saveFile(IMAGE_DIR, imageName, productImage);
             replaceThumbnailFileName = FileUploadUtils.saveThumbnailFile(IMAGE_DIR, replaceFileName);
 
@@ -300,17 +300,31 @@ public class ProductService {
 
             log.info("[ProductService] 등록 이미지명 : {}", replaceFileName);
 
+            // Product 저장
             TblProduct insertProduct = modelMapper.map(productDTO, TblProduct.class);
+            TblProduct savedProduct = productRepository.save(insertProduct); // 저장 후 ID 생성
 
-            productRepository.save(insertProduct);
+            // Option 저장
+            List<OptionDTO> options = productDTO.getOptions();
+            List<TblOption> optionModel = new ArrayList<>();
+            for (OptionDTO option : options) {
+                System.out.println("여기여이겨이겨이깅기ㅕ기겨ㅣㄱ" + option);
+                TblOption tblOption = modelMapper.map(option, TblOption.class);
+                tblOption.setOptionQuantity(option.getOptionQuantity());
+                tblOption.setOptionDesc(option.getOptionDesc());
+                tblOption.setAddPrice(option.getAddPrice());
+                tblOption.setProductId(savedProduct.getProductId()); // 연관 관계 설정
+                optionModel.add(tblOption);
+            }
 
-            result = 1;
+            optionRepository.saveAll(optionModel);
+
+            return "상품 입력 성공";
         } catch (Exception e) {
-            FileUploadUtils.deleteFile(IMAGE_DIR, replaceFileName);
+            log.error("[ProductService] 상품 등록 실패", e);
+            FileUploadUtils.deleteFile(IMAGE_DIR, replaceFileName); // 이미지 삭제
             throw new RuntimeException(e);
         }
-
-        return "상품 입력 성공";
     }
 
     /* 판매자 상품 수정 */

@@ -77,7 +77,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
     // 판매자 페이지 상품 조회
     @Query("SELECT new naero.naeroserver.product.dto.ProductOptionDTO(p, o.addPrice, o.optionDesc, o.optionQuantity) " +
             "FROM TblProduct p " +
-            "JOIN TblOption o ON p.productId = o.productId " +
+            "LEFT JOIN TblOption o ON p.productId = o.productId " +
             "WHERE p.producerId = :producerId " +
             "AND p.productCheck = 'Y' " +
             "ORDER BY p.productCreateAt desc ")

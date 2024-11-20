@@ -2,16 +2,16 @@ package naero.naeroserver.product.dto;
 
 public class OptionDTO {
 
-    private int optionId;
+    private Integer optionId;
     private String optionDesc;
-    private int addPrice;
-    private int productId;
-    private int optionQuantity;
+    private Integer addPrice;
+    private Integer productId;
+    private Integer optionQuantity;
 
     public OptionDTO() {
     }
 
-    public OptionDTO(int optionId, String optionDesc, int addPrice, int productId, int optionQuantity) {
+    public OptionDTO(Integer optionId, String optionDesc, Integer addPrice, Integer productId, Integer optionQuantity) {
         this.optionId = optionId;
         this.optionDesc = optionDesc;
         this.addPrice = addPrice;
@@ -19,11 +19,11 @@ public class OptionDTO {
         this.optionQuantity = optionQuantity;
     }
 
-    public int getOptionId() {
+    public Integer getOptionId() {
         return optionId;
     }
 
-    public void setOptionId(int optionId) {
+    public void setOptionId(Integer optionId) {
         this.optionId = optionId;
     }
 
@@ -35,27 +35,27 @@ public class OptionDTO {
         this.optionDesc = optionDesc;
     }
 
-    public int getAddPrice() {
+    public Integer getAddPrice() {
         return addPrice;
     }
 
-    public void setAddPrice(int addPrice) {
+    public void setAddPrice(Integer addPrice) {
         this.addPrice = addPrice;
     }
 
-    public int getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
     }
 
-    public int getOptionQuantity() {
+    public Integer getOptionQuantity() {
         return optionQuantity;
     }
 
-    public void setOptionQuantity(int optionQuantity) {
+    public void setOptionQuantity(Integer optionQuantity) {
         this.optionQuantity = optionQuantity;
     }
 
@@ -66,7 +66,7 @@ public class OptionDTO {
                 ", optionDesc='" + optionDesc + '\'' +
                 ", addPrice=" + addPrice +
                 ", productId=" + productId +
-                ", opeiontQuantity=" + optionQuantity +
+                ", optionQuantity=" + optionQuantity +
                 '}';
     }
 }

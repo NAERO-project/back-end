@@ -185,10 +185,21 @@ public class ProductController {
 
     /* 판매자 상품 등록 */
     @Operation(summary = "판매자 상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
-    @PostMapping(value = "/products")
-    public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImg) {
+    @PostMapping(value = "/products/insert")
+    public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO,
+                                                     @RequestPart(value = "productImage", required = false) MultipartFile productImage,
+                                                     @RequestParam("producerUsername") String producerUsername) {
+        if (productDTO.getSmallCategory().getMediumCategoryId() == null ||
+                productDTO.getSmallCategory().getSmallCategoryId() == null) {
+            return ResponseEntity.badRequest().body(new ResponseDTO(HttpStatus.BAD_REQUEST, "중분류 또는 소분류 누락", null));
+        }
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImg)));
+        System.out.println("여기여기여기!!!" + productDTO.getOptions());
+        int producerId = userService.getProducerIdFromUserName(producerUsername);
+        productDTO.setProducerId(producerId);
+        System.out.println("여기여기여기!!!" + productDTO.getProducerId());
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
     }
 
     /* 판매자 상품 수정 */

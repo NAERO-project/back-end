@@ -20,7 +20,7 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(int productId, String productName, int productPrice, String productThumbnail, String productImg, String productDesc, String productCreateAt, String productDeleteAt, String productCheck, int productQuantity, int producerId, CategorySmallDTO smallCategory, List<OptionDTO> options) {
+    public ProductDTO(int productId, String productName, int productPrice, String productThumbnail, String productImg, String productDesc, String productCreateAt, String productDeleteAt, String productCheck, int producerId, CategorySmallDTO smallCategory, List<OptionDTO> options) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
