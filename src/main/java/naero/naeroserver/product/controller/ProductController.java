@@ -5,7 +5,6 @@ import naero.naeroserver.common.Criteria;
 import naero.naeroserver.common.PageDTO;
 import naero.naeroserver.common.PagingResponseDTO;
 import naero.naeroserver.common.ResponseDTO;
-import naero.naeroserver.member.service.ProducerService;
 import naero.naeroserver.member.service.UserService;
 import naero.naeroserver.product.dto.ProductDTO;
 import naero.naeroserver.product.dto.ProductSearchDTO;
@@ -24,7 +23,7 @@ public class ProductController {
 
     private static final Logger log = LoggerFactory.getLogger(ProductController.class);
     private final ProductService productService;
-    private final int SIZE =1;
+    private final int SIZE = 1;
     private final UserService userService;
 
     @Autowired
@@ -123,7 +122,7 @@ public class ProductController {
         Criteria cri = new Criteria(Integer.valueOf(offset), 12);
         PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
 
-        pagingResponseDTO.setData(productService.selectProducerProductListPaging(producerId, cri));
+        pagingResponseDTO.setData(productService.selectProductListByBrandPaging(producerId, cri));
 
         pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
 
@@ -187,9 +186,9 @@ public class ProductController {
     /* 판매자 상품 등록 */
     @Operation(summary = "판매자 상품 등록 요청", description = "상품 등록이 진행됩니다.", tags = { "ProductController" })
     @PostMapping(value = "/products")
-    public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
+    public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImg) {
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImg)));
     }
 
     /* 판매자 상품 수정 */
@@ -219,10 +218,27 @@ public class ProductController {
     }
 
     /* 상품 카테고리와 연관된 상품 조회 */
-    @Operation(summary = "카테고리와 연관된 상품 조회 요청", description = "카테고리와 연관된 상품 조회가 진행됩니다.", tags = { "ProductController" })
+    @Operation(summary = "카테고리와 연관된 상품 조회 요청",
+            description = "카테고리와 연관된 상품 조회가 진행됩니다.", tags = { "ProductController" })
     @GetMapping("/productList/{smallId}")
     public ResponseEntity<ResponseDTO> selectProductCategory(@PathVariable("smallId") int smallId){
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "연관된 상품 정보 조회 성공", productService.selectProductCategory(smallId)));
+    }
+
+    @Operation(summary = "대분류 카테고리와 연관된 중분류 카테고리 조회 요청",
+            description = "대분류 카테고리와 연관된 중분류 카테고리 조회가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/medium-categories")
+    public ResponseEntity<ResponseDTO> selectMediumCategoryListByLargeCategory(@RequestParam("largeCategory") int largeCategory){
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "연관된 중분류 조회 성공", productService.selectMediumListByLarge(largeCategory)));
+    }
+
+    @Operation(summary = "중분류 카테고리와 연관된 소분류 카테고리 조회 요청",
+            description = "중분류 카테고리와 연관된 소분류 카테고리 조회가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/small-categories")
+    public ResponseEntity<ResponseDTO> selectSmallCategoryListByMediumCategory(@RequestParam("mediumCategory") int mediumCategory){
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "연관된 소분류 조회 성공", productService.selectSmallListByMedium((mediumCategory))));
     }
 }

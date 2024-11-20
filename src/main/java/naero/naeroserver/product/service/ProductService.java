@@ -1,10 +1,12 @@
 package naero.naeroserver.product.service;
 
 import naero.naeroserver.common.Criteria;
+import naero.naeroserver.entity.product.TblCategoryMedium;
+import naero.naeroserver.entity.product.TblCategorySmall;
 import naero.naeroserver.entity.product.TblProduct;
-import naero.naeroserver.product.dto.ProductDTO;
-import naero.naeroserver.product.dto.ProductOptionDTO;
-import naero.naeroserver.product.dto.ProductSearchDTO;
+import naero.naeroserver.product.dto.*;
+import naero.naeroserver.product.repository.CategoryMediumRepository;
+import naero.naeroserver.product.repository.CategorySmallRepository;
 import naero.naeroserver.product.repository.ProductRepository;
 import naero.naeroserver.product.repository.ProductSearchRepository;
 import naero.naeroserver.util.FileUploadUtils;
@@ -34,12 +36,16 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
     private final ProductSearchRepository productSearchRepository;
+    private final CategoryMediumRepository categoryMediumRepository;
+    private final CategorySmallRepository categorySmallRepository;
 
     @Autowired
-    public ProductService(ModelMapper modelMapper, ProductRepository productRepository, ProductSearchRepository productSearchRepository) {
+    public ProductService(ModelMapper modelMapper, ProductRepository productRepository, ProductSearchRepository productSearchRepository, CategoryMediumRepository categoryMediumRepository, CategorySmallRepository categorySmallRepository) {
         this.modelMapper = modelMapper;
         this.productRepository = productRepository;
         this.productSearchRepository = productSearchRepository;
+        this.categoryMediumRepository = categoryMediumRepository;
+        this.categorySmallRepository = categorySmallRepository;
     }
 
     /* 설명. 이미지 파일 저장 경로와 응답용 URL (WebConfig 설정파일 참고) */
@@ -193,8 +199,8 @@ public class ProductService {
         return productList.size();
     }
 
-    public Object selectProducerProductListPaging(int producerId, Criteria cri) {
-        log.info("[ProductService] selectProducerProductListPaging() 시작");
+    public Object selectProductListByBrandPaging(int producerId, Criteria cri) {
+        log.info("[ProductService] selectProductListByBrandPaging() 시작");
 
         int index = cri.getPageNum() -1;
         int count = cri.getAmount();
@@ -210,6 +216,27 @@ public class ProductService {
         log.info("[ProductService] selectProducerProductListPaging() 종료");
 
         return productList.stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    /* 판매자 페이지 전체 상품 조회 (페이징) */
+    public Object selectProducerProductListPaging(int producerId, Criteria cri) {
+        log.info("[ProductService] selectProducerProductListPaging() 시작");
+
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
+
+        Page<ProductOptionDTO> result = productRepository.findProductListByProducer(producerId, paging);
+        List<ProductOptionDTO> productList = result.getContent();
+
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).getProduct().setProductThumbnail(IMAGE_URL + productList.get(i).getProduct().getProductThumbnail());
+        }
+
+        log.info(productList.toString());
+        log.info("[ProductService] selectProducerProductListPaging() 종료");
+
+        return productList;
     }
 
     /* 브랜드별 페이지 카테고리 상품 조회 (페이징) */
@@ -394,4 +421,21 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    // 선택된 대분류에 해당되는 중분류 조회(판매자 상품 등록에서 필요)
+    public Object selectMediumListByLarge(int largeCategory) {
+
+        List<TblCategoryMedium> categoryMedium = categoryMediumRepository.findTblCategoryMediumByLargeCategoryId(largeCategory);
+
+        return categoryMedium.stream().map(medium -> modelMapper.map(medium, CategoryMediumDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    // 선택된 중분류에 해당되는 소분류 조회(판매자 상품 등록에서 필요)
+    public Object selectSmallListByMedium(int mediumCategory) {
+
+        List<TblCategorySmall> categoryMedium = categorySmallRepository.findTblCategorySmallByMediumCategoryId(mediumCategory);
+
+        return categoryMedium.stream().map(small -> modelMapper.map(small, CategorySmallDTO.class))
+                .collect(Collectors.toList());
+    }
 }

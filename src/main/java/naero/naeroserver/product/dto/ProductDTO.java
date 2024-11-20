@@ -35,21 +35,6 @@ public class ProductDTO {
         this.options = options;
     }
 
-    public ProductDTO(int productId, String productName, int productPrice, String productThumbnail, String productImg, String productDesc, String productCreateAt, String productDeleteAt, String productCheck, int productQuantity, int producerId, CategorySmallDTO smallCategory) {
-        this.productId = productId;
-        this.productName = productName;
-        this.productPrice = productPrice;
-        this.productThumbnail = productThumbnail;
-        this.productImg = productImg;
-        this.productDesc = productDesc;
-        this.productCreateAt = productCreateAt;
-        this.productDeleteAt = productDeleteAt;
-        this.productCheck = productCheck;
-        this.productQuantity = productQuantity;
-        this.producerId = producerId;
-        this.smallCategory = smallCategory;
-    }
-
     public int getProductId() {
         return productId;
     }

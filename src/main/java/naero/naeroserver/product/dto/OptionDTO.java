@@ -11,12 +11,12 @@ public class OptionDTO {
     public OptionDTO() {
     }
 
-    public OptionDTO(int optionId, String optionDesc, int addPrice, int productId, int opeiontQuantity) {
+    public OptionDTO(int optionId, String optionDesc, int addPrice, int productId, int optionQuantity) {
         this.optionId = optionId;
         this.optionDesc = optionDesc;
         this.addPrice = addPrice;
         this.productId = productId;
-        this.optionQuantity = opeiontQuantity;
+        this.optionQuantity = optionQuantity;
     }
 
     public int getOptionId() {
