@@ -47,8 +47,8 @@ public class TblQuestion {
         return questionId;
     }
 
-    public void setQuestionId(Integer id) {
-        this.questionId = id;
+    public void setQuestionId(Integer questionId) {
+        this.questionId = questionId;
     }
 
     public String getQuestionTitle() {

@@ -51,8 +51,8 @@ public class TblInquiry {
         return inquiryId;
     }
 
-    public void setInquiryId(Integer id) {
-        this.inquiryId = id;
+    public void setInquiryId(Integer getInquiryId) {
+        this.inquiryId = getInquiryId;
     }
 
     public String getInquiryTitle() {
