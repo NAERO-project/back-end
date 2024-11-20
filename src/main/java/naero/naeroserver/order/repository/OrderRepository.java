@@ -19,7 +19,7 @@ public interface OrderRepository extends JpaRepository<TblOrder, Integer> {
     @Query("SELECT o FROM TblOrder o WHERE o.userId = :userId ORDER BY o.createdAt DESC")
     List<TblOrder> findByUserOrderByRecent(@Param("userId") Integer userId);
 
-    // 판매자 주문 건 조회
+    // 판매자 주문 건 조회s
     @Query("SELECT o FROM TblOrder o " +
             "JOIN TblOrderDetail od ON o.orderId = od.orderId " + // TblOrder와 TblOrderDetail의 관계를 명시적으로 매핑
             "JOIN TblOption op ON od.optionId = op.optionId " + // TblOrderDetail과 TblOption의 관계
