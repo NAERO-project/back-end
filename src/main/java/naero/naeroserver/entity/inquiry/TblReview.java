@@ -46,8 +46,8 @@ public class TblReview {
         return reviewId;
     }
 
-    public void setReviewId(Integer id) {
-        this.reviewId = id;
+    public void setReviewId(Integer reviewId) {
+        this.reviewId = reviewId;
     }
 
     public String getReviewImage() {
