@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import naero.naeroserver.entity.user.TblProducer;
 import naero.naeroserver.entity.user.TblProducerGrade;
 import naero.naeroserver.entity.user.TblUser;
+import naero.naeroserver.exception.DuplicatedUsernameException;
 import naero.naeroserver.exception.LoginFailedException;
 import naero.naeroserver.exception.UpdateUserException;
 import naero.naeroserver.manage.DTO.ManageUserDTO;
@@ -33,17 +34,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
-    private final UserGradeRepository userGradeRepository;
     private final SearchRepository searchRepository;
     private final ProducerRepository producerRepository;
+    private final AuthService authService;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, UserGradeRepository userGradeRepository, SearchRepository searchRepository, ProducerRepository producerRepository) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, UserGradeRepository userGradeRepository, SearchRepository searchRepository, ProducerRepository producerRepository, AuthService authService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
-        this.userGradeRepository = userGradeRepository;
         this.searchRepository = searchRepository;
         this.producerRepository = producerRepository;
+        this.authService = authService;
     }
 
     public Object findByusername(String username) {
@@ -167,4 +168,47 @@ public class UserService {
         getProducer.setWithStatus("Y");
 
     }
+
+    //유저와 관리자 공용으로 사용할 것
+    @Transactional
+    public Object updateProducerDetail(ProducerDTO producer, String username) {
+        //사용자 정보중에 바꿀 수 있는 데이터...
+        //busi_no producer_add producer_name producer_phone delivery_fee delivery_crit
+        int userId = userRepository.findByUsername(username).getUserId();
+        TblProducer getUser = producerRepository.findByProducerId(userId);
+
+        if (getUser == null) {
+            throw new UpdateUserException("사용자를 찾을 수 없습니다.");
+        }
+
+        if (producer.getProducerName() != null) {
+            getUser.setProducerName(producer.getProducerName());
+        }
+        if (producer.getDeliveryFee() != null) {
+            getUser.setDeliveryFee(producer.getDeliveryFee());
+        }
+        if (producer.getDeliveryCrit() != null) {
+            getUser.setDeliveryCrit(producer.getDeliveryCrit());
+        }
+        if (producer.getProducerAdd() != null) {
+            getUser.setProducerAdd(producer.getProducerAdd());
+        }
+        if (producer.getBusiNo() != null) {
+            getUser.setBusiNo(producer.getBusiNo());
+        }
+
+        return modelMapper.map(getUser, ProducerDTO.class);
+    }
+
+    @Transactional
+    public Object convertToProducer(ProducerDTO producer, String username) {
+        int userId = userRepository.findByUsername(username).getUserId();
+        if(producerRepository.existsById(userId)){
+            throw new DuplicatedUsernameException("같은 아이디로 가입된 판매자가 있습니다.");
+        }
+        TblProducer newProducer = modelMapper.map(producer, TblProducer.class);
+
+        return producerRepository.save(newProducer);
+    }
+
 }

@@ -22,6 +22,7 @@ DROP TABLE IF EXISTS `tbl_coupon`;
 DROP TABLE IF EXISTS `tbl_liked_seller`;
 DROP TABLE IF EXISTS `tbl_liked_product`;
 
+
 DROP TABLE IF EXISTS `tbl_address`;
 DROP TABLE IF EXISTS `tbl_review`;
 
@@ -99,6 +100,10 @@ CREATE TABLE `tbl_producer` (
                                 `delivery_fee`	int	NULL	COMMENT '배송비',
                                 `delivery_crit`	int	NULL	COMMENT '무료 배송 기준'
 );
+CREATE TRIGGER after_insert_tbl_producer
+    AFTER INSERT ON `tbl_producer`
+    FOR EACH ROW
+    INSERT INTO tbl_user_role (user_id, role_id) VALUE (NEW.producer_id , 2);
 
 
 CREATE TABLE `tbl_role` (
@@ -206,7 +211,6 @@ CREATE TABLE `tbl_product` (
                                `product_create_at`	DateTime	NULL	COMMENT '등록일',
                                `product_delete_at`	DateTime	NULL	COMMENT '삭제일',
                                `product_check`	varchar(1)	NULL DEFAULT 'Y'	COMMENT '판매여부',
-                               `product_quantity`	int	NULL	COMMENT '재고',
                                `producer_id`	int	NOT NULL	COMMENT '판매자 회원 번호',
                                `small_category_id`	int	NOT NULL	COMMENT '카테고리 번호'
 );
@@ -404,9 +408,9 @@ CREATE TABLE `tbl_order` (
                              `delivery_status`	varchar(50)	NOT NULL	COMMENT '배송 상태',
                              `order_status`	varchar(50)	NOT NULL	COMMENT '주문 상태',
                              `delivery_fee`	int	NOT NULL	COMMENT '배송비',
-                            `point_discount` int NULL COMMENT '포인트 할인',
-                            `coupon_id` int NULL COMMENT '사용한 쿠폰 번호',
-                            `coupon_discount` int NULL COMMENT '쿠폰 할인',
+                             `point_discount` int NULL COMMENT '포인트 할인',
+                             `coupon_id` int NULL COMMENT '사용한 쿠폰 번호',
+                             `coupon_discount` int NULL COMMENT '쿠폰 할인',
                              `discount_amount`	int	NULL	COMMENT '할인 금액',
                              `recipient_name`	varchar(20)	NOT NULL	COMMENT '수령인 이름',
                              `recipient_phone_number`	varchar(50)	NOT NULL	COMMENT '수령인 연락처',
@@ -471,7 +475,7 @@ CREATE TABLE `tbl_shipping` (
                                 `tracking_number`	varchar(50)	NULL	COMMENT '송장 번호',
                                 `shipping_status`	varchar(50)	NOT NULL	COMMENT '배송 상태',
                                 `order_id`	int	NOT NULL	COMMENT '주문 번호',
-                                `ship_com_id`	int	NOT NULL	COMMENT '택배사 번호'
+                                `ship_com_id`	int	NULL	COMMENT '택배사 번호'
 );
 
 CREATE TABLE `tbl_payment` (

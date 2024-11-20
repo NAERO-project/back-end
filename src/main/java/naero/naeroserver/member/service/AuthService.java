@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userDao;
-    private final UserRoleRepository userRoleRepository;
-    private final UserGradeRepository userGradeRepository;
     private final TokenProvider tokenProvider;
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
@@ -28,8 +26,6 @@ public class AuthService {
     public AuthService(PasswordEncoder passwordEncoder, UserRepository userDao, UserRoleRepository userRoleRepository, UserGradeRepository userGradeRepository, TokenProvider tokenProvider, ModelMapper modelMapper, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
-        this.userRoleRepository = userRoleRepository;
-        this.userGradeRepository = userGradeRepository;
         this.tokenProvider = tokenProvider;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
@@ -64,7 +60,6 @@ public class AuthService {
 
     @Transactional
     public Object signup(UserDTO user) {
-        System.out.println("유저가 안나바"+user);
         dupulicateIdCheck(user.getUsername());
         dupulicateEmailCheck(user.getUserEmail());
 
