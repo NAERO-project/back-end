@@ -86,7 +86,6 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        System.out.println("판매자 계정으로 전환");
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
                 userService.convertToProducer(producer, username)));
     }

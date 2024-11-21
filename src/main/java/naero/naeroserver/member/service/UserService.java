@@ -7,6 +7,7 @@ import naero.naeroserver.entity.user.TblUser;
 import naero.naeroserver.exception.DuplicatedUsernameException;
 import naero.naeroserver.exception.LoginFailedException;
 import naero.naeroserver.exception.UpdateUserException;
+import naero.naeroserver.jwt.TokenProvider;
 import naero.naeroserver.manage.DTO.ManageUserDTO;
 import naero.naeroserver.member.dto.ManageSearchDTO;
 import naero.naeroserver.member.dto.ProducerDTO;
@@ -33,18 +34,16 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
     private final SearchRepository searchRepository;
     private final ProducerRepository producerRepository;
-    private final AuthService authService;
+    private final TokenProvider tokenProvider;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, UserGradeRepository userGradeRepository, SearchRepository searchRepository, ProducerRepository producerRepository, AuthService authService) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, SearchRepository searchRepository, ProducerRepository producerRepository, TokenProvider tokenProvider) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
-        this.passwordEncoder = passwordEncoder;
         this.searchRepository = searchRepository;
         this.producerRepository = producerRepository;
-        this.authService = authService;
+        this.tokenProvider = tokenProvider;
     }
 
     public Object findByusername(String username) {
@@ -184,6 +183,9 @@ public class UserService {
         if (producer.getProducerName() != null) {
             getUser.setProducerName(producer.getProducerName());
         }
+        if (producer.getProducerPhone() != null) {
+            getUser.setProducerPhone(producer.getProducerPhone());
+        }
         if (producer.getDeliveryFee() != null) {
             getUser.setDeliveryFee(producer.getDeliveryFee());
         }
@@ -202,13 +204,18 @@ public class UserService {
 
     @Transactional
     public Object convertToProducer(ProducerDTO producer, String username) {
-        int userId = userRepository.findByUsername(username).getUserId();
+        TblUser getUser = userRepository.findByUsername(username);
+        int userId = getUser.getUserId();
+
         if(producerRepository.existsById(userId)){
             throw new DuplicatedUsernameException("같은 아이디로 가입된 판매자가 있습니다.");
         }
-        TblProducer newProducer = modelMapper.map(producer, TblProducer.class);
 
-        return producerRepository.save(newProducer);
+        producerRepository.insertProducer(userId);
+        updateProducerDetail(producer,getUser.getUsername());
+        System.out.println(producerRepository.findByProducerId(userId));
+
+        return tokenProvider.generateTokenDTO(userRepository.findById(userId));
     }
 
 }
