@@ -50,12 +50,9 @@ public class TblProduct {
     @Column(name = "producer_id", nullable = false)
     private Integer producerId;
 
-
-    @OneToMany( cascade = CascadeType.PERSIST)
+    @OneToMany
     @JoinColumn(name="product_id")
     private List<TblOption> options;
-
-
 
     @NotNull
     @ManyToOne

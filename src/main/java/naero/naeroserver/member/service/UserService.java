@@ -211,4 +211,9 @@ public class UserService {
         return producerRepository.save(newProducer);
     }
 
+
+    public Integer getProducerIdFromUserName(String producerUsername) {
+        TblUser producer = userRepository.findUserIdByUsername(producerUsername);
+        return producer.getUserId();
+    }
 }
