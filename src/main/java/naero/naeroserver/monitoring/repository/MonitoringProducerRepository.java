@@ -17,7 +17,7 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
             "LEFT JOIN TblProduct pt ON pr.producerId = pt.producerId " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
-            "WHERE (od.createdAt IS NOT NULL AND od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
+            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "GROUP BY pr.producerName " +
             "ORDER BY SUM(od.amount) DESC")
     List<Map<String, Double>> findCrossByProducerAndSales(@Param("parsedStartInstant") Instant parsedStartInstant,
@@ -28,7 +28,7 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
             "LEFT JOIN TblProduct pt ON pr.producerId = pt.producerId " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
-            "WHERE (od.createdAt IS NOT NULL AND od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
+            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "GROUP BY pr.producerName " +
             "ORDER BY SUM(od.count) DESC")
     List<Map<String, Double>> findCrossByProducerAndQuantity(@Param("parsedStartInstant") Instant parsedStartInstant,
@@ -39,7 +39,7 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
             "LEFT JOIN TblProduct pt ON pr.producerId = pt.producerId " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
-            "WHERE (od.createdAt IS NOT NULL AND od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
+            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "AND pr.producerName = :specification " +
             "GROUP BY DATE(od.createdAt) " +
             "ORDER BY DATE(od.createdAt)")
@@ -52,7 +52,7 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
             "LEFT JOIN TblProduct pt ON pr.producerId = pt.producerId " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
-            "WHERE (od.createdAt IS NOT NULL AND od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
+            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "AND pr.producerName = :specification " +
             "GROUP BY DATE(od.createdAt) " +
             "ORDER BY DATE(od.createdAt)")
@@ -63,7 +63,7 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
     @Query("SELECT new map(pr.producerName AS producer_name, CAST(COUNT(pr.producerName) AS double) AS total_like) " +
             "FROM TblProducer pr " +
             "LEFT JOIN TblLikedSeller lpr ON pr.producerId = lpr.producerId " +
-            "WHERE (lpr.brandLikeDate IS NOT NULL AND lpr.brandLikeDate BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
+            "WHERE lpr.brandLikeDate BETWEEN :parsedStartInstant AND :parsedEndInstant " +
             "GROUP BY pr.producerName " +
             "ORDER BY COUNT(pr.producerName) DESC")
     List<Map<String, Double>> findCrossByProducerAndLike(@Param("parsedStartInstant") Instant parsedStartInstant,
