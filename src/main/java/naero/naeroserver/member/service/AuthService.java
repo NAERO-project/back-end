@@ -65,7 +65,6 @@ public class AuthService {
     @Transactional
     public Object signup(UserDTO user, int authId) {
         dupulicateIdCheck(user.getUsername());
-        dupulicateEmailCheck(user.getUserEmail());
         authSuccessCheck(authId);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
