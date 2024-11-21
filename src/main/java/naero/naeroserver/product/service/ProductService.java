@@ -275,11 +275,11 @@ public class ProductService {
     public Object selectProductDetail(int productId) {
         log.info("[ProductService] selectProductDetail() 시작");
 
-        List<ProductOptionDTO> productList = productRepository.findByIdAndOption(productId);
+        ProductOptionDTO product = productRepository.findByIdAndOption(productId);
 
         log.info("[ProductService] selectProductDetail() 종료");
 
-        return productList;
+        return product;
     }
 
     @Transactional

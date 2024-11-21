@@ -6,6 +6,7 @@ import naero.naeroserver.cart.dto.CartDTO;
 import naero.naeroserver.cart.repository.CartRepository;
 import naero.naeroserver.common.ResponseDTO;
 import naero.naeroserver.entity.cart.TblCart;
+import naero.naeroserver.member.service.UserService;
 import naero.naeroserver.order.dto.OrderDTO;
 import naero.naeroserver.order.dto.OrderPageDTO;
 import naero.naeroserver.order.dto.PayRequestDTO;
@@ -31,26 +32,41 @@ public class OrderController {
     private final OrderService orderService;
     private final HttpSession httpSession;
     private final CartRepository cartRepository;
+    private final UserService userService;
 
     @Autowired
-    public OrderController(OrderService orderService, HttpSession httpSession, CartRepository cartRepository) {
+    public OrderController(OrderService orderService, HttpSession httpSession, CartRepository cartRepository, UserService userService) {
         this.orderService = orderService;
         this.httpSession = httpSession;
         this.cartRepository = cartRepository;
+        this.userService = userService;
     }
 
-    @Operation(summary = "장바구니 상품 주문 요청", description = "장바구니 상품 주문이 진행됩니다.", tags = { "OrderController" })
+    @Operation(summary = "상품 주문 요청", description = "상품 주문이 진행됩니다.", tags = { "OrderController" })
     @PostMapping("/order/start")
-    public ResponseEntity<ResponseDTO> startCartOrder(@RequestBody List<CartDTO> cartDTOList, HttpSession httpSession) {
-        OrderPageDTO tempOrder = orderService.startOrder(cartDTOList);
-        List<Integer> cartIds = new ArrayList<>();
+    public ResponseEntity<ResponseDTO> startCartOrder(@RequestBody List<CartDTO> cartDTOList,
+                                                      @RequestParam("username") String username, HttpSession httpSession) {
 
+        // 단일 상품 결제 시 cartDTO에 userId 정보가 없을 경우 대비 돌아가는 로직
+        if (username != null) {
+            int userId = userService.getUserIdFromUserName(username);
+            cartDTOList.forEach((c) -> c.setUserId(userId));
+        }
+
+        OrderPageDTO tempOrder = orderService.startOrder(cartDTOList);
+
+        // 추후 결제 완료된 장바구니 상품 삭제하기 위해 세션에 저장
+        List<Integer> cartIds = new ArrayList<>();
         for (CartDTO cartItem : cartDTOList) {
+            if (cartItem.getCartId() == null) break;
             cartIds.add(cartItem.getCartId());
         }
 
         httpSession.setAttribute("tempOrder", tempOrder);
-        httpSession.setAttribute("cartIds", cartIds);
+
+        if (!cartIds.isEmpty()) {
+            httpSession.setAttribute("cartIds", cartIds);
+        }
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문 정보 생성 성공", tempOrder));
     }

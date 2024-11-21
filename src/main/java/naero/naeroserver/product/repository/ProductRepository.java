@@ -112,7 +112,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "FROM TblProduct p " +
             "JOIN TblOption op ON p.productId = op.productId " +
             "WHERE p.productId = :productId")
-    List<ProductOptionDTO> findByIdAndOption(@Param("productId") Integer productId);
+    ProductOptionDTO findByIdAndOption(@Param("productId") Integer productId);
 
 //    @Query("SELECT p, pi.producer FROM TblProduct p " +
 //            "JOIN TblProducer pi ON p.productId = pi.id " +

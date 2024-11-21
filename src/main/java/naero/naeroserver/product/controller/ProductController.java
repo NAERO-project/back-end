@@ -169,7 +169,7 @@ public class ProductController {
 
         log.info("[ProductController] selectProducerProductListPage 상품 리스트 전체 조회(페이징) : " + offset);
 
-        int producerId = userService.getProducerIdFromUserName(producerUsername);
+        int producerId = userService.getUserIdFromUserName(producerUsername);
 
         int total = productService.selectProducerProductListPage(producerId);
 
@@ -189,15 +189,9 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO,
                                                      @RequestPart(value = "productImage", required = false) MultipartFile productImage,
                                                      @RequestParam("producerUsername") String producerUsername) {
-        if (productDTO.getSmallCategory().getMediumCategoryId() == null ||
-                productDTO.getSmallCategory().getSmallCategoryId() == null) {
-            return ResponseEntity.badRequest().body(new ResponseDTO(HttpStatus.BAD_REQUEST, "중분류 또는 소분류 누락", null));
-        }
 
-        System.out.println("여기여기여기!!!" + productDTO.getOptions());
-        int producerId = userService.getProducerIdFromUserName(producerUsername);
+        int producerId = userService.getUserIdFromUserName(producerUsername);
         productDTO.setProducerId(producerId);
-        System.out.println("여기여기여기!!!" + productDTO.getProducerId());
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
     }

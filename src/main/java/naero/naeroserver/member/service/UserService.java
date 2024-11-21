@@ -2,7 +2,6 @@ package naero.naeroserver.member.service;
 
 import jakarta.transaction.Transactional;
 import naero.naeroserver.entity.user.TblProducer;
-import naero.naeroserver.entity.user.TblProducerGrade;
 import naero.naeroserver.entity.user.TblUser;
 import naero.naeroserver.exception.DuplicatedUsernameException;
 import naero.naeroserver.exception.LoginFailedException;
@@ -11,7 +10,6 @@ import naero.naeroserver.manage.DTO.ManageUserDTO;
 import naero.naeroserver.member.dto.ManageSearchDTO;
 import naero.naeroserver.member.dto.ProducerDTO;
 import naero.naeroserver.member.dto.UserDTO;
-import naero.naeroserver.member.dto.UserGradeDTO;
 import naero.naeroserver.manage.repository.SearchRepository;
 import naero.naeroserver.member.repository.ProducerRepository;
 import naero.naeroserver.member.repository.UserGradeRepository;
@@ -24,9 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserService {
@@ -212,7 +208,7 @@ public class UserService {
     }
 
 
-    public Integer getProducerIdFromUserName(String producerUsername) {
+    public Integer getUserIdFromUserName(String producerUsername) {
         TblUser producer = userRepository.findUserIdByUsername(producerUsername);
         return producer.getUserId();
     }
