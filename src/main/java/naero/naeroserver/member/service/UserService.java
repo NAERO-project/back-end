@@ -36,13 +36,15 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final SearchRepository searchRepository;
     private final ProducerRepository producerRepository;
+    private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, SearchRepository searchRepository, ProducerRepository producerRepository, TokenProvider tokenProvider) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, SearchRepository searchRepository, ProducerRepository producerRepository, PasswordEncoder passwordEncoder, TokenProvider tokenProvider) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.searchRepository = searchRepository;
         this.producerRepository = producerRepository;
+        this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
     }
 
@@ -95,6 +97,9 @@ public class UserService {
         }
         if (user.getUserPhone() != null) {
             getUser.setUserPhone(user.getUserPhone());
+        }
+        if(user.getPassword()!=null){
+            getUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
         return modelMapper.map(getUser, UserDTO.class);
