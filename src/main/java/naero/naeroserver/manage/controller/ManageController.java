@@ -2,6 +2,7 @@ package naero.naeroserver.manage.controller;
 
 import naero.naeroserver.common.ResponseDTO;
 import naero.naeroserver.member.dto.ManageSearchDTO;
+import naero.naeroserver.member.dto.ProducerDTO;
 import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -67,14 +68,6 @@ public class ManageController {
         ));
     }
 
-/*    //판매자 회원 정보
-    @GetMapping("/detail/producer/{username}")
-    public ResponseEntity<ResponseDTO> producerDetail(@PathVariable String username) {
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
-                userService.findProducerByusername(username)
-        ));
-    }*/
-
     //판매자 회원만 검색
     @GetMapping("/search/producer/{page}")
     public ResponseEntity<ResponseDTO> producerSearch(@PathVariable Integer page, @RequestBody ManageSearchDTO crit){
@@ -92,5 +85,12 @@ public class ManageController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "사업장 정지처리 완료되었습니다.", null));
     }
 
+    @PostMapping("/update/producer/{username}")
+    public ResponseEntity<ResponseDTO> updateProducerDetail(@RequestBody ProducerDTO producer, @PathVariable String username){
+
+        System.out.println("판매자 정보 수정");
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
+                userService.updateProducerDetail(producer, username)));
+    }
 
 }

@@ -42,8 +42,8 @@ public class TblAnswer {
         return answerId;
     }
 
-    public void setAnswerId(Integer id) {
-        this.answerId = id;
+    public void setAnswerId(Integer answerId) {
+        this.answerId = answerId;
     }
 
     public String getAnswerTitle() {

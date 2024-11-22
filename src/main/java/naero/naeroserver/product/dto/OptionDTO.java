@@ -6,7 +6,7 @@ public class OptionDTO {
     private String optionDesc;
     private int addPrice;
     private int productId;
-    private int opeiontQuantity;
+    private int optionQuantity;
 
     public OptionDTO() {
     }
@@ -16,7 +16,7 @@ public class OptionDTO {
         this.optionDesc = optionDesc;
         this.addPrice = addPrice;
         this.productId = productId;
-        this.opeiontQuantity = opeiontQuantity;
+        this.optionQuantity = opeiontQuantity;
     }
 
     public int getOptionId() {
@@ -51,12 +51,12 @@ public class OptionDTO {
         this.productId = productId;
     }
 
-    public int getOpeiontQuantity() {
-        return opeiontQuantity;
+    public int getOptionQuantity() {
+        return optionQuantity;
     }
 
-    public void setOpeiontQuantity(int opeiontQuantity) {
-        this.opeiontQuantity = opeiontQuantity;
+    public void setOptionQuantity(int optionQuantity) {
+        this.optionQuantity = optionQuantity;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class OptionDTO {
                 ", optionDesc='" + optionDesc + '\'' +
                 ", addPrice=" + addPrice +
                 ", productId=" + productId +
-                ", opeiontQuantity=" + opeiontQuantity +
+                ", opeiontQuantity=" + optionQuantity +
                 '}';
     }
 }

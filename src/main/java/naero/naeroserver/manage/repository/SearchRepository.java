@@ -187,4 +187,32 @@ public class SearchRepository {
 
         return ((Number) query.getSingleResult()).intValue();
     }
+
+    public int getTotalCountForProducer(ManageSearchDTO dto) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM tbl_producer a " +
+                "LEFT JOIN tbl_user b ON a.producer_id = b.user_id " +
+                "LEFT JOIN tbl_producer_grade c ON a.pgrade_id = c.pgrade_id WHERE 1=1");
+
+        Map<String, String> filters = dto.getFilter();
+        for (Map.Entry<String, String> filter : filters.entrySet()) {
+            sql.append(" AND ").append(filter.getKey()).append(" = :filterValue");
+        }
+        Map<String, String> keywords = dto.getKeyword();
+        for (Map.Entry<String, String> keyword : keywords.entrySet()) {
+            sql.append(" AND ").append(keyword.getKey())
+                    .append(" LIKE CONCAT('%', :keywordValue, '%')");
+        }
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        // 파라미터 바인딩
+        for (Map.Entry<String, String> filter : filters.entrySet()) {
+            query.setParameter("filterValue", filter.getValue());
+        }
+        for (Map.Entry<String, String> keyword : keywords.entrySet()) {
+            query.setParameter("keywordValue", keyword.getValue());
+        }
+
+        return ((Number) query.getSingleResult()).intValue();
+    }
 }

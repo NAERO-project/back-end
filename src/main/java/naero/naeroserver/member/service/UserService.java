@@ -4,8 +4,10 @@ import jakarta.transaction.Transactional;
 import naero.naeroserver.entity.user.TblProducer;
 import naero.naeroserver.entity.user.TblProducerGrade;
 import naero.naeroserver.entity.user.TblUser;
+import naero.naeroserver.exception.DuplicatedUsernameException;
 import naero.naeroserver.exception.LoginFailedException;
 import naero.naeroserver.exception.UpdateUserException;
+import naero.naeroserver.jwt.TokenProvider;
 import naero.naeroserver.manage.DTO.ManageUserDTO;
 import naero.naeroserver.member.dto.ManageSearchDTO;
 import naero.naeroserver.member.dto.ProducerDTO;
@@ -32,18 +34,18 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
-    private final UserGradeRepository userGradeRepository;
     private final SearchRepository searchRepository;
     private final ProducerRepository producerRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenProvider tokenProvider;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, UserGradeRepository userGradeRepository, SearchRepository searchRepository, ProducerRepository producerRepository) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, SearchRepository searchRepository, ProducerRepository producerRepository, PasswordEncoder passwordEncoder, TokenProvider tokenProvider) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
-        this.passwordEncoder = passwordEncoder;
-        this.userGradeRepository = userGradeRepository;
         this.searchRepository = searchRepository;
         this.producerRepository = producerRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenProvider = tokenProvider;
     }
 
     public Object findByusername(String username) {
@@ -95,6 +97,9 @@ public class UserService {
         }
         if (user.getUserPhone() != null) {
             getUser.setUserPhone(user.getUserPhone());
+        }
+        if(user.getPassword()!=null){
+            getUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
         return modelMapper.map(getUser, UserDTO.class);
@@ -167,4 +172,55 @@ public class UserService {
         getProducer.setWithStatus("Y");
 
     }
+
+    //유저와 관리자 공용으로 사용할 것
+    @Transactional
+    public Object updateProducerDetail(ProducerDTO producer, String username) {
+        //사용자 정보중에 바꿀 수 있는 데이터...
+        //busi_no producer_add producer_name producer_phone delivery_fee delivery_crit
+        int userId = userRepository.findByUsername(username).getUserId();
+        TblProducer getUser = producerRepository.findByProducerId(userId);
+
+        if (getUser == null) {
+            throw new UpdateUserException("사용자를 찾을 수 없습니다.");
+        }
+
+        if (producer.getProducerName() != null) {
+            getUser.setProducerName(producer.getProducerName());
+        }
+        if (producer.getProducerPhone() != null) {
+            getUser.setProducerPhone(producer.getProducerPhone());
+        }
+        if (producer.getDeliveryFee() != null) {
+            getUser.setDeliveryFee(producer.getDeliveryFee());
+        }
+        if (producer.getDeliveryCrit() != null) {
+            getUser.setDeliveryCrit(producer.getDeliveryCrit());
+        }
+        if (producer.getProducerAdd() != null) {
+            getUser.setProducerAdd(producer.getProducerAdd());
+        }
+        if (producer.getBusiNo() != null) {
+            getUser.setBusiNo(producer.getBusiNo());
+        }
+
+        return modelMapper.map(getUser, ProducerDTO.class);
+    }
+
+    @Transactional
+    public Object convertToProducer(ProducerDTO producer, String username) {
+        TblUser getUser = userRepository.findByUsername(username);
+        int userId = getUser.getUserId();
+
+        if(producerRepository.existsById(userId)){
+            throw new DuplicatedUsernameException("같은 아이디로 가입된 판매자가 있습니다.");
+        }
+
+        producerRepository.insertProducer(userId);
+        updateProducerDetail(producer,getUser.getUsername());
+        System.out.println(producerRepository.findByProducerId(userId));
+
+        return tokenProvider.generateTokenDTO(userRepository.findById(userId));
+    }
+
 }

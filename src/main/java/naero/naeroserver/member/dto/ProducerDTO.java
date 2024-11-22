@@ -8,13 +8,13 @@ public class ProducerDTO {
     private String producerName;
     private String producerPhone;
     private ProducerGradeDTO producerGrade;
-    private int deliveryFee;
-    private int deliveryCrit;
+    private Integer deliveryFee;
+    private Integer deliveryCrit;
 
     public ProducerDTO() {
     }
 
-    public ProducerDTO(int producerId, UserDTO user, String busiNo, String producerAdd, String producerName, String producerPhone, ProducerGradeDTO producerGrade, int deliveryFee, int deliveryCrit) {
+    public ProducerDTO(int producerId, UserDTO user, String busiNo, String producerAdd, String producerName, String producerPhone, ProducerGradeDTO producerGrade, Integer deliveryFee, Integer deliveryCrit) {
         this.producerId = producerId;
         this.user = user;
         this.busiNo = busiNo;
@@ -82,16 +82,20 @@ public class ProducerDTO {
         this.producerGrade = producerGrade;
     }
 
-    public int getDeliveryFee() {
+    public Integer getDeliveryFee() {
         return deliveryFee;
     }
 
-    public void setDeliveryFee(int deliveryFee) {
+    public void setDeliveryFee(Integer deliveryFee) {
         this.deliveryFee = deliveryFee;
     }
 
-    public int getDeliveryCrit() {
+    public Integer getDeliveryCrit() {
         return deliveryCrit;
+    }
+
+    public void setDeliveryCrit(Integer deliveryCrit) {
+        this.deliveryCrit = deliveryCrit;
     }
 
     public void setDeliveryCrit(int deliveryCrit) {

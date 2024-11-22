@@ -2,6 +2,7 @@ package naero.naeroserver.member.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import naero.naeroserver.common.ResponseDTO;
+import naero.naeroserver.member.dto.ProducerDTO;
 import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -57,18 +58,40 @@ public class UserController {
     @PostMapping("/update")
     public ResponseEntity<ResponseDTO> updateDetail(@RequestBody UserDTO user){
        //현재 요청 보낸 사용자와 수정하려는 사용자가 일치하는지 -> 프런트 구현되고 확인
-        /* Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String authenticatedUsername = authentication.getName();
 
         if (!authenticatedUsername.equals(user.getUsername())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new ResponseDTO(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.", null));
-        }*/
+        }
         System.out.println("수정요청");
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
                 userService.updateDetail(user)));
     }
+
+    @PostMapping("/update/producer")
+    public ResponseEntity<ResponseDTO> updateProducerDetail(@RequestBody ProducerDTO producer){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        System.out.println("판매자 정보 수정");
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
+                userService.updateProducerDetail(producer, username)));
+    }
+
+    @PostMapping("/insert/producer")
+    public ResponseEntity<ResponseDTO> insertProducerDetail(@RequestBody ProducerDTO producer){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
+                userService.convertToProducer(producer, username)));
+    }
+
+
+
 
   /*  @GetMapping("/detail")
     public ResponseEntity<ResponseDTO> name(@RequestBody Object var){

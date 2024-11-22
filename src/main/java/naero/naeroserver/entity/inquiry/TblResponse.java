@@ -1,3 +1,4 @@
+
 package naero.naeroserver.entity.inquiry;
 
 import jakarta.persistence.*;
@@ -42,8 +43,8 @@ public class TblResponse {
         return responseId;
     }
 
-    public void setResponseId(Integer id) {
-        this.responseId = id;
+    public void setResponseId(Integer responseId) {
+        this.responseId = responseId;
     }
 
     public String getResponseTitle() {
