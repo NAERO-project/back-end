@@ -73,7 +73,7 @@ public class OrderController {
 
     @Operation(summary = "상품 결제 요청", description = "상품 결제가 진행됩니다.", tags = { "OrderController" })
     @PostMapping("/order/process")
-    public ResponseEntity<ResponseDTO> insertOrder(@RequestBody PayRequestDTO payRequestDTO) {
+    public ResponseEntity<ResponseDTO> insertOrder(@RequestBody PayRequestDTO payRequestDTO, @RequestParam("username") String username) {
         try {
             // PayRequestDTO에서 필요한 정보 추출
             OrderDTO orderDTO = payRequestDTO.getOrderDTO();

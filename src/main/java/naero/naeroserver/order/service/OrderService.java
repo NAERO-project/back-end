@@ -287,7 +287,7 @@ public class OrderService {
             // 중복을 방지하기 위해 Set 데이터 타입으로 선언
             Set<Integer> producerSet = new HashSet<>();
 
-            // 프런트에서 전달 받은 optioIds 파라미터에서 판매자 ID를 producerSet에 저장
+            // 프런트에서 전달 받은 optionIds 파라미터에서 판매자 ID를 producerSet에 저장
             for (Map.Entry<Integer, Integer> entry : optionIds.entrySet()) {
 
                 // optionIds entry 키를 이용해 option을 추출
@@ -302,7 +302,7 @@ public class OrderService {
             }
 
             // producerSet에서 루프를 돌려 producer별 배송 엔티티를 생성
-            for (Integer prodcer : producerSet) {
+            for (Integer producer : producerSet) {
                 TblShipping shipping = new TblShipping();
 
                 shipping.setShippingStatus("pending");
