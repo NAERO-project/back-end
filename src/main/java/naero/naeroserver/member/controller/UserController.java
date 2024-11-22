@@ -52,7 +52,7 @@ public class UserController {
                     .body(new ResponseDTO(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.", null));
         }
         userService.withdrawUser(username);
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "message", null));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "message", null));
     }
 
     @GetMapping("/withdraw/producer/{username}")
@@ -66,7 +66,7 @@ public class UserController {
                     .body(new ResponseDTO(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.", null));
         }
         userService.withdrawProducer(username);
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "사업장 탈퇴처리 완료되었습니다.", null));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "사업장 탈퇴처리 완료되었습니다.", null));
     }
 
     @PostMapping("/update")
