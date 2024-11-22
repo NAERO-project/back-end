@@ -2,10 +2,7 @@ package naero.naeroserver.product.service;
 
 import naero.naeroserver.common.Criteria;
 import naero.naeroserver.entity.order.TblOrder;
-import naero.naeroserver.entity.product.TblCategoryMedium;
-import naero.naeroserver.entity.product.TblCategorySmall;
-import naero.naeroserver.entity.product.TblOption;
-import naero.naeroserver.entity.product.TblProduct;
+import naero.naeroserver.entity.product.*;
 import naero.naeroserver.product.dto.*;
 import naero.naeroserver.product.repository.*;
 import naero.naeroserver.util.FileUploadUtils;
@@ -85,17 +82,18 @@ public class ProductService {
         return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
     }
 
-    public int selectProductCategoryList(int mediumId) {
-        log.info("[ProductService] selectProductCategoryList 시작");
-        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategory(mediumId);
+    /* 대분류 카테고리별 상품 조회 (페이징) */
+    public int selectProductCategoryLargeList(int largeId) {
+        log.info("[ProductService] selectProductCategoryLargeList 시작");
+        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategory(largeId);
 
-        log.info("[ProductService] selectProductCategoryList 종료");
+        log.info("[ProductService] selectProductCategoryLargeList 종료");
 
         return productList.size();
     }
 
-    public Object selectProductCategoryListPaging(int mediumId, Criteria cri) {
-        log.info("[ProductService] selectProductCategoryListPaging() 시작");
+    public Object selectProductCategoryLargeListPaging(int mediumId, Criteria cri) {
+        log.info("[ProductService] selectProductCategoryLargeListPaging() 시작");
 
         int index = cri.getPageNum() -1;
         int count = cri.getAmount();
@@ -108,10 +106,63 @@ public class ProductService {
             productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
         }
 
-        log.info("[ProductService] selectProductCategoryListPaging() 종료");
+        log.info("[ProductService] selectProductCategoryLargeListPaging() 종료");
 
         return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
     }
+
+    /* 중분류 카테고리별 상품 조회 (페이징) */
+    public int selectProductCategoryMediumIdList(int largeId, int mediumId) {
+        log.info("[ProductService] selectProductCategoryMediumIdList 시작");
+        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategory(largeId, mediumId);
+
+        log.info("[ProductService] selectProductCategoryMediumIdList 종료");
+
+        return productList.size();
+    }
+
+    public Object selectProductCategoryMediumIdListPaging(int largeId, Criteria cri) {
+        log.info("[ProductService] selectProductCategoryMediumIdListPaging() 시작");
+
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
+
+        Page<TblProduct> result = productRepository.findPagedProductCheckAndSmallCategory(largeId, paging);
+        List<TblProduct> productList = (List<TblProduct>)result.getContent();
+
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+        }
+
+        log.info("[ProductService] selectProductCategoryMediumIdListPaging() 종료");
+
+        return productList.stream().map(tblProduct -> modelMapper.map(tblProduct, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    /* 카테고리 조회(수정) */
+    public Object selectProductCategoryList01() {
+        log.info("[ProductService] selectProductCategoryList01() 시작");
+
+        List<TblCategoryLarge> ProductCategoryList01 = productRepository.findAllProductCategory01();
+
+        log.info("[ProductService] selectProductCategoryList01() 종료");
+
+        return ProductCategoryList01.stream().map(product -> modelMapper.map(product, CategoryLargeDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public Object selectProductCategoryList02(int largeId) {
+        log.info("[ProductService] selectProductCategoryList02() 시작");
+
+        List<TblCategoryMedium> ProductCategoryList01 = productRepository.findAllProductCategory02(largeId);
+
+        log.info("[ProductService] selectProductCategoryList02() 종료");
+
+        return ProductCategoryList01.stream().map(product -> modelMapper.map(product, CategoryMediumDTO.class))
+                .collect(Collectors.toList());
+    }
+
 
     /* 상품 리스트 미리보기 조회 */
     public Object selectProductListPreview() {
@@ -455,4 +506,6 @@ public class ProductService {
         return categoryMedium.stream().map(small -> modelMapper.map(small, CategorySmallDTO.class))
                 .collect(Collectors.toList());
     }
+
+
 }

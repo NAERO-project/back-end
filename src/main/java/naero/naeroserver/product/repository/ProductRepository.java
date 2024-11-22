@@ -1,5 +1,7 @@
 package naero.naeroserver.product.repository;
 
+import naero.naeroserver.entity.product.TblCategoryLarge;
+import naero.naeroserver.entity.product.TblCategoryMedium;
 import naero.naeroserver.entity.product.TblProduct;
 import naero.naeroserver.product.dto.ProductOptionDTO;
 import naero.naeroserver.order.dto.OrderPageProductDTO;
@@ -23,10 +25,24 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "FROM TblProduct p " +
             "JOIN TblCategorySmall cs ON p.smallCategory.smallCategoryId = cs.smallCategoryId " +
             "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
-            "AND cm.mediumCategoryId = :mediumId " +
+            "JOIN TblCategoryLarge cl ON cm.largeCategoryId = cl.largeCategoryId " +
+//            "AND cm.mediumCategoryId = :mediumId " +
+            "AND cl.largeCategoryId = :largeId " +
             "AND p.productCheck = 'Y' " +
             "ORDER BY p.productCreateAt desc ")
-    List<TblProduct> findByProductCheckAndSmallCategory(@Param("mediumId") Integer mediumId);
+    List<TblProduct> findByProductCheckAndSmallCategory(@Param("largeId") Integer largeId);
+
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "JOIN TblCategorySmall cs ON p.smallCategory.smallCategoryId = cs.smallCategoryId " +
+            "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
+            "JOIN TblCategoryLarge cl ON cm.largeCategoryId = cl.largeCategoryId " +
+            "AND cm.mediumCategoryId = :mediumId " +
+            "AND cl.largeCategoryId = :largeId " +
+            "AND p.productCheck = 'Y' " +
+            "ORDER BY p.productCreateAt desc ")
+    List<TblProduct> findByProductCheckAndSmallCategory(@Param("largeId") Integer largeId,
+                                                        @Param("mediumId") Integer mediumId);
 
     @Query("SELECT p " +
             "FROM TblProduct p " +
@@ -142,4 +158,16 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "AND p.productCheck = 'Y' " +
             "ORDER BY p.productId desc ")
     List<TblProduct> findByProductIdAndSmallCategory(@Param("smallId") Integer smallId);
+
+    // 카테고리 대분류
+    @Query("SELECT cl " +
+            "FROM  TblCategoryLarge cl" )
+    List<TblCategoryLarge> findAllProductCategory01();
+
+    // 카테고리 중분류
+    @Query("SELECT cm " +
+            "FROM TblCategoryMedium cm " +
+            "JOIN TblCategoryLarge cl ON cm.largeCategoryId = cl.largeCategoryId " +
+            "WHERE cl.largeCategoryId = :largeId ")
+    List<TblCategoryMedium> findAllProductCategory02(@Param("largeId") Integer largeId);
 }
