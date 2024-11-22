@@ -326,11 +326,11 @@ public class ProductService {
     public Object selectProductDetail(int productId) {
         log.info("[ProductService] selectProductDetail() 시작");
 
-        ProductOptionDTO product = productRepository.findByIdAndOption(productId);
+        TblProduct product = productRepository.findByIdAndOption(productId);
 
         log.info("[ProductService] selectProductDetail() 종료");
 
-        return product;
+        return modelMapper.map(product, ProductDTO.class);
     }
 
     @Transactional
@@ -506,6 +506,4 @@ public class ProductService {
         return categoryMedium.stream().map(small -> modelMapper.map(small, CategorySmallDTO.class))
                 .collect(Collectors.toList());
     }
-
-
 }

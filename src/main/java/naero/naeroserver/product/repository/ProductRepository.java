@@ -124,11 +124,16 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
                                                                                Pageable paging);
 
 
-    @Query("SELECT new naero.naeroserver.product.dto.ProductOptionDTO(p, op.addPrice, op.optionDesc, op.optionQuantity) " +
+//    @Query("SELECT new naero.naeroserver.product.dto.ProductOptionDTO(p, op.addPrice, op.optionDesc, op.optionQuantity) " +
+//            "FROM TblProduct p " +
+//            "JOIN TblOption op ON p.productId = op.productId " +
+//            "WHERE p.productId = :productId")
+//    ProductOptionDTO findByIdAndOption(@Param("productId") Integer productId);
+
+    @Query("SELECT p " +
             "FROM TblProduct p " +
-            "JOIN TblOption op ON p.productId = op.productId " +
             "WHERE p.productId = :productId")
-    ProductOptionDTO findByIdAndOption(@Param("productId") Integer productId);
+    TblProduct findByIdAndOption(@Param("productId") Integer productId);
 
 //    @Query("SELECT p, pi.producer FROM TblProduct p " +
 //            "JOIN TblProducer pi ON p.productId = pi.id " +
