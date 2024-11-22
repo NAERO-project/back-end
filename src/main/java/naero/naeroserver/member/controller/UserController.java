@@ -52,7 +52,21 @@ public class UserController {
                     .body(new ResponseDTO(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.", null));
         }
         userService.withdrawUser(username);
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "message", null));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "message", null));
+    }
+
+    @GetMapping("/withdraw/producer/{username}")
+    public ResponseEntity<ResponseDTO> withdrawProducer(@PathVariable String username) {
+        System.out.println("임의 판매자 탈퇴 요청");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String authenticatedUsername = authentication.getName();
+        if (!authenticatedUsername.equals(username)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ResponseDTO(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.", null));
+        }
+        userService.withdrawProducer(username);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "사업장 탈퇴처리 완료되었습니다.", null));
     }
 
     @PostMapping("/update")
@@ -73,7 +87,6 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        System.out.println("왜 너만 0이 돼"+ producer);
         System.out.println("판매자 정보 수정");
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
                 userService.updateProducerDetail(producer, username)));
@@ -88,6 +101,14 @@ public class UserController {
                 userService.convertToProducer(producer, username)));
     }
 
+    @PostMapping("passcheck")
+    public ResponseEntity<ResponseDTO> checkPassword(@RequestBody String password){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        userService.checkPassword(username, password);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"비밀번호 인증에 성공했습니다.",
+                "성공"));
+    }
 
 
 

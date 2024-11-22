@@ -1,9 +1,14 @@
 package naero.naeroserver.member.service;
 
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import naero.naeroserver.auth.repository.RoleRepository;
+import naero.naeroserver.auth.repository.UserRoleRepository;
+import naero.naeroserver.entity.auth.TblUserRole;
 import naero.naeroserver.entity.user.TblProducer;
 import naero.naeroserver.entity.user.TblProducerGrade;
 import naero.naeroserver.entity.user.TblUser;
+import naero.naeroserver.exception.AuthFailException;
 import naero.naeroserver.exception.DuplicatedUsernameException;
 import naero.naeroserver.exception.LoginFailedException;
 import naero.naeroserver.exception.UpdateUserException;
@@ -15,7 +20,6 @@ import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.member.dto.UserGradeDTO;
 import naero.naeroserver.manage.repository.SearchRepository;
 import naero.naeroserver.member.repository.ProducerRepository;
-import naero.naeroserver.member.repository.UserGradeRepository;
 import naero.naeroserver.member.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -25,9 +29,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserService {
@@ -38,14 +40,18 @@ public class UserService {
     private final ProducerRepository producerRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final UserRoleRepository userRoleRepository;
+    private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, SearchRepository searchRepository, ProducerRepository producerRepository, PasswordEncoder passwordEncoder, TokenProvider tokenProvider) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, SearchRepository searchRepository, ProducerRepository producerRepository, PasswordEncoder passwordEncoder, TokenProvider tokenProvider, UserRoleRepository userRoleRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.searchRepository = searchRepository;
         this.producerRepository = producerRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
+        this.userRoleRepository = userRoleRepository;
+        this.roleRepository = roleRepository;
     }
 
     public Object findByusername(String username) {
@@ -76,9 +82,13 @@ public class UserService {
     public Object withdrawUser(String username) {
 
         TblUser getUser = userRepository.findByUsername(username);
-            if (getUser == null) {
+        TblProducer getProducer = producerRepository.findByProducerId(getUser.getUserId());
+        if (getUser == null) {
                 throw new UpdateUserException("사용자를 찾을 수 없습니다.");
-            }
+        }
+        if(getProducer !=null && getProducer.getWithStatus().equals("N")){
+            getProducer.setWithStatus("Y");
+        }
         getUser.setWithStatus("Y");
 
         return modelMapper.map(getUser, UserDTO.class);
@@ -171,6 +181,8 @@ public class UserService {
         }
         getProducer.setWithStatus("Y");
 
+        userRoleRepository.deleteByUserAndRole(getProducer.getUser(), roleRepository.findById(2));
+
     }
 
     //유저와 관리자 공용으로 사용할 것
@@ -224,4 +236,11 @@ public class UserService {
         return tokenProvider.generateTokenDTO(userRepository.findById(userId));
     }
 
+    public void checkPassword(String username, String password) {
+        TblUser getuser = userRepository.findByUsername(username);
+        System.out.println(passwordEncoder.matches(password, getuser.getPassword()));
+        if (!passwordEncoder.matches(password, getuser.getPassword())){
+            throw new AuthFailException("비밀번호 인증에 실패했습니다.");
+        }
+    }
 }

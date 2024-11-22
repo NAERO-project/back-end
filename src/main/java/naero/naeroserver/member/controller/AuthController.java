@@ -95,7 +95,7 @@ public class AuthController {
         response.put("authId", result.getAuthId());
         return  ResponseEntity
                 .ok()
-                .body(new ResponseDTO(HttpStatus.CREATED, "이메일 전송에 성공했습니다.",result));
+                .body(new ResponseDTO(HttpStatus.ACCEPTED, "이메일 전송에 성공했습니다.",result));
     }
 
     //받아야할 내용 인증id, 인증 코드 보내야할 내용 인증 성공여부 
@@ -105,6 +105,6 @@ public class AuthController {
 
         return  ResponseEntity
                 .ok()
-                .body(new ResponseDTO(HttpStatus.ACCEPTED, "이메일인증 성공했습니다.",authService.checkAuthEmail(auth)));
+                .body(new ResponseDTO(HttpStatus.OK, "이메일인증 성공했습니다.",authService.checkAuthEmail(auth)));
     }
 }
