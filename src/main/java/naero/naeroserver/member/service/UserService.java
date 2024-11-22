@@ -181,14 +181,15 @@ public class UserService {
         int userId = userRepository.findByUsername(username).getUserId();
         TblProducer getUser = producerRepository.findByProducerId(userId);
 
+        System.out.println("producer"+producer);
         if (getUser == null) {
             throw new UpdateUserException("사용자를 찾을 수 없습니다.");
         }
 
-        if (producer.getProducerName() != null) {
+        if (!producer.getProducerName().isEmpty()) {
             getUser.setProducerName(producer.getProducerName());
         }
-        if (producer.getProducerPhone() != null) {
+        if (!producer.getProducerPhone().isEmpty()) {
             getUser.setProducerPhone(producer.getProducerPhone());
         }
         if (producer.getDeliveryFee() != null) {
@@ -197,10 +198,10 @@ public class UserService {
         if (producer.getDeliveryCrit() != null) {
             getUser.setDeliveryCrit(producer.getDeliveryCrit());
         }
-        if (producer.getProducerAdd() != null) {
+        if (!producer.getProducerAdd().isEmpty()) {
             getUser.setProducerAdd(producer.getProducerAdd());
         }
-        if (producer.getBusiNo() != null) {
+        if (!producer.getBusiNo().isEmpty()) {
             getUser.setBusiNo(producer.getBusiNo());
         }
 

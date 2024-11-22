@@ -61,11 +61,8 @@ public class UserController {
          Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String authenticatedUsername = authentication.getName();
+        user.setUsername(authenticatedUsername);
 
-        if (!authenticatedUsername.equals(user.getUsername())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ResponseDTO(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.", null));
-        }
         System.out.println("수정요청");
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
                 userService.updateDetail(user)));
@@ -76,6 +73,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
+        System.out.println("왜 너만 0이 돼"+ producer);
         System.out.println("판매자 정보 수정");
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
                 userService.updateProducerDetail(producer, username)));
