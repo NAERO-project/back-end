@@ -8,6 +8,7 @@ import naero.naeroserver.common.ResponseDTO;
 import naero.naeroserver.coupon.dto.CouponDTO;
 import naero.naeroserver.coupon.dto.CouponListDTO;
 import naero.naeroserver.coupon.service.CouponService;
+import naero.naeroserver.member.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,11 @@ public class CouponController {
 
     private static final Logger log = LoggerFactory.getLogger(CouponController.class);
     private final CouponService couponService;
+    private final UserService userService;
 
-    public CouponController(CouponService couponService) {
+    public CouponController(CouponService couponService, UserService userService) {
         this.couponService = couponService;
+        this.userService = userService;
     }
 
     @Operation(summary = "판매자별 쿠폰 리스트 조회 요청", description = "판매자별 쿠폰 리스트 조회가 진행됩니다.", tags = { "CouponController" })
@@ -99,8 +102,15 @@ public class CouponController {
                 .body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
     }
 
-    // TODO
-    // 쿠폰 할인, 포인트 할인 column 추가
-    // 주문 취소 시 쿠폰/포인트 원복
+    @Operation(summary = "쿠폰 리스트 조회 요청", description = "쿠폰 리스트 조회가 진행됩니다.", tags = { "CouponController" })
+    @GetMapping("/coupon/{username}")
+    public ResponseEntity<ResponseDTO> getIssuedCouponList(@PathVariable String username) {
+
+        int userId = userService.getUserIdFromUserName(username);
+
+        return ResponseEntity
+                .ok()
+                .body(new ResponseDTO(HttpStatus.OK, "조회 성공", couponService.getIssuedCouponList(userId)));
+    }
 
 }

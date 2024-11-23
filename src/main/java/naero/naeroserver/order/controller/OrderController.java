@@ -75,6 +75,11 @@ public class OrderController {
     @PostMapping("/order/process")
     public ResponseEntity<ResponseDTO> insertOrder(@RequestBody PayRequestDTO payRequestDTO, @RequestParam("username") String username) {
         try {
+            // 회원 username으로 userId 조회 후 세팅
+            int userId = userService.getUserIdFromUserName(username);
+            payRequestDTO.getOrderDTO().setUserId(userId);
+            payRequestDTO.getPaymentDTO().setUserId(userId);
+
             // PayRequestDTO에서 필요한 정보 추출
             OrderDTO orderDTO = payRequestDTO.getOrderDTO();
             PaymentDTO paymentDTO = payRequestDTO.getPaymentDTO();
