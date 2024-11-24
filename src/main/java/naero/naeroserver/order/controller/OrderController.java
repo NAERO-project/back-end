@@ -85,6 +85,13 @@ public class OrderController {
             PaymentDTO paymentDTO = payRequestDTO.getPaymentDTO();
             Map<Integer, Integer> optionIdAndCount = payRequestDTO.getOptionIds();
 
+            System.out.println("===================================");
+            log.info("Received PayRequestDTO: {}", payRequestDTO);
+            log.info("orderDTO {}", orderDTO);
+            log.info("paymentDTO {}", paymentDTO);
+            log.info("optionIdAndCount {}", optionIdAndCount);
+            System.out.println("===================================");
+
             // OrderService에 추출한 정보를 전달
             OrderDTO createdOrder = (OrderDTO) orderService.insertOrder(orderDTO, paymentDTO, optionIdAndCount);
             return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문 성공", createdOrder));

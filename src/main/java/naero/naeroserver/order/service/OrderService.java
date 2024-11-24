@@ -29,10 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -200,21 +197,23 @@ public class OrderService {
     public Object insertOrder(OrderDTO orderDTO, PaymentDTO paymentDTO, Map<Integer, Integer> optionIds) {
         log.info("[OrderService] insertOrder() 시작");
         log.info("[OrderService] orderDTO : {}", orderDTO);
+        log.info("[OrderService] paymentDTO : {}", paymentDTO);
+        log.info("[OrderService] optionIds : {}", optionIds);
 
         try {
             // 1. 결제 정보 검증
             System.out.println("portoneToken() 시작");
             String portoneToken = getPortOneToken();
             log.info(portoneToken);
-//            Map<String, Object> paymentInfo = validatePayment(paymentDTO.getImp_uid(), orderDTO.getOrderTotalAmount(), portoneToken);
+            Map<String, Object> paymentInfo = validatePayment(paymentDTO.getImpUid(), orderDTO.getOrderTotalAmount(), portoneToken);
             // 결제 검증 후 응답에서 필요한 정보 추가
 //            paymentDTO.setCurrency((String) paymentInfo.get("currency"));
-            paymentDTO.setCurrency("KRW");
+//            paymentDTO.setCurrency("KRW");
             paymentDTO.setPaymentStatus("completed"); // 예: 결제 완료로 설정
-//            paymentDTO.setTransaction_id((String) paymentInfo.get("transaction_id"));
-            paymentDTO.setTransactionId("transid_1223423423422");
-//            paymentDTO.setReceipt_url((String) paymentInfo.get("receipt_url"));
-            paymentDTO.setReceiptUrl("sample_url");
+            paymentDTO.setTransactionId((String) paymentInfo.get("transaction_id"));
+//            paymentDTO.setTransactionId("transid_1223423423422");
+            paymentDTO.setReceiptUrl((String) paymentInfo.get("receipt_url"));
+//            paymentDTO.setReceiptUrl("sample_url");
 
             // 2. 옵션 조회 및 재고 확인
             // <옵션아이디, 옵션 주문수량>
@@ -267,10 +266,12 @@ public class OrderService {
 //            payment.setOrderId(order.getOrderId()); // 저장된 order의 ID 참조
 //            payment.setAmount(orderDTO.getOrderTotalAmount());
 
+            System.out.println("paymentDTO" + paymentDTO);
+
             TblPayment payment = new TblPayment();
             payment.setUserId(paymentDTO.getUserId());
             payment.setOrderId(order.getOrderId());
-            payment.setAmount(order.getOrderTotalAmount());
+            payment.setAmount(orderDTO.getOrderTotalAmount());
             payment.setCurrency(paymentDTO.getCurrency());
             payment.setPaymentMethod(paymentDTO.getPaymentMethod());
             payment.setPaymentStatus(paymentDTO.getPaymentStatus());
@@ -280,7 +281,6 @@ public class OrderService {
             payment.setTransactionId(paymentDTO.getTransactionId());
 
             paymentRepository.save(payment);
-
 
             // 4. 배송 정보 저장
             // 4-1. 주문 정보에서 서로 다른 판매자를 추출하기
@@ -335,7 +335,7 @@ public class OrderService {
             user.setUserPoint(user.getUserPoint() - order.getPointDiscount());
             // 사용된 쿠폰 소진
             TblCouponList usedCoupon = couponListRepository.findTblCouponListByUserIdAndCouponId(user.getUserId(), orderDTO.getCouponId());
-            usedCoupon.setUseStatus("Y");
+            if (usedCoupon != null) usedCoupon.setUseStatus("Y");
 
             return modelMapper.map(order, OrderDTO.class);
         } catch (Exception e) {
@@ -389,6 +389,10 @@ public class OrderService {
                 .defaultHeader("Authorization", portoneToken)
                 .build();
 
+        log.info("impUid: {}", impUid);
+        log.info("portoneToken: {}", portoneToken);
+
+
         try {
             Map<String, Object> paymentData = webClient.get()
                     .uri(impUid)
@@ -396,7 +400,42 @@ public class OrderService {
                     .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                     .block(); // Synchronous operation
 
-            int amount = (int) paymentData.get("amount");
+            log.info("결제 정보 조회 응답: {}", paymentData);
+
+            Map<String, Object> payment = (Map<String, Object>) paymentData.get("payment");
+            if (payment == null) {
+                throw new IllegalStateException("payment 데이터가 없습니다.");
+            }
+
+            // 'transactions' 데이터 가져오기
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> transactions = (List<Map<String, Object>>) payment.get("transactions");
+            if (transactions == null || transactions.isEmpty()) {
+                throw new IllegalStateException("transactions 데이터가 없습니다.");
+            }
+
+            // 첫 번째 transaction 가져오기
+            Map<String, Object> firstTransaction = transactions.get(0);
+            if (firstTransaction == null) {
+                throw new IllegalStateException("첫 번째 transaction 데이터가 없습니다.");
+            }
+
+            // 'amount' 데이터 가져오기
+            @SuppressWarnings("unchecked")
+            Map<String, Object> amountData = (Map<String, Object>) firstTransaction.get("amount");
+            if (amountData == null) {
+                throw new IllegalStateException("amount 데이터가 없습니다.");
+            }
+
+            // 'total' 금액 가져오기
+            Integer amount = (Integer) amountData.get("total");
+            if (amount == null) {
+                throw new IllegalStateException("amount total 값이 없습니다.");
+            }
+
+            log.info("결제된 금액: {}", amount);
+
+            // 금액 검증
             if (orderTotalAmount != amount) {
                 throw new IllegalStateException("결제 금액 불일치: 요청 금액(" + orderTotalAmount + ") vs 결제 금액(" + amount + ")");
             }
@@ -404,10 +443,10 @@ public class OrderService {
             return paymentData;
 
         } catch (WebClientResponseException e) {
-            // Handle HTTP errors
-            throw new IllegalStateException("결제 정보 조회 실패: " + e.getStatusCode() + " " + e.getResponseBodyAsString(), e);
+            log.error("HTTP 에러 발생: {} {}", e.getStatusCode(), e.getResponseBodyAsString());
+            throw new IllegalStateException("결제 정보 조회 실패: " + e.getStatusCode(), e);
         } catch (Exception e) {
-            // Handle other errors
+            log.error("알 수 없는 오류 발생: {}", e.getMessage(), e);
             throw new IllegalStateException("결제 검증 중 알 수 없는 오류 발생", e);
         }
     }
@@ -492,22 +531,22 @@ public class OrderService {
 
         try {
             // 1. 포트원 API를 통해 결제 취소 요청
-//            String portoneToken = getPortOneToken();
-//            String url = "https://api.portone.io/payments/" + paymentId + "/cancel";
-//
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.APPLICATION_JSON);
-//            headers.set("Authorization", portoneToken);
-//
-//            ResponseEntity<Map> response = new RestTemplate().exchange(
-//                    url,
-//                    HttpMethod.POST,
-//                    new HttpEntity<>(headers),
-//                    Map.class
-//            );
+            String portoneToken = getPortOneToken();
+            String url = "https://api.portone.io/payments/" + paymentId + "/cancel";
 
-//            if (response.getStatusCode() == HttpStatus.OK) {
-//                log.info("결제 취소 성공: {}", response.getBody());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("Authorization", portoneToken);
+
+            ResponseEntity<Map> response = new RestTemplate().exchange(
+                    url,
+                    HttpMethod.POST,
+                    new HttpEntity<>(headers),
+                    Map.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                log.info("결제 취소 성공: {}", response.getBody());
 
                 // 2. 결제 정보 업데이트
                 payment.setPaymentStatus("canceled");
@@ -530,10 +569,10 @@ public class OrderService {
                 option.setOptionQuantity(option.getOptionQuantity() + order.getOrderTotalCount());
 
 
-//            } else {
-//                log.error("결제 취소 실패: {}", response.getBody());
-//                throw new IllegalStateException("결제 취소 요청이 실패했습니다.");
-//            }
+            } else {
+                log.error("결제 취소 실패: {}", response.getBody());
+                throw new IllegalStateException("결제 취소 요청이 실패했습니다.");
+            }
         } catch (Exception e) {
             log.error("[OrderService] 결제 취소 중 오류 발생: {}", e.getMessage());
             throw new RuntimeException("결제 취소 중 오류가 발생했습니다.");
