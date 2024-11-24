@@ -42,7 +42,7 @@ public class ResponseService {
         response.setInquiryId(inquiryId);
         response.setResponseTitle(responseDTO.getResponseTitle());
         response.setResponseContent(responseDTO.getResponseContent());
-        response.setProducerId(producer.getProducerId());
+//        response.setProducerId(producer.getProducerId());
 
         responseRepository.save(response);
 

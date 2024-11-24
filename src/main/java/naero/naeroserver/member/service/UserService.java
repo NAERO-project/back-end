@@ -1,18 +1,23 @@
 package naero.naeroserver.member.service;
 
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import naero.naeroserver.auth.repository.RoleRepository;
+import naero.naeroserver.auth.repository.UserRoleRepository;
+import naero.naeroserver.entity.auth.TblUserRole;
 import naero.naeroserver.entity.user.TblProducer;
 import naero.naeroserver.entity.user.TblUser;
+import naero.naeroserver.exception.AuthFailException;
 import naero.naeroserver.exception.DuplicatedUsernameException;
 import naero.naeroserver.exception.LoginFailedException;
 import naero.naeroserver.exception.UpdateUserException;
+import naero.naeroserver.jwt.TokenProvider;
 import naero.naeroserver.manage.DTO.ManageUserDTO;
 import naero.naeroserver.member.dto.ManageSearchDTO;
 import naero.naeroserver.member.dto.ProducerDTO;
 import naero.naeroserver.member.dto.UserDTO;
 import naero.naeroserver.manage.repository.SearchRepository;
 import naero.naeroserver.member.repository.ProducerRepository;
-import naero.naeroserver.member.repository.UserGradeRepository;
 import naero.naeroserver.member.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -29,18 +34,22 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
     private final SearchRepository searchRepository;
     private final ProducerRepository producerRepository;
-    private final AuthService authService;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenProvider tokenProvider;
+    private final UserRoleRepository userRoleRepository;
+    private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, UserGradeRepository userGradeRepository, SearchRepository searchRepository, ProducerRepository producerRepository, AuthService authService) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, SearchRepository searchRepository, ProducerRepository producerRepository, PasswordEncoder passwordEncoder, TokenProvider tokenProvider, UserRoleRepository userRoleRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
-        this.passwordEncoder = passwordEncoder;
         this.searchRepository = searchRepository;
         this.producerRepository = producerRepository;
-        this.authService = authService;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenProvider = tokenProvider;
+        this.userRoleRepository = userRoleRepository;
+        this.roleRepository = roleRepository;
     }
 
     public Object findByusername(String username) {
@@ -71,9 +80,13 @@ public class UserService {
     public Object withdrawUser(String username) {
 
         TblUser getUser = userRepository.findByUsername(username);
-            if (getUser == null) {
+        TblProducer getProducer = producerRepository.findByProducerId(getUser.getUserId());
+        if (getUser == null) {
                 throw new UpdateUserException("사용자를 찾을 수 없습니다.");
-            }
+        }
+        if(getProducer !=null && getProducer.getWithStatus().equals("N")){
+            getProducer.setWithStatus("Y");
+        }
         getUser.setWithStatus("Y");
 
         return modelMapper.map(getUser, UserDTO.class);
@@ -92,6 +105,9 @@ public class UserService {
         }
         if (user.getUserPhone() != null) {
             getUser.setUserPhone(user.getUserPhone());
+        }
+        if(user.getPassword()!=null){
+            getUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
         return modelMapper.map(getUser, UserDTO.class);
@@ -163,6 +179,8 @@ public class UserService {
         }
         getProducer.setWithStatus("Y");
 
+        userRoleRepository.deleteByUserAndRole(getProducer.getUser(), roleRepository.findById(2));
+
     }
 
     //유저와 관리자 공용으로 사용할 것
@@ -173,12 +191,16 @@ public class UserService {
         int userId = userRepository.findByUsername(username).getUserId();
         TblProducer getUser = producerRepository.findByProducerId(userId);
 
+        System.out.println("producer"+producer);
         if (getUser == null) {
             throw new UpdateUserException("사용자를 찾을 수 없습니다.");
         }
 
-        if (producer.getProducerName() != null) {
+        if (!producer.getProducerName().isEmpty()) {
             getUser.setProducerName(producer.getProducerName());
+        }
+        if (!producer.getProducerPhone().isEmpty()) {
+            getUser.setProducerPhone(producer.getProducerPhone());
         }
         if (producer.getDeliveryFee() != null) {
             getUser.setDeliveryFee(producer.getDeliveryFee());
@@ -186,10 +208,10 @@ public class UserService {
         if (producer.getDeliveryCrit() != null) {
             getUser.setDeliveryCrit(producer.getDeliveryCrit());
         }
-        if (producer.getProducerAdd() != null) {
+        if (!producer.getProducerAdd().isEmpty()) {
             getUser.setProducerAdd(producer.getProducerAdd());
         }
-        if (producer.getBusiNo() != null) {
+        if (!producer.getBusiNo().isEmpty()) {
             getUser.setBusiNo(producer.getBusiNo());
         }
 
@@ -198,15 +220,27 @@ public class UserService {
 
     @Transactional
     public Object convertToProducer(ProducerDTO producer, String username) {
-        int userId = userRepository.findByUsername(username).getUserId();
+        TblUser getUser = userRepository.findByUsername(username);
+        int userId = getUser.getUserId();
+
         if(producerRepository.existsById(userId)){
             throw new DuplicatedUsernameException("같은 아이디로 가입된 판매자가 있습니다.");
         }
-        TblProducer newProducer = modelMapper.map(producer, TblProducer.class);
 
-        return producerRepository.save(newProducer);
+        producerRepository.insertProducer(userId);
+        updateProducerDetail(producer,getUser.getUsername());
+        System.out.println(producerRepository.findByProducerId(userId));
+
+        return tokenProvider.generateTokenDTO(userRepository.findById(userId));
     }
 
+    public void checkPassword(String username, String password) {
+        TblUser getuser = userRepository.findByUsername(username);
+        System.out.println(passwordEncoder.matches(password, getuser.getPassword()));
+        if (!passwordEncoder.matches(password, getuser.getPassword())){
+            throw new AuthFailException("비밀번호 인증에 실패했습니다.");
+        }
+    }
 
     public Integer getUserIdFromUserName(String producerUsername) {
         TblUser producer = userRepository.findUserIdByUsername(producerUsername);
