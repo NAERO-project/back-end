@@ -3,6 +3,7 @@ package naero.naeroserver.product.service;
 import naero.naeroserver.common.Criteria;
 import naero.naeroserver.entity.order.TblOrder;
 import naero.naeroserver.entity.product.*;
+import naero.naeroserver.entity.user.TblProducer;
 import naero.naeroserver.product.dto.*;
 import naero.naeroserver.product.repository.*;
 import naero.naeroserver.util.FileUploadUtils;
@@ -36,15 +37,17 @@ public class ProductService {
     private final CategoryMediumRepository categoryMediumRepository;
     private final CategorySmallRepository categorySmallRepository;
     private final OptionRepository optionRepository;
+    private final ProductProducerRepository productProducerRepository;
 
     @Autowired
-    public ProductService(ModelMapper modelMapper, ProductRepository productRepository, ProductSearchRepository productSearchRepository, CategoryMediumRepository categoryMediumRepository, CategorySmallRepository categorySmallRepository, OptionRepository optionRepository) {
+    public ProductService(ModelMapper modelMapper, ProductRepository productRepository, ProductSearchRepository productSearchRepository, CategoryMediumRepository categoryMediumRepository, CategorySmallRepository categorySmallRepository, OptionRepository optionRepository, ProductProducerRepository productProducerRepository) {
         this.modelMapper = modelMapper;
         this.productRepository = productRepository;
         this.productSearchRepository = productSearchRepository;
         this.categoryMediumRepository = categoryMediumRepository;
         this.categorySmallRepository = categorySmallRepository;
         this.optionRepository = optionRepository;
+        this.productProducerRepository = productProducerRepository;
     }
 
     /* 설명. 이미지 파일 저장 경로와 응답용 URL (WebConfig 설정파일 참고) */
@@ -230,11 +233,23 @@ public class ProductService {
     }
 
     /* 브랜드 전체 페이지 상품 조회 (미리보기) */
-    public List<TblProduct> selectProducerProductListPreview() {
+    public List<ProductProducerDTO> selectProducerProductList() {
+        log.info("[ProductService] selectProducerProductListPreview() 시작");
+
+//        Pageable pageable = PageRequest.of(0, 4);
+        List<ProductProducerDTO> previewList = productProducerRepository.findByProducerName();
+
+        log.info("[ProductService] selectProducerProductListPreview() 종료");
+
+        return previewList;
+    }
+
+    /* 브랜드 전체 페이지 상품 조회 (미리보기) */
+    public List<TblProduct> selectProducerProductListPreview(int producerId) {
         log.info("[ProductService] selectProducerProductListPreview() 시작");
 
         Pageable pageable = PageRequest.of(0, 4);
-        List<TblProduct> previewList = productRepository.findByProducerIdWithLimit(2, pageable);
+        List<TblProduct> previewList = productRepository.findByProducerIdWithLimit(producerId, pageable);
 
         log.info("[ProductService] selectProducerProductListPreview() 종료");
 

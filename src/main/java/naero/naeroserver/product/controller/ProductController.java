@@ -139,12 +139,19 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListAboutFashionPreview()));
     }
 
+    @Operation(summary = "전체 브랜드 상품 리스트 미리보기 조회 요청", description = "브랜드별 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/brand/home")
+    public ResponseEntity<ResponseDTO> selectProducerProductList() {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProducerProductList()));
+    }
+
     /* 전체 브랜드 페이지 상품 조회 (미리보기) */
     @Operation(summary = "전체 브랜드 상품 리스트 미리보기 조회 요청", description = "브랜드별 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/producer/preview")
-    public ResponseEntity<ResponseDTO> selectProducerProductListPreview() {
+    @GetMapping("/products/brand/home/{producerId}")
+    public ResponseEntity<ResponseDTO> selectProducerProductListPreview(@PathVariable("producerId") int producerId) {
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProducerProductListPreview()));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProducerProductListPreview(producerId)));
     }
 
     /* 브랜드별 페이지 전체 상품 조회 (페이징) */
