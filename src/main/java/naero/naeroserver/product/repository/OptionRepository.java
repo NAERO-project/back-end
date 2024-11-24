@@ -16,4 +16,8 @@ public interface OptionRepository extends JpaRepository<TblOption, Integer> {
 
     // 옵션 아이디로 옵션(상품) 조회
     TblOption findTblOptionByOptionId(Integer optionId);
+
+    // 옵션아이디로 상품아이디 조회
+    TblOption findProductIdByOptionId(int optionId);
+
 }

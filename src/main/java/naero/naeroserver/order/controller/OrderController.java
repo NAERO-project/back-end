@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpSession;
 import naero.naeroserver.cart.dto.CartDTO;
 import naero.naeroserver.cart.repository.CartRepository;
+import naero.naeroserver.common.Criteria;
+import naero.naeroserver.common.PageDTO;
+import naero.naeroserver.common.PagingResponseDTO;
 import naero.naeroserver.common.ResponseDTO;
 import naero.naeroserver.entity.cart.TblCart;
 import naero.naeroserver.member.service.UserService;
@@ -139,10 +142,23 @@ public class OrderController {
     @Operation(summary = "회원 주문 리스트 조회 요청",
             description = "해당 회원의 주문건에 대한 리스트 조회가 진행됩니다.",
             tags = { "OrderController" })
-    @GetMapping("/order/{userId}")
-    public ResponseEntity<ResponseDTO> getOrderList(@PathVariable String userId) {
+    @GetMapping("/order/{username}")
+    public ResponseEntity<ResponseDTO> getOrderList(@PathVariable String username,
+                                                    @RequestParam(name = "offset", defaultValue = "1") String offset) {
+
+        // 회원 username으로 userId 조회 후 세팅
+        int userId = userService.getUserIdFromUserName(username);
+
+        // 페이징 처리
+        int total = orderService.selectOrderListPage(userId);
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 3);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+        pagingResponseDTO.setData(orderService.selectOrderList(userId, cri));
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
+
         return ResponseEntity.ok()
-                .body(new ResponseDTO(HttpStatus.OK, "주문 리스트 조회 성공", orderService.selectOrderList(userId)));
+                .body(new ResponseDTO(HttpStatus.OK, "주문 리스트 조회 성공", pagingResponseDTO));
     }
 
     @Operation(summary = "회원 주문 상세 조회 요청",
@@ -166,14 +182,27 @@ public class OrderController {
     @Operation(summary = "해당 판매자의 주문 리스트 조회 요청",
             description = "해당 판매자의 주문건에 대한 리스트 조회가 진행됩니다.",
             tags = { "OrderController" })
-    @GetMapping("/order/seller/{producerId}")
-    public ResponseEntity<ResponseDTO> getOrderListByProducer(@PathVariable String producerId) {
+    @GetMapping("/order/seller/{producerUsername}")
+    public ResponseEntity<ResponseDTO> getOrderListByProducer(@RequestParam(name = "offset", defaultValue = "1") String offset,
+                                                              @PathVariable String producerUsername) {
+
+        int producerId = userService.getUserIdFromUserName(producerUsername);
+
+        int total = orderService.getOrderListByProducer(producerId);
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 15);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+
+        pagingResponseDTO.setData(orderService.getOrderListByProducerPaging(producerId, cri));
+
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
+
         return ResponseEntity.ok()
                 .body(
                         new ResponseDTO(
                                 HttpStatus.OK,
                                 "해당 판매자의 주문리스트 조회 성공",
-                                orderService.getOrderListByProducer(producerId)));
+                                pagingResponseDTO));
     }
 
     @Operation(summary = "관리자용 전체 주문 리스트 조회 요청",

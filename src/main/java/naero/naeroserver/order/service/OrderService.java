@@ -1,6 +1,7 @@
 package naero.naeroserver.order.service;
 
 import naero.naeroserver.cart.dto.CartDTO;
+import naero.naeroserver.common.Criteria;
 import naero.naeroserver.coupon.repository.CouponListRepository;
 import naero.naeroserver.entity.coupon.TblCouponList;
 import naero.naeroserver.entity.order.TblAddress;
@@ -20,6 +21,7 @@ import naero.naeroserver.order.repository.AddressRepository;
 import naero.naeroserver.order.repository.OrderDetailRepository;
 import naero.naeroserver.order.repository.OrderRepository;
 import naero.naeroserver.order.repository.PaymentRepository;
+import naero.naeroserver.product.dto.ProductOptionDTO;
 import naero.naeroserver.product.repository.OptionRepository;
 import naero.naeroserver.product.repository.ProductRepository;
 import naero.naeroserver.shipping.repository.TblShippingRepository;
@@ -29,6 +31,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -201,19 +207,19 @@ public class OrderService {
         log.info("[OrderService] optionIds : {}", optionIds);
 
         try {
-            // 1. 결제 정보 검증
-            System.out.println("portoneToken() 시작");
-            String portoneToken = getPortOneToken();
-            log.info(portoneToken);
-            Map<String, Object> paymentInfo = validatePayment(paymentDTO.getImpUid(), orderDTO.getOrderTotalAmount(), portoneToken);
-            // 결제 검증 후 응답에서 필요한 정보 추가
-//            paymentDTO.setCurrency((String) paymentInfo.get("currency"));
-//            paymentDTO.setCurrency("KRW");
-            paymentDTO.setPaymentStatus("completed"); // 예: 결제 완료로 설정
-            paymentDTO.setTransactionId((String) paymentInfo.get("transaction_id"));
-//            paymentDTO.setTransactionId("transid_1223423423422");
-            paymentDTO.setReceiptUrl((String) paymentInfo.get("receipt_url"));
-//            paymentDTO.setReceiptUrl("sample_url");
+            if (!Objects.equals(paymentDTO.getPaymentMethod(), "BANK_TRANSFER")) {
+                // 1. 결제 정보 검증
+                String portoneToken = getPortOneToken();
+                log.info(portoneToken);
+                Map<String, Object> paymentInfo = validatePayment(paymentDTO.getImpUid(), orderDTO.getOrderTotalAmount(), portoneToken);
+                // 결제 검증 후 응답에서 필요한 정보 추가
+                paymentDTO.setTransactionId((String) paymentInfo.get("transaction_id"));
+                paymentDTO.setReceiptUrl((String) paymentInfo.get("receipt_url"));
+                paymentDTO.setPaymentStatus("completed"); // 결제 완료로 설정
+            } else {
+                paymentDTO.setPaymentStatus("pending"); // 결제 완료로 설정
+            }
+
 
             // 2. 옵션 조회 및 재고 확인
             // <옵션아이디, 옵션 주문수량>
@@ -582,10 +588,19 @@ public class OrderService {
     // ================================================================================================================
 
     // 마이페이지 내 구매자별 주문 리스트 조회 (최신순으로)
-    public Object selectOrderList(String userId) {
-        List<TblOrder> orderList = orderRepository.findByUserOrderByRecent(Integer.valueOf(userId));
+    public int selectOrderListPage(int userId) {
+        List<TblOrder> orderList = orderRepository.findByUserOrderByRecent(userId);
 
-        log.info("[OrderService] orderList {}", orderList);
+        return orderList.size();
+    }
+
+    public Object selectOrderList(int userId, Criteria cri) {
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("orderId").descending());
+
+        Page<TblOrder> result = orderRepository.findByUserOrderByRecentPaging(userId, paging);
+        List<TblOrder> orderList = (List<TblOrder>)result.getContent();
 
         return orderList.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
     }
@@ -615,12 +630,21 @@ public class OrderService {
     }
 
     // 해당 판매자의 주문 건 전체 조회
-    public Object getOrderListByProducer(String producerId) {
-        List<TblOrder> orderListByProducer = orderRepository.findOrdersByProducerId(Integer.valueOf(producerId));
+    public int getOrderListByProducer(int producerId) {
+        List<TblOrder> orderListByProducer = orderRepository.findOrdersByProducerId(producerId);
 
-        log.info("[OrderService] orderListByProducer {}", orderListByProducer);
+        return orderListByProducer.size();
+    }
 
-        return orderListByProducer.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
+    public Object getOrderListByProducerPaging(int producerId, Criteria cri) {
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("orderId").descending());
+
+        Page<TblOrder> result = orderRepository.findOrdersByProducerId(producerId, paging);
+        List<TblOrder> orderList = result.getContent();
+
+        return orderList.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
     }
 
     // 관리자 모든 주문 건 조회(최신순으로)

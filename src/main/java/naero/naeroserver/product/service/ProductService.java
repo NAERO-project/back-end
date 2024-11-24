@@ -506,4 +506,8 @@ public class ProductService {
         return categoryMedium.stream().map(small -> modelMapper.map(small, CategorySmallDTO.class))
                 .collect(Collectors.toList());
     }
+
+    public Object selectProductIdByOptionId(int optionId) {
+        return optionRepository.findProductIdByOptionId(optionId).getProductId();
+    }
 }

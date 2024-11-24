@@ -243,7 +243,7 @@ public class UserService {
     }
 
     public Integer getUserIdFromUserName(String producerUsername) {
-        TblUser producer = userRepository.findUserIdByUsername(producerUsername);
-        return producer.getUserId();
+        TblUser user = userRepository.findUserIdByUsername(producerUsername);
+        return user.getUserId();
     }
 }

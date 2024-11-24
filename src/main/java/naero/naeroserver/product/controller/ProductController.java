@@ -285,4 +285,11 @@ public class ProductController {
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "연관된 소분류 조회 성공", productService.selectSmallListByMedium((mediumCategory))));
     }
+
+    @Operation(summary = "옵션아이디로 상품아이디 조회 요청", description = "옵션아이디로 상품아이디 조회가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/option-id/{optionId}")
+    public ResponseEntity<ResponseDTO> selectProductIdByOptionId(@PathVariable("optionId") int optionId) {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductIdByOptionId(optionId)));
+    }
 }
