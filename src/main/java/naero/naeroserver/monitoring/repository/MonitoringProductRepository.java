@@ -33,7 +33,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
     List<Map<String, Double>> findCrossByProductAndQuantity(@Param("parsedStartInstant") Instant parsedStartInstant,
                                                             @Param("parsedEndInstant") Instant parsedEndInstant);
 
-    @Query("SELECT new map(DATE(od.createdAt) AS order_date, SUM(od.amount) AS total_amount) " +
+    @Query("SELECT new map(DATE(od.createdAt) AS count_date, SUM(od.amount) AS value) " +
             "FROM TblProduct pt " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
@@ -46,7 +46,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
                                                           @Param("parsedEndInstant") Instant parsedEndInstant,
                                                           @Param("specification") String specification);
 
-    @Query("SELECT new map(DATE(od.createdAt) AS order_date, SUM(od.count) AS total_count) " +
+    @Query("SELECT new map(DATE(od.createdAt) AS count_date, SUM(od.count) AS value) " +
             "FROM TblProduct pt " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
@@ -69,7 +69,7 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
     List<Map<String, Double>> findCrossByProductAndLike(@Param("parsedStartInstant") Instant parsedStartInstant,
                                                         @Param("parsedEndInstant") Instant parsedEndInstant);
 
-    @Query("SELECT new map(DATE(lpt.productLikeDate) AS like_date, COUNT(pt.productName) AS total_like) " +
+    @Query("SELECT new map(DATE(lpt.productLikeDate) AS count_date, COUNT(pt.productName) AS value) " +
             "FROM TblProduct pt " +
             "LEFT JOIN TblLikedProduct lpt ON pt.productId = lpt.productId " +
 //            "WHERE (lpt.productLikeDate IS NOT NULL AND lpt.productLikeDate BETWEEN :parsedStartInstant AND :parsedEndInstant) " +

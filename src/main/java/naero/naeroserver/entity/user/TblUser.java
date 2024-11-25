@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import naero.naeroserver.entity.auth.TblUserRole;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -46,7 +47,7 @@ public class TblUser {
     private Integer userPoint;
 
     @Column(name = "enroll_date")
-    private Date enrollDate;
+    private Instant enrollDate;
 
     @Size(max = 1)
     @ColumnDefault("'N'")
@@ -117,11 +118,11 @@ public class TblUser {
         this.userPoint = userPoint;
     }
 
-    public Date getEnrollDate() {
+    public Instant getEnrollDate() {
         return enrollDate;
     }
 
-    public void setEnrollDate(Date enrollDate) {
+    public void setEnrollDate(Instant enrollDate) {
         this.enrollDate = enrollDate;
     }
 

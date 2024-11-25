@@ -40,8 +40,8 @@ public class CrossStatProducer {
             double value = stat.get(valueKey);
             if (i < 3) {
                 result.add(Map.of(
-                        "producer_name", stat.get(producerKey),
-                        valueKey, value,
+                        "name", stat.get(producerKey),
+                        "value", value,
                         "ratio", value / overallTotal
                 ));
             } else {
@@ -52,7 +52,7 @@ public class CrossStatProducer {
         if (othersTotal > 0) {
             result.add(Map.of(
                     "name", "others",
-                    valueKey, othersTotal,
+                    "value", othersTotal,
                     "ratio", othersTotal / overallTotal
             ));
         }
