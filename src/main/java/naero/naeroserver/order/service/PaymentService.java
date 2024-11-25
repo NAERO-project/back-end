@@ -1,8 +1,11 @@
 package naero.naeroserver.order.service;
 
+import naero.naeroserver.entity.order.TblOrder;
 import naero.naeroserver.entity.order.TblPayment;
 import naero.naeroserver.order.dto.OrderDTO;
+import naero.naeroserver.order.dto.PaymentDTO;
 import naero.naeroserver.order.repository.PaymentRepository;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +26,21 @@ public class PaymentService {
 
     private static final String API_KEY = "your-api-key";
     private static final String SECRET_KEY = "your-secret-key";
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public PaymentService(PaymentRepository paymentRepository) {
+    public PaymentService(PaymentRepository paymentRepository, ModelMapper modelMapper) {
         this.paymentRepository = paymentRepository;
+        this.modelMapper = modelMapper;
+    }
+
+    // 주문번호로 결제 정보 조회
+    public Object getPaymentDetail(String orderId) {
+        TblPayment payment = paymentRepository.findByOrderId(Integer.valueOf(orderId));
+
+        System.out.println("왜 createAt 없어" + payment.getCreatedAt());
+
+        return modelMapper.map(payment, PaymentDTO.class);
     }
 
 //    // PortOne 결제 처리 메소드

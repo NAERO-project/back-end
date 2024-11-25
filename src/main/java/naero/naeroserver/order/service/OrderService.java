@@ -522,66 +522,81 @@ public class OrderService {
 
     // 결제 취소
     @Transactional
-    public void cancelPayment(String paymentId) {
-        log.info("[OrderService] cancelPayment() 시작, paymentId: {}", paymentId);
+    public void cancelPayment(String orderId) {
+        log.info("[OrderService] cancelPayment() 시작, orderId: {}", orderId);
 
-        TblPayment payment = paymentRepository.findById(Integer.valueOf(paymentId))
-                .orElseThrow(() -> new IllegalArgumentException("결제 정보가 존재하지 않습니다."));
-
-        TblOrder order = orderRepository.findById(payment.getOrderId())
+        TblOrder order = orderRepository.findById(Integer.valueOf(orderId))
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보가 존재하지 않습니다."));
+
+        TblPayment payment = paymentRepository.findByOrderId(Integer.valueOf(orderId));
 
         if (!order.getDeliveryStatus().equals("pending") || order.getOrderStatus().equals("canceled")) {
             throw new IllegalStateException("취소 불가한 주문 건 입니다.");
         }
 
         try {
-            // 1. 포트원 API를 통해 결제 취소 요청
-            String portoneToken = getPortOneToken();
-            String url = "https://api.portone.io/payments/" + paymentId + "/cancel";
+            if (!payment.getPaymentMethod().equals("BANK_TRANSFER")) {
+                // 1. 포트원 API를 통해 결제 취소 요청
+                String portoneToken = getPortOneToken();
+                String url = "https://api.portone.io/payments/" + payment.getImpUid() + "/cancel";
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("Authorization", portoneToken);
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                headers.set("Authorization", portoneToken);
 
-            ResponseEntity<Map> response = new RestTemplate().exchange(
-                    url,
-                    HttpMethod.POST,
-                    new HttpEntity<>(headers),
-                    Map.class
-            );
+                // 요청 본문 생성
+                Map<String, String> body = new HashMap<>();
+                body.put("reason", "고객 요청에 의한 취소");
 
-            if (response.getStatusCode() == HttpStatus.OK) {
-                log.info("결제 취소 성공: {}", response.getBody());
+                HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);
 
-                // 2. 결제 정보 업데이트
-                payment.setPaymentStatus("canceled");
-                payment.setUpdatedAt(Instant.now());
+                ResponseEntity<Map> response = new RestTemplate().exchange(
+                        url,
+                        HttpMethod.POST,
+                        entity,
+                        Map.class
+                );
 
-                // 3. 주문 정보 업데이트
-                order.setOrderStatus("canceled");
-                order.setUpdatedAt(Instant.now());
-
-                // 포인트 원복
-                TblUser user = userRepository.findTblUserByUserId(order.getUserId());
-                user.setUserPoint(user.getUserPoint() + order.getPointDiscount());
-                // 쿠폰 원복
-                TblCouponList coupon = couponListRepository.findTblCouponListByUserIdAndCouponId(user.getUserId(), order.getCouponId());
-                coupon.setUseStatus("N");
-
-                // 4. 상품 정보(재고 원복) 업데이트
-                TblOrderDetail orderProduct = orderDetailRepository.findByOrderId(order.getOrderId());
-                TblOption option = optionRepository.findTblOptionByOptionId(orderProduct.getOptionId());
-                option.setOptionQuantity(option.getOptionQuantity() + order.getOrderTotalCount());
-
-
-            } else {
-                log.error("결제 취소 실패: {}", response.getBody());
-                throw new IllegalStateException("결제 취소 요청이 실패했습니다.");
+                if (response.getStatusCode() == HttpStatus.OK) {
+                    log.info("결제 취소 성공: {}", response.getBody());
+                } else {
+                    log.error("결제 취소 실패: {}", response.getBody());
+                    throw new IllegalStateException("결제 취소 요청이 실패했습니다.");
+                }
             }
+
+            // 2. 결제 정보 업데이트
+            payment.setPaymentStatus("canceled");
+            payment.setUpdatedAt(Instant.now());
+
+            // 3. 주문 정보 업데이트
+            order.setOrderStatus("canceled");
+            order.setDeliveryStatus("canceled");
+            order.setUpdatedAt(Instant.now());
+
+            TblUser user = userRepository.findTblUserByUserId(order.getUserId());
+
+            // 4. 포인트 원복
+            if (order.getPointDiscount() != 0) {
+                user.setUserPoint(user.getUserPoint() + order.getPointDiscount());
+            }
+
+            // 5. 쿠폰 상태 원복
+            TblCouponList coupon = couponListRepository.findTblCouponListByUserIdAndCouponId(
+                    user.getUserId(), order.getCouponId());
+
+            if (coupon != null) {
+                coupon.setUseStatus("N");
+            }
+
+            // 6. 상품 재고 원복
+            TblOrderDetail orderProduct = orderDetailRepository.findByOrderId(order.getOrderId());
+            TblOption option = optionRepository.findTblOptionByOptionId(orderProduct.getOptionId());
+            option.setOptionQuantity(option.getOptionQuantity() + order.getOrderTotalCount());
+
         } catch (Exception e) {
-            log.error("[OrderService] 결제 취소 중 오류 발생: {}", e.getMessage());
-            throw new RuntimeException("결제 취소 중 오류가 발생했습니다.");
+            log.error("[OrderService] 결제 취소 중 오류 발생: {}", e.getMessage(), e);
+            throw new RuntimeException("결제 취소 중 오류가 발생했습니다.", e);
         }
     }
 
