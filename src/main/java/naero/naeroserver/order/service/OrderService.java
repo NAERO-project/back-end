@@ -615,11 +615,24 @@ public class OrderService {
         return modelMapper.map(order, OrderDTO.class);
     }
 
-    // 주문 리스트 내 주문번호 별 주문 상품 리스트 조회(구매자, 판매자, 관리자 모두 해당)
+    // 주문 리스트 내 주문번호 별 주문 상품 리스트 조회(구매자, 관리자 모두 해당)
     public Object getOrderDetailList(String orderId) {
         List<OrderDetailProductDTO> orderDetails = orderDetailRepository.findOrderDetailWithProductByOrder(Integer.valueOf(orderId));
 
         log.info("[OrderService] orderDetails {}", orderDetails);
+
+        for(int i = 0 ; i < orderDetails.size() ; i++) {
+            orderDetails.get(i).setProductImg(IMG_URL + orderDetails.get(i).getProductImg());
+            orderDetails.get(i).setProductThumbnail(IMG_URL + orderDetails.get(i).getProductThumbnail());
+        }
+
+        return orderDetails;
+    }
+
+    // 주문 리스트 내 주문번호 별 해당 판매자의 주문 상품 리스트 조회(판매자 해당)
+    public Object getProducerOrderDetailList(String orderId, int producerId) {
+        List<OrderDetailProductDTO> orderDetails = orderDetailRepository
+                .findProducerOrderDetailWithProductByOrder(Integer.valueOf(orderId), producerId);
 
         for(int i = 0 ; i < orderDetails.size() ; i++) {
             orderDetails.get(i).setProductImg(IMG_URL + orderDetails.get(i).getProductImg());
@@ -643,7 +656,6 @@ public class OrderService {
 
         Page<TblOrder> result = orderRepository.findOrdersByProducerId(producerId, paging);
         List<TblOrder> orderList = result.getContent();
-
         return orderList.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
     }
 

@@ -9,8 +9,9 @@ public class OrderDetailProductDTO {
     private String productImg;
     private String productThumbnail;
     private Integer smallCategoryId;
+    private Integer shippingId;
 
-    public OrderDetailProductDTO(Integer orderDetailId, Integer optionId, Integer count, Integer amount, String productName, String productImg, String productThumbnail, Integer smallCategoryId) {
+    public OrderDetailProductDTO(Integer orderDetailId, Integer optionId, Integer count, Integer amount, String productName, String productImg, String productThumbnail, Integer smallCategoryId, Integer shippingId) {
         this.orderDetailId = orderDetailId;
         this.optionId = optionId;
         this.count = count;
@@ -19,6 +20,7 @@ public class OrderDetailProductDTO {
         this.productImg = productImg;
         this.productThumbnail = productThumbnail;
         this.smallCategoryId = smallCategoryId;
+        this.shippingId = shippingId;
     }
 
     // Getters and setters
@@ -86,6 +88,14 @@ public class OrderDetailProductDTO {
         this.productThumbnail = productThumbnail;
     }
 
+    public Integer getShippingId() {
+        return shippingId;
+    }
+
+    public void setShippingId(Integer shippingId) {
+        this.shippingId = shippingId;
+    }
+
     @Override
     public String toString() {
         return "OrderDetailProductDTO{" +
@@ -97,6 +107,7 @@ public class OrderDetailProductDTO {
                 ", productImg='" + productImg + '\'' +
                 ", productThumbnail='" + productThumbnail + '\'' +
                 ", smallCategoryId=" + smallCategoryId +
+                ", shippingId=" + shippingId +
                 '}';
     }
 }

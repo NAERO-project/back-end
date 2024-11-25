@@ -179,6 +179,20 @@ public class OrderController {
                 .body(new ResponseDTO(HttpStatus.OK, "주문 상품 리스트 조회 성공", orderService.getOrderDetailList(orderId)));
     }
 
+    @Operation(summary = "판매자에 해당 되는 회원 주문 상품 리스트 조회 요청",
+            description = "판매자에 해당 되는 회원의 주문건에 대한 상품 리스트 조회가 진행됩니다.",
+            tags = { "OrderController" })
+    @GetMapping("/order/seller/product/{orderId}")
+    public ResponseEntity<ResponseDTO> getProducerOrderDetailList(@PathVariable String orderId,
+                                                                  @RequestParam("producerUsername") String producerUsername) {
+
+        int producerId = userService.getUserIdFromUserName(producerUsername);
+
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, "주문 상품 리스트 조회 성공",
+                        orderService.getProducerOrderDetailList(orderId, producerId)));
+    }
+
     @Operation(summary = "해당 판매자의 주문 리스트 조회 요청",
             description = "해당 판매자의 주문건에 대한 리스트 조회가 진행됩니다.",
             tags = { "OrderController" })
