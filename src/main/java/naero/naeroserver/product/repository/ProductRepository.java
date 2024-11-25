@@ -3,13 +3,17 @@ package naero.naeroserver.product.repository;
 import naero.naeroserver.entity.product.TblCategoryLarge;
 import naero.naeroserver.entity.product.TblCategoryMedium;
 import naero.naeroserver.entity.product.TblProduct;
+import naero.naeroserver.entity.user.TblProducer;
+import naero.naeroserver.product.dto.ProducerProductDTO;
 import naero.naeroserver.product.dto.ProductOptionDTO;
 import naero.naeroserver.order.dto.OrderPageProductDTO;
+import naero.naeroserver.product.dto.ProductProducerDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -68,6 +72,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
     //    브랜드 전체 페이지 상품 조회 (미리보기)
     @Query("SELECT p " +
             "FROM TblProduct p " +
+            "JOIN TblProducer pi ON p.producerId = pi.producerId " +
             "WHERE p.producerId = :producerId " +
             "AND p.productCheck = 'Y' " +
             "ORDER BY p.productCreateAt desc ")
