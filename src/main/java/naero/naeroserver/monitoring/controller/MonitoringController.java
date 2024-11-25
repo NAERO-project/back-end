@@ -89,7 +89,7 @@ public class MonitoringController {
             tags = { "MonitoringController" })
     @GetMapping("/monitoring/sales-statistics")
     public ResponseEntity<ResponseDTO> selectSalesStatistics(
-            @RequestParam(defaultValue = "브랜드") String categoryOption,
+            @RequestParam(defaultValue = "상품") String categoryOption,
             @RequestParam(defaultValue = "매출액") String indexOption,
             @RequestParam(required = false, defaultValue = "") String startDate,
             @RequestParam(required = false, defaultValue = "") String endDate,
@@ -103,7 +103,7 @@ public class MonitoringController {
             tags = { "MonitoringController" })
     @GetMapping("/monitoring/liked-statistics")
     public ResponseEntity<ResponseDTO> selectLikedStatisticsCross(
-            @RequestParam(defaultValue = "브랜드") String categoryOption,
+            @RequestParam(defaultValue = "상품") String categoryOption,
             @RequestParam(required = false, defaultValue = "") String startDate,
             @RequestParam(required = false, defaultValue = "") String endDate,
             @RequestParam(required = false) String specification
