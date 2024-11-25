@@ -40,8 +40,8 @@ public class CrossStatProduct {
             double value = stat.get(valueKey);
             if (i < 3) {
                 result.add(Map.of(
-                        "product_name", stat.get(productKey),
-                        valueKey, value,
+                        "name", stat.get(productKey),
+                        "value", value,
                         "ratio", value / overallTotal
                 ));
             } else {
@@ -51,8 +51,8 @@ public class CrossStatProduct {
 
         if (othersTotal > 0) {
             result.add(Map.of(
-                    "product_name", "others",
-                    valueKey, othersTotal,
+                    "name", "others",
+                    "value", othersTotal,
                     "ratio", othersTotal / overallTotal
             ));
         }
