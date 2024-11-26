@@ -33,23 +33,19 @@ public class TblPayment {
     private String paymentMethod;
 
     @Size(max = 20)
-    @NotNull
-    @Column(name = "payment_status", nullable = false, length = 20)
+    @Column(name = "payment_status", length = 20)
     private String paymentStatus;
 
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "imp_uid", nullable = false, length = 20)
+    @Size(max = 100)
+    @Column(name = "imp_uid", length = 20)
     private String impUid;
 
     @Size(max = 50)
-    @NotNull
-    @Column(name = "merchant_uid", nullable = false, length = 50)
+    @Column(name = "merchant_uid", length = 50)
     private String merchantUid;
 
     @Size(max = 50)
-    @NotNull
-    @Column(name = "transaction_id", nullable = false, length = 50)
+    @Column(name = "transaction_id", length = 50)
     private String transactionId;
 
     @Lob

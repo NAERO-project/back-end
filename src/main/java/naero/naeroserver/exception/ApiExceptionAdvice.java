@@ -48,6 +48,12 @@ public class ApiExceptionAdvice {
 				.body(new ApiExceptionDTO(HttpStatus.BAD_REQUEST, e.getMessage()));
 	}
 
+	@ExceptionHandler(AuthFailException.class)
+	public ResponseEntity<ApiExceptionDTO> exceptionHandler(AuthFailException e) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new ApiExceptionDTO(HttpStatus.BAD_REQUEST, e.getMessage()));
+	}
+
 
 }
 

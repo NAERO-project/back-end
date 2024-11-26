@@ -259,10 +259,10 @@ INSERT INTO tbl_order_detail (option_id, count, amount,
 #     ();
 
 INSERT INTO tbl_banner (banner_thumbnail, banner_img, banner_url,
-                        banner_create_at, banner_delete_at, producer_id, banner_accept_at, approver_id)VALUES
-                                                                                                           ('banner_thum_image001.png', 'banner_image001.png', 'naver.com','2024-11-12 00:00:00', '2024-12-30 00:00:00',1, '2024-11-11 00:00:00', 8 ),
-                                                                                                           ('banner_thum_image002.png', 'banner_image002.png', 'naver.com','2024-11-20 00:00:00', '2024-12-30 00:00:00',1, '2024-11-11 00:00:00', 8 ),
-                                                                                                           ('banner_thum_image003.png', 'banner_image003.png', 'naver.com','2024-11-11 00:00:00', '2024-12-30 00:00:00',1, NULL, NULL );
+                        banner_create_at, banner_accept_status, banner_delete_at, producer_id, banner_accept_at, approver_id)VALUES
+                                                                                                           ('banner_thum_image001.png', '5b42c11407734c42a253883d237c554e.png', 'naver.com','2024-11-12 00:00:00', 'Y','2024-12-30 00:00:00',  1, '2024-11-11 00:00:00', 8 ),
+                                                                                                           ('banner_thum_image002.png', 'banner_image002.png', 'naver.com','2024-11-20 00:00:00', 'N', '2024-12-30 00:00:00', 1, '2024-11-11 00:00:00', 8 ),
+                                                                                                           ('banner_thum_image003.png', 'banner_image003.png', 'naver.com','2024-11-11 00:00:00','N', '2024-12-30 00:00:00', 1, NULL, NULL );
 INSERT INTO tbl_faq (faq_title, faq_content)VALUES
                                                 ('회원가입은 어떻게 하나요?','회원가입은 하면되는 거죠'),
                                                 ('아이디를 잃어버렸어요.','아이디는 이메일 인증하면 찾을 수 있습니다.')

@@ -51,7 +51,7 @@ public class TblProduct {
     private Integer producerId;
 
     @OneToMany
-    @JoinColumn(name="product_id")
+    @JoinColumn(name = "product_id", insertable = false, updatable = false) // 읽기 전용
     private List<TblOption> options;
 
     @NotNull

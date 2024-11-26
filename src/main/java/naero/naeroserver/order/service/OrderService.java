@@ -1,6 +1,7 @@
 package naero.naeroserver.order.service;
 
 import naero.naeroserver.cart.dto.CartDTO;
+import naero.naeroserver.common.Criteria;
 import naero.naeroserver.coupon.repository.CouponListRepository;
 import naero.naeroserver.entity.coupon.TblCouponList;
 import naero.naeroserver.entity.order.TblAddress;
@@ -20,6 +21,7 @@ import naero.naeroserver.order.repository.AddressRepository;
 import naero.naeroserver.order.repository.OrderDetailRepository;
 import naero.naeroserver.order.repository.OrderRepository;
 import naero.naeroserver.order.repository.PaymentRepository;
+import naero.naeroserver.product.dto.ProductOptionDTO;
 import naero.naeroserver.product.repository.OptionRepository;
 import naero.naeroserver.product.repository.ProductRepository;
 import naero.naeroserver.shipping.repository.TblShippingRepository;
@@ -29,10 +31,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -200,21 +203,23 @@ public class OrderService {
     public Object insertOrder(OrderDTO orderDTO, PaymentDTO paymentDTO, Map<Integer, Integer> optionIds) {
         log.info("[OrderService] insertOrder() 시작");
         log.info("[OrderService] orderDTO : {}", orderDTO);
+        log.info("[OrderService] paymentDTO : {}", paymentDTO);
+        log.info("[OrderService] optionIds : {}", optionIds);
 
         try {
-            // 1. 결제 정보 검증
-            System.out.println("portoneToken() 시작");
-            String portoneToken = getPortOneToken();
-            log.info(portoneToken);
-//            Map<String, Object> paymentInfo = validatePayment(paymentDTO.getImp_uid(), orderDTO.getOrderTotalAmount(), portoneToken);
-            // 결제 검증 후 응답에서 필요한 정보 추가
-//            paymentDTO.setCurrency((String) paymentInfo.get("currency"));
-            paymentDTO.setCurrency("KRW");
-            paymentDTO.setPaymentStatus("completed"); // 예: 결제 완료로 설정
-//            paymentDTO.setTransaction_id((String) paymentInfo.get("transaction_id"));
-            paymentDTO.setTransactionId("transid_1223423423422");
-//            paymentDTO.setReceipt_url((String) paymentInfo.get("receipt_url"));
-            paymentDTO.setReceiptUrl("sample_url");
+            if (!Objects.equals(paymentDTO.getPaymentMethod(), "BANK_TRANSFER")) {
+                // 1. 결제 정보 검증
+                String portoneToken = getPortOneToken();
+                log.info(portoneToken);
+                Map<String, Object> paymentInfo = validatePayment(paymentDTO.getImpUid(), orderDTO.getOrderTotalAmount(), portoneToken);
+                // 결제 검증 후 응답에서 필요한 정보 추가
+                paymentDTO.setTransactionId((String) paymentInfo.get("transaction_id"));
+                paymentDTO.setReceiptUrl((String) paymentInfo.get("receipt_url"));
+                paymentDTO.setPaymentStatus("completed"); // 결제 완료로 설정
+            } else {
+                paymentDTO.setPaymentStatus("pending"); // 결제 완료로 설정
+            }
+
 
             // 2. 옵션 조회 및 재고 확인
             // <옵션아이디, 옵션 주문수량>
@@ -267,10 +272,12 @@ public class OrderService {
 //            payment.setOrderId(order.getOrderId()); // 저장된 order의 ID 참조
 //            payment.setAmount(orderDTO.getOrderTotalAmount());
 
+            System.out.println("paymentDTO" + paymentDTO);
+
             TblPayment payment = new TblPayment();
             payment.setUserId(paymentDTO.getUserId());
             payment.setOrderId(order.getOrderId());
-            payment.setAmount(order.getOrderTotalAmount());
+            payment.setAmount(orderDTO.getOrderTotalAmount());
             payment.setCurrency(paymentDTO.getCurrency());
             payment.setPaymentMethod(paymentDTO.getPaymentMethod());
             payment.setPaymentStatus(paymentDTO.getPaymentStatus());
@@ -281,13 +288,12 @@ public class OrderService {
 
             paymentRepository.save(payment);
 
-
             // 4. 배송 정보 저장
             // 4-1. 주문 정보에서 서로 다른 판매자를 추출하기
             // 중복을 방지하기 위해 Set 데이터 타입으로 선언
             Set<Integer> producerSet = new HashSet<>();
 
-            // 프런트에서 전달 받은 optioIds 파라미터에서 판매자 ID를 producerSet에 저장
+            // 프런트에서 전달 받은 optionIds 파라미터에서 판매자 ID를 producerSet에 저장
             for (Map.Entry<Integer, Integer> entry : optionIds.entrySet()) {
 
                 // optionIds entry 키를 이용해 option을 추출
@@ -301,16 +307,20 @@ public class OrderService {
                 producerSet.add(product.getProducerId());
             }
 
-            // producerSet에서 루프를 돌려 producer별 배송 엔티티를 생성
-            for (Integer prodcer : producerSet) {
+            // 4-2. Map to store producerId and shippingId
+            Map<Integer, Integer> shippingIdByProducer = new HashMap<>();
+
+            // 4-3.producerSet에서 루프를 돌려 producer별 배송 엔티티를 생성
+            for (Integer producer : producerSet) {
                 TblShipping shipping = new TblShipping();
 
                 shipping.setShippingStatus("pending");
                 shipping.setOrderId(order.getOrderId());
 
-                tblShippingRepository.save(shipping);
+                TblShipping savedShipping = tblShippingRepository.save(shipping);
+                shippingIdByProducer.put(producer, savedShipping.getShippingId());    // Store the shippingId
             }
-
+            System.out.println("shippingIdByProducer: " + shippingIdByProducer);
 
             // 5. 주문 상세 정보 저장
             for (Map.Entry<Integer, Integer> entry : optionIds.entrySet()) {
@@ -328,6 +338,10 @@ public class OrderService {
                 orderDetail.setOrderId(order.getOrderId());
                 orderDetail.setOptionId(entry.getKey());
 
+                // Retrieve the shippingId for the current product's producer
+                Integer shippingId = shippingIdByProducer.get(product.getProducerId());
+                orderDetail.setShippingId(shippingId);  // Assuming TblOrderDetail has a field for shippingId
+
                 orderDetailRepository.save(orderDetail);
             }
 
@@ -335,7 +349,7 @@ public class OrderService {
             user.setUserPoint(user.getUserPoint() - order.getPointDiscount());
             // 사용된 쿠폰 소진
             TblCouponList usedCoupon = couponListRepository.findTblCouponListByUserIdAndCouponId(user.getUserId(), orderDTO.getCouponId());
-            usedCoupon.setUseStatus("Y");
+            if (usedCoupon != null) usedCoupon.setUseStatus("Y");
 
             return modelMapper.map(order, OrderDTO.class);
         } catch (Exception e) {
@@ -389,6 +403,10 @@ public class OrderService {
                 .defaultHeader("Authorization", portoneToken)
                 .build();
 
+        log.info("impUid: {}", impUid);
+        log.info("portoneToken: {}", portoneToken);
+
+
         try {
             Map<String, Object> paymentData = webClient.get()
                     .uri(impUid)
@@ -396,7 +414,42 @@ public class OrderService {
                     .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                     .block(); // Synchronous operation
 
-            int amount = (int) paymentData.get("amount");
+            log.info("결제 정보 조회 응답: {}", paymentData);
+
+            Map<String, Object> payment = (Map<String, Object>) paymentData.get("payment");
+            if (payment == null) {
+                throw new IllegalStateException("payment 데이터가 없습니다.");
+            }
+
+            // 'transactions' 데이터 가져오기
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> transactions = (List<Map<String, Object>>) payment.get("transactions");
+            if (transactions == null || transactions.isEmpty()) {
+                throw new IllegalStateException("transactions 데이터가 없습니다.");
+            }
+
+            // 첫 번째 transaction 가져오기
+            Map<String, Object> firstTransaction = transactions.get(0);
+            if (firstTransaction == null) {
+                throw new IllegalStateException("첫 번째 transaction 데이터가 없습니다.");
+            }
+
+            // 'amount' 데이터 가져오기
+            @SuppressWarnings("unchecked")
+            Map<String, Object> amountData = (Map<String, Object>) firstTransaction.get("amount");
+            if (amountData == null) {
+                throw new IllegalStateException("amount 데이터가 없습니다.");
+            }
+
+            // 'total' 금액 가져오기
+            Integer amount = (Integer) amountData.get("total");
+            if (amount == null) {
+                throw new IllegalStateException("amount total 값이 없습니다.");
+            }
+
+            log.info("결제된 금액: {}", amount);
+
+            // 금액 검증
             if (orderTotalAmount != amount) {
                 throw new IllegalStateException("결제 금액 불일치: 요청 금액(" + orderTotalAmount + ") vs 결제 금액(" + amount + ")");
             }
@@ -404,10 +457,10 @@ public class OrderService {
             return paymentData;
 
         } catch (WebClientResponseException e) {
-            // Handle HTTP errors
-            throw new IllegalStateException("결제 정보 조회 실패: " + e.getStatusCode() + " " + e.getResponseBodyAsString(), e);
+            log.error("HTTP 에러 발생: {} {}", e.getStatusCode(), e.getResponseBodyAsString());
+            throw new IllegalStateException("결제 정보 조회 실패: " + e.getStatusCode(), e);
         } catch (Exception e) {
-            // Handle other errors
+            log.error("알 수 없는 오류 발생: {}", e.getMessage(), e);
             throw new IllegalStateException("결제 검증 중 알 수 없는 오류 발생", e);
         }
     }
@@ -477,76 +530,100 @@ public class OrderService {
 
     // 결제 취소
     @Transactional
-    public void cancelPayment(String paymentId) {
-        log.info("[OrderService] cancelPayment() 시작, paymentId: {}", paymentId);
+    public void cancelPayment(String orderId) {
+        log.info("[OrderService] cancelPayment() 시작, orderId: {}", orderId);
 
-        TblPayment payment = paymentRepository.findById(Integer.valueOf(paymentId))
-                .orElseThrow(() -> new IllegalArgumentException("결제 정보가 존재하지 않습니다."));
-
-        TblOrder order = orderRepository.findById(payment.getOrderId())
+        TblOrder order = orderRepository.findById(Integer.valueOf(orderId))
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보가 존재하지 않습니다."));
+
+        TblPayment payment = paymentRepository.findByOrderId(Integer.valueOf(orderId));
 
         if (!order.getDeliveryStatus().equals("pending") || order.getOrderStatus().equals("canceled")) {
             throw new IllegalStateException("취소 불가한 주문 건 입니다.");
         }
 
         try {
-            // 1. 포트원 API를 통해 결제 취소 요청
-//            String portoneToken = getPortOneToken();
-//            String url = "https://api.portone.io/payments/" + paymentId + "/cancel";
-//
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.APPLICATION_JSON);
-//            headers.set("Authorization", portoneToken);
-//
-//            ResponseEntity<Map> response = new RestTemplate().exchange(
-//                    url,
-//                    HttpMethod.POST,
-//                    new HttpEntity<>(headers),
-//                    Map.class
-//            );
+            if (!payment.getPaymentMethod().equals("BANK_TRANSFER")) {
+                // 1. 포트원 API를 통해 결제 취소 요청
+                String portoneToken = getPortOneToken();
+                String url = "https://api.portone.io/payments/" + payment.getImpUid() + "/cancel";
 
-//            if (response.getStatusCode() == HttpStatus.OK) {
-//                log.info("결제 취소 성공: {}", response.getBody());
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                headers.set("Authorization", portoneToken);
 
-                // 2. 결제 정보 업데이트
-                payment.setPaymentStatus("canceled");
-                payment.setUpdatedAt(Instant.now());
+                // 요청 본문 생성
+                Map<String, String> body = new HashMap<>();
+                body.put("reason", "고객 요청에 의한 취소");
 
-                // 3. 주문 정보 업데이트
-                order.setOrderStatus("canceled");
-                order.setUpdatedAt(Instant.now());
+                HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);
 
-                // 포인트 원복
-                TblUser user = userRepository.findTblUserByUserId(order.getUserId());
+                ResponseEntity<Map> response = new RestTemplate().exchange(
+                        url,
+                        HttpMethod.POST,
+                        entity,
+                        Map.class
+                );
+
+                if (response.getStatusCode() == HttpStatus.OK) {
+                    log.info("결제 취소 성공: {}", response.getBody());
+                } else {
+                    log.error("결제 취소 실패: {}", response.getBody());
+                    throw new IllegalStateException("결제 취소 요청이 실패했습니다.");
+                }
+            }
+
+            // 2. 결제 정보 업데이트
+            payment.setPaymentStatus("canceled");
+            payment.setUpdatedAt(Instant.now());
+
+            // 3. 주문 정보 업데이트
+            order.setOrderStatus("canceled");
+            order.setDeliveryStatus("canceled");
+            order.setUpdatedAt(Instant.now());
+
+            TblUser user = userRepository.findTblUserByUserId(order.getUserId());
+
+            // 4. 포인트 원복
+            if (order.getPointDiscount() != 0) {
                 user.setUserPoint(user.getUserPoint() + order.getPointDiscount());
-                // 쿠폰 원복
-                TblCouponList coupon = couponListRepository.findTblCouponListByUserIdAndCouponId(user.getUserId(), order.getCouponId());
+            }
+
+            // 5. 쿠폰 상태 원복
+            TblCouponList coupon = couponListRepository.findTblCouponListByUserIdAndCouponId(
+                    user.getUserId(), order.getCouponId());
+
+            if (coupon != null) {
                 coupon.setUseStatus("N");
+            }
 
-                // 4. 상품 정보(재고 원복) 업데이트
-                TblOrderDetail orderProduct = orderDetailRepository.findByOrderId(order.getOrderId());
-                TblOption option = optionRepository.findTblOptionByOptionId(orderProduct.getOptionId());
-                option.setOptionQuantity(option.getOptionQuantity() + order.getOrderTotalCount());
+            // 6. 상품 재고 원복
+            TblOrderDetail orderProduct = orderDetailRepository.findByOrderId(order.getOrderId());
+            TblOption option = optionRepository.findTblOptionByOptionId(orderProduct.getOptionId());
+            option.setOptionQuantity(option.getOptionQuantity() + order.getOrderTotalCount());
 
-
-//            } else {
-//                log.error("결제 취소 실패: {}", response.getBody());
-//                throw new IllegalStateException("결제 취소 요청이 실패했습니다.");
-//            }
         } catch (Exception e) {
-            log.error("[OrderService] 결제 취소 중 오류 발생: {}", e.getMessage());
-            throw new RuntimeException("결제 취소 중 오류가 발생했습니다.");
+            log.error("[OrderService] 결제 취소 중 오류 발생: {}", e.getMessage(), e);
+            throw new RuntimeException("결제 취소 중 오류가 발생했습니다.", e);
         }
     }
 
     // ================================================================================================================
 
     // 마이페이지 내 구매자별 주문 리스트 조회 (최신순으로)
-    public Object selectOrderList(String userId) {
-        List<TblOrder> orderList = orderRepository.findByUserOrderByRecent(Integer.valueOf(userId));
+    public int selectOrderListPage(int userId) {
+        List<TblOrder> orderList = orderRepository.findByUserOrderByRecent(userId);
 
-        log.info("[OrderService] orderList {}", orderList);
+        return orderList.size();
+    }
+
+    public Object selectOrderList(int userId, Criteria cri) {
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("orderId").descending());
+
+        Page<TblOrder> result = orderRepository.findByUserOrderByRecentPaging(userId, paging);
+        List<TblOrder> orderList = (List<TblOrder>)result.getContent();
 
         return orderList.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
     }
@@ -561,7 +638,7 @@ public class OrderService {
         return modelMapper.map(order, OrderDTO.class);
     }
 
-    // 주문 리스트 내 주문번호 별 주문 상품 리스트 조회(구매자, 판매자, 관리자 모두 해당)
+    // 주문 리스트 내 주문번호 별 주문 상품 리스트 조회(구매자, 관리자 모두 해당)
     public Object getOrderDetailList(String orderId) {
         List<OrderDetailProductDTO> orderDetails = orderDetailRepository.findOrderDetailWithProductByOrder(Integer.valueOf(orderId));
 
@@ -575,13 +652,34 @@ public class OrderService {
         return orderDetails;
     }
 
+    // 주문 리스트 내 주문번호 별 해당 판매자의 주문 상품 리스트 조회(판매자 해당)
+    public Object getProducerOrderDetailList(String orderId, int producerId) {
+        List<OrderDetailProductDTO> orderDetails = orderDetailRepository
+                .findProducerOrderDetailWithProductByOrder(Integer.valueOf(orderId), producerId);
+
+        for(int i = 0 ; i < orderDetails.size() ; i++) {
+            orderDetails.get(i).setProductImg(IMG_URL + orderDetails.get(i).getProductImg());
+            orderDetails.get(i).setProductThumbnail(IMG_URL + orderDetails.get(i).getProductThumbnail());
+        }
+
+        return orderDetails;
+    }
+
     // 해당 판매자의 주문 건 전체 조회
-    public Object getOrderListByProducer(String producerId) {
-        List<TblOrder> orderListByProducer = orderRepository.findOrdersByProducerId(Integer.valueOf(producerId));
+    public int getOrderListByProducer(int producerId) {
+        List<TblOrder> orderListByProducer = orderRepository.findOrdersByProducerId(producerId);
 
-        log.info("[OrderService] orderListByProducer {}", orderListByProducer);
+        return orderListByProducer.size();
+    }
 
-        return orderListByProducer.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
+    public Object getOrderListByProducerPaging(int producerId, Criteria cri) {
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+        Pageable paging = PageRequest.of(index, count, Sort.by("orderId").descending());
+
+        Page<TblOrder> result = orderRepository.findOrdersByProducerId(producerId, paging);
+        List<TblOrder> orderList = result.getContent();
+        return orderList.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
     }
 
     // 관리자 모든 주문 건 조회(최신순으로)

@@ -484,10 +484,10 @@ CREATE TABLE `tbl_payment` (
                                `amount`	int	NOT NULL	COMMENT '결제 금액',
                                `currency`	varchar(20)	NOT NULL	COMMENT '통화',
                                `payment_method`	varchar(20)	NOT NULL	COMMENT '결제 수단',
-                               `payment_status`	varchar(20)	NOT NULL	COMMENT '결제 상태',
-                               `imp_uid`	varchar(20)	NOT NULL	COMMENT '결제 고유 ID',
-                               `merchant_uid`	varchar(50)	NOT NULL	COMMENT '가맹점 고유 주문 번호',
-                               `transaction_id`	varchar(50)	NOT NULL	COMMENT '결제 트랜잭션 ID',
+                               `payment_status`	varchar(20)	NULL	COMMENT '결제 상태',
+                               `imp_uid`	varchar(100)	NULL	COMMENT '결제 고유 ID',
+                               `merchant_uid`	varchar(50)	NULL	COMMENT '가맹점 고유 주문 번호',
+                               `transaction_id`	varchar(50)	NULL	COMMENT '결제 트랜잭션 ID',
                                `fail_reason`	text	 NULL	COMMENT '결제 실패 사유',
                                `receipt_url`	varchar(255)	 NULL	COMMENT '결제 영수증 URL',
                                `created_at`	DateTime	NULL	COMMENT '결제 생성 일시',
@@ -504,10 +504,16 @@ CREATE TRIGGER before_insert_tbl_payment
 CREATE TABLE `tbl_auth` (
                             `auth_id`	int	NOT NULL PRIMARY KEY AUTO_INCREMENT	COMMENT '인증 아이디',
                             `auth_key`	varchar(20)	NOT NULL	COMMENT '인증 번호',
-                            `start_time`	Time	NOT NULL	COMMENT '인증 시작 시간',
-                            `Field`	varchar(20)	NULL	COMMENT '대상 이메일',
+                            `end_time`	DATETIME	NOT NULL	COMMENT '인증 시작 시간',
+                            `email`	varchar(20)	NULL	COMMENT '대상 이메일',
                             `auth_status`	varchar(1)	NOT NULL 	COMMENT '인증 성공 여부'
 );
+CREATE TRIGGER before_insert_tbl_auth
+    BEFORE INSERT ON `tbl_auth`
+    FOR EACH ROW
+BEGIN
+    SET NEW.end_time = IFNULL(NEW.end_time, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 10 MINUTE));
+END;
 
 #관계성 추가 구문 ---------------------------
 

@@ -51,24 +51,63 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
     }
 
-    @Operation(summary = "카테고리별 리스트 전체 조회 (페이징)", description = "카테고리별 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
-    @GetMapping("/products/more/{mediumId}")
-    public ResponseEntity<ResponseDTO> selectProductCategoryList(
+    @Operation(summary = "대분류 카테고리별 리스트 전체 조회 (페이징)", description = "대분류 카테고리별 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
+    @GetMapping("/products/more/{largeId}")
+    public ResponseEntity<ResponseDTO> selectProductCategoryLargeList(
             @RequestParam(name = "offset", defaultValue = "1") String offset,
-            @PathVariable int mediumId){
+            @PathVariable int largeId){
 
-        log.info("[ProductController] selectProductCategoryList 상품 리스트 전체 조회(페이징) : " + offset);
+        log.info("[ProductController] selectProductCategoryLargeList 상품 리스트 전체 조회(페이징) : " + offset);
 
-        int total = productService.selectProductCategoryList(mediumId);
+        int total = productService.selectProductCategoryLargeList(largeId);
+//        int total = productService.selectProductCategoryList(largeId);
 
         Criteria cri = new Criteria(Integer.valueOf(offset), 12);
         PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
 
-        pagingResponseDTO.setData(productService.selectProductCategoryListPaging(mediumId, cri));
+        pagingResponseDTO.setData(productService.selectProductCategoryLargeListPaging(largeId, cri));
+//        pagingResponseDTO.setData(productService.selectProductCategoryListPaging(largeId, cri));
 
         pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
+
+    @Operation(summary = "중분류 카테고리별 리스트 전체 조회 (페이징)", description = "카테고리별 상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
+    @GetMapping("/products/more/{largeId}/{mediumId}")
+    public ResponseEntity<ResponseDTO> selectProductCategoryMediumIdList(
+            @RequestParam(name = "offset", defaultValue = "1") String offset,
+            @PathVariable int largeId,
+            @PathVariable int mediumId){
+
+        log.info("[ProductController] selectProductCategoryMediumIdList 상품 리스트 전체 조회(페이징) : " + offset);
+
+        int total = productService.selectProductCategoryMediumIdList(largeId, mediumId);
+//        int inttotal = productService.selectProductCategoryList(largeId);
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 12);
+        PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
+
+        pagingResponseDTO.setData(productService.selectProductCategoryMediumIdListPaging(largeId, cri));
+//        pagingResponseDTO.setData(productService.selectProductCategoryListPaging(largeId, cri));
+
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
+    }
+
+    @Operation(summary = "대분류 카테고리 리스트 전체 조회", description = "대분류 카테고리 리스트 조회 진행", tags = { "ProductController" })
+    @GetMapping("/products/more/category")
+    public ResponseEntity<ResponseDTO> selectProductCategoryLarge(){
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", productService.selectProductCategoryList01()));
+    }
+
+    @Operation(summary = "중분류 카테고리 리스트 전체 조회", description = "중분류 카테고리 리스트 조회 진행", tags = { "ProductController" })
+    @GetMapping("/products/more/{largeId}/category")
+    public ResponseEntity<ResponseDTO> selectProductCategoryMediumId(@PathVariable int largeId){
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", productService.selectProductCategoryList02(largeId)));
     }
 
     /* 상품 리스트 미리보기 조회 */
@@ -100,12 +139,19 @@ public class ProductController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductListAboutFashionPreview()));
     }
 
+    @Operation(summary = "전체 브랜드 상품 리스트 미리보기 조회 요청", description = "브랜드별 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/brand/home")
+    public ResponseEntity<ResponseDTO> selectProducerProductList() {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProducerProductList()));
+    }
+
     /* 전체 브랜드 페이지 상품 조회 (미리보기) */
     @Operation(summary = "전체 브랜드 상품 리스트 미리보기 조회 요청", description = "브랜드별 상품 리스트 미리보기 조회가 진행됩니다.", tags = { "ProductController" })
-    @GetMapping("/products/producer/preview")
-    public ResponseEntity<ResponseDTO> selectProducerProductListPreview() {
+    @GetMapping("/products/brand/home/{producerId}")
+    public ResponseEntity<ResponseDTO> selectProducerProductListPreview(@PathVariable("producerId") int producerId) {
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProducerProductListPreview()));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProducerProductListPreview(producerId)));
     }
 
     /* 브랜드별 페이지 전체 상품 조회 (페이징) */
@@ -169,7 +215,7 @@ public class ProductController {
 
         log.info("[ProductController] selectProducerProductListPage 상품 리스트 전체 조회(페이징) : " + offset);
 
-        int producerId = userService.getProducerIdFromUserName(producerUsername);
+        int producerId = userService.getUserIdFromUserName(producerUsername);
 
         int total = productService.selectProducerProductListPage(producerId);
 
@@ -189,15 +235,9 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> insertProduct(@ModelAttribute ProductDTO productDTO,
                                                      @RequestPart(value = "productImage", required = false) MultipartFile productImage,
                                                      @RequestParam("producerUsername") String producerUsername) {
-        if (productDTO.getSmallCategory().getMediumCategoryId() == null ||
-                productDTO.getSmallCategory().getSmallCategoryId() == null) {
-            return ResponseEntity.badRequest().body(new ResponseDTO(HttpStatus.BAD_REQUEST, "중분류 또는 소분류 누락", null));
-        }
 
-        System.out.println("여기여기여기!!!" + productDTO.getOptions());
-        int producerId = userService.getProducerIdFromUserName(producerUsername);
+        int producerId = userService.getUserIdFromUserName(producerUsername);
         productDTO.setProducerId(producerId);
-        System.out.println("여기여기여기!!!" + productDTO.getProducerId());
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 등록 성공",  productService.insertProduct(productDTO, productImage)));
     }
@@ -251,5 +291,12 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> selectSmallCategoryListByMediumCategory(@RequestParam("mediumCategory") int mediumCategory){
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "연관된 소분류 조회 성공", productService.selectSmallListByMedium((mediumCategory))));
+    }
+
+    @Operation(summary = "옵션아이디로 상품아이디 조회 요청", description = "옵션아이디로 상품아이디 조회가 진행됩니다.", tags = { "ProductController" })
+    @GetMapping("/products/option-id/{optionId}")
+    public ResponseEntity<ResponseDTO> selectProductIdByOptionId(@PathVariable("optionId") int optionId) {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공",  productService.selectProductIdByOptionId(optionId)));
     }
 }

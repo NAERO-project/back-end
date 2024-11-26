@@ -55,17 +55,28 @@ public class UserController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "message", null));
     }
 
+    @GetMapping("/withdraw/producer/{username}")
+    public ResponseEntity<ResponseDTO> withdrawProducer(@PathVariable String username) {
+        System.out.println("임의 판매자 탈퇴 요청");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String authenticatedUsername = authentication.getName();
+        if (!authenticatedUsername.equals(username)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ResponseDTO(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.", null));
+        }
+        userService.withdrawProducer(username);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "사업장 탈퇴처리 완료되었습니다.", null));
+    }
+
     @PostMapping("/update")
     public ResponseEntity<ResponseDTO> updateDetail(@RequestBody UserDTO user){
        //현재 요청 보낸 사용자와 수정하려는 사용자가 일치하는지 -> 프런트 구현되고 확인
          Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String authenticatedUsername = authentication.getName();
+        user.setUsername(authenticatedUsername);
 
-        if (!authenticatedUsername.equals(user.getUsername())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ResponseDTO(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.", null));
-        }
         System.out.println("수정요청");
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
                 userService.updateDetail(user)));
@@ -86,11 +97,18 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        System.out.println("판매자 계정으로 전환");
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
                 userService.convertToProducer(producer, username)));
     }
 
+    @PostMapping("passcheck")
+    public ResponseEntity<ResponseDTO> checkPassword(@RequestBody String password){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        userService.checkPassword(username, password);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"비밀번호 인증에 성공했습니다.",
+                "성공"));
+    }
 
 
 

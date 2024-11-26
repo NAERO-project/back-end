@@ -98,9 +98,7 @@ public class ProducerDTO {
         this.deliveryCrit = deliveryCrit;
     }
 
-    public void setDeliveryCrit(int deliveryCrit) {
-        this.deliveryCrit = deliveryCrit;
-    }
+
 
     @Override
     public String toString() {
