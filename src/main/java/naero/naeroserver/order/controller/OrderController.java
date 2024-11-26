@@ -48,7 +48,7 @@ public class OrderController {
         this.paymentService = paymentService;
     }
 
-    @Operation(summary = "상품 주문 요청", description = "상품 주문이 진행됩니다.", tags = { "OrderController" })
+    @Operation(summary = "상품 주문 요청", description = "상품 주문 화면을 조회합니다.", tags = { "OrderController" })
     @PostMapping("/order/start")
     public ResponseEntity<ResponseDTO> startCartOrder(@RequestBody List<CartDTO> cartDTOList,
                                                       @RequestParam("username") String username, HttpSession httpSession) {
@@ -103,29 +103,11 @@ public class OrderController {
             return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "주문 성공", createdOrder));
         }  catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseDTO(HttpStatus.BAD_REQUEST, e.getMessage(), null));
+                    .body(new ResponseDTO(HttpStatus.BAD_REQUEST, e.getMessage(), e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null));
+                    .body(new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e.getMessage()));
         }
-    }
-
-    @Operation(summary = "상품 결제 완료", description = "상품 결제 완료 후 장바구니 삭제 및 세션 정리가 진행됩니다.",
-            tags = { "OrderController" })
-    @GetMapping("/order/complete")
-    public void deleteSession(HttpSession httpSession) {
-        if (httpSession.getAttribute("cartIds") != null) {
-            List<Integer> cartIds = (List<Integer>) httpSession.getAttribute("cartIds");
-            for(Integer cartId : cartIds){
-                TblCart cart = cartRepository.findById(cartId)
-                        .orElseThrow(() -> new NoSuchElementException("삭제할 장바구니를 찾을 수 없습니다."));
-                cartRepository.delete(cart);
-            }
-        }
-
-        // 세션에서 임시 주문 정보 삭제
-        httpSession.removeAttribute("tempOrder");
-        httpSession.removeAttribute("cartIds");
     }
 
     @Operation(summary = "결제 취소 요청", description = "결제를 취소합니다.", tags = { "OrderController" })
@@ -239,4 +221,23 @@ public class OrderController {
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, "전체 주문리스트 조회 성공", orderService.getAllOrderList()));
     }
+
+    // 불필요
+//    @Operation(summary = "상품 결제 완료", description = "상품 결제 완료 후 장바구니 삭제 및 세션 정리가 진행됩니다.",
+//            tags = { "OrderController" })
+//    @GetMapping("/order/complete")
+//    public void deleteSession(HttpSession httpSession) {
+//        if (httpSession.getAttribute("cartIds") != null) {
+//            List<Integer> cartIds = (List<Integer>) httpSession.getAttribute("cartIds");
+//            for(Integer cartId : cartIds){
+//                TblCart cart = cartRepository.findById(cartId)
+//                        .orElseThrow(() -> new NoSuchElementException("삭제할 장바구니를 찾을 수 없습니다."));
+//                cartRepository.delete(cart);
+//            }
+//        }
+//
+//        // 세션에서 임시 주문 정보 삭제
+//        httpSession.removeAttribute("tempOrder");
+//        httpSession.removeAttribute("cartIds");
+//    }
 }
