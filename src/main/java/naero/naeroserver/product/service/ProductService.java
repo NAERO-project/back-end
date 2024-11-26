@@ -399,6 +399,7 @@ public class ProductService {
     /* 판매자 상품 수정 */
     @Transactional
     public Object updateProduct(ProductDTO productDTO, MultipartFile productImage) {
+//    public Object updateProduct(ProductDTO productDTO, productDTO.getProductImg()) {
         log.info("[ProductService] updateProduct() Start");
         log.info("[ProductService] productDTO : {}", productDTO);
 
@@ -408,7 +409,8 @@ public class ProductService {
         try {
 
             /* 설명. update 할 엔티티 조회 */
-            TblProduct product = productRepository.findById(productDTO.getProductId()).get();
+            TblProduct product = productRepository.findByProductId(productDTO.getProductId());
+            TblProduct savedProduct = productRepository.save(product); // 저장 후 ID 생성
             String oriImage = product.getProductThumbnail();
             log.info("[updateProduct] oriImage : {}", oriImage);
 
@@ -418,6 +420,23 @@ public class ProductService {
             product.setProductDesc(productDTO.getProductDesc());
             product.setProductCheck(productDTO.getProductCheck());
             product.setProductThumbnail(productDTO.getProductThumbnail());
+
+            // Option 저장
+            List<OptionDTO> options = productDTO.getOptions();
+            if (options != null && !options.isEmpty()) { // 옵션 리스트가 null이 아니고 비어있지 않을 경우
+                List<TblOption> optionModel = new ArrayList<>();
+                for (OptionDTO option : options) {
+                    log.info("옵션 정보: {}", option);
+                    TblOption tblOption = new TblOption();
+                    tblOption.setProductId(savedProduct.getProductId()); // 연관된 productId 설정
+                    tblOption.setOptionDesc(option.getOptionDesc());
+                    tblOption.setOptionQuantity(option.getOptionQuantity());
+                    tblOption.setAddPrice(option.getAddPrice());
+                    optionModel.add(tblOption);
+                }
+
+                optionRepository.saveAll(optionModel);
+            }
 
             if(productImage != null){
                 String imageName = UUID.randomUUID().toString().replace("-", "");
