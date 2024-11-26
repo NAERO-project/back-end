@@ -15,6 +15,7 @@ import naero.naeroserver.order.dto.OrderPageDTO;
 import naero.naeroserver.order.dto.PayRequestDTO;
 import naero.naeroserver.order.dto.PaymentDTO;
 import naero.naeroserver.order.service.OrderService;
+import naero.naeroserver.order.service.PaymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +37,15 @@ public class OrderController {
     private final HttpSession httpSession;
     private final CartRepository cartRepository;
     private final UserService userService;
+    private final PaymentService paymentService;
 
     @Autowired
-    public OrderController(OrderService orderService, HttpSession httpSession, CartRepository cartRepository, UserService userService) {
+    public OrderController(OrderService orderService, HttpSession httpSession, CartRepository cartRepository, UserService userService, PaymentService paymentService) {
         this.orderService = orderService;
         this.httpSession = httpSession;
         this.cartRepository = cartRepository;
         this.userService = userService;
+        this.paymentService = paymentService;
     }
 
     @Operation(summary = "상품 주문 요청", description = "상품 주문이 진행됩니다.", tags = { "OrderController" })
@@ -126,11 +129,11 @@ public class OrderController {
     }
 
     @Operation(summary = "결제 취소 요청", description = "결제를 취소합니다.", tags = { "OrderController" })
-    @PutMapping("/order/cancel/{paymentId}")
-    public ResponseEntity<ResponseDTO> cancelPayment(@PathVariable String paymentId) {
+    @PutMapping("/order/cancel/{orderId}")
+    public ResponseEntity<ResponseDTO> cancelPayment(@PathVariable String orderId) {
         try {
-            orderService.cancelPayment(paymentId);
-            return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "결제 취소 성공", null));
+            orderService.cancelPayment(orderId);
+            return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "결제 취소 성공", "결제 취소 성공"));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(HttpStatus.BAD_REQUEST, e.getMessage(), null));
         } catch (Exception e) {
@@ -168,6 +171,15 @@ public class OrderController {
     public ResponseEntity<ResponseDTO> getOrderDetail(@PathVariable String orderId) {
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, "주문 상세정보 조회 성공", orderService.getOrderDetail(orderId)));
+    }
+
+    @Operation(summary = "회원 결제 상세 조회 요청",
+            description = "해당 회원의 결제에 대한 상세 정보 조회가 진행됩니다.",
+            tags = { "OrderController" })
+    @GetMapping("/payment/details/{orderId}")
+    public ResponseEntity<ResponseDTO> getPaymentDetail(@PathVariable String orderId) {
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, "결제 상세정보 조회 성공", paymentService.getPaymentDetail(orderId)));
     }
 
     @Operation(summary = "회원 주문 상품 리스트 조회 요청",
