@@ -103,16 +103,16 @@ INSERT INTO tbl_category_small (small_category_name, medium_category_id) VALUES
                                                                              ('상의', 7),
                                                                              ('스킨케어', 8);
 
-INSERT INTO tbl_product (product_name, product_price, product_thumbnail, product_img, product_desc, product_check, product_quantity, producer_id, small_category_id) VALUES
-                                                                                                                                                                         ('유기농 토마토 주스', '2000', 'product_thum_image001.png','product_image001', '통통튀는 상큼한 유기농 상품 착즙 토마토 쥬-스', 'Y', 200, 1, 3),
-                                                                                                                                                                         ('콜라', 1200, 'product_thum_image003.png', 'product_image003.png', '시원하고 청량한 탄산 음료 콜라입니다.', 'Y', 300, 1, 2),
-                                                                                                                                                                         ('오렌지 주스', 2500, 'product_thum_image004.png', 'product_image004.png', '신선한 오렌지를 착즙한 과채 음료입니다.', 'Y', 200, 2, 3),
-                                                                                                                                                                         ('초코 케이크', 5000, 'product_thum_image005.png', 'product_image005.png', '달콤하고 진한 초코 케이크입니다.', 'Y', 100, 2, 4),
-                                                                                                                                                                         ('냄비 세트', 30000, 'product_thum_image006.png', 'product_image006.png', '다양한 크기의 냄비로 구성된 주방용품 세트입니다.', 'Y', 75, 2, 5),
-                                                                                                                                                                         ('비누 세트', 8000, 'product_thum_image007.png', 'product_image007.png', '피부에 좋은 성분을 사용한 욕실용품 비누 세트입니다.', 'Y', 150, 2, 6),
-                                                                                                                                                                         ('베개', 12000, 'product_thum_image008.png', 'product_image008.png', '푹신한 침실용품 베개입니다.', 'Y', 100, 1, 7),
-                                                                                                                                                                         ('여름 티셔츠', 7000, 'product_thum_image009.png', 'product_image009.png', '시원하고 편안한 여름 티셔츠입니다.', 'Y', 200, 1, 8),
-                                                                                                                                                                         ('수분 크림', 15000, 'product_thum_image010.png', 'product_image010.png', '피부에 촉촉함을 더해주는 스킨케어 수분 크림입니다.', 'Y', 250, 2, 9);
+INSERT INTO tbl_product (product_name, product_price, product_thumbnail, product_img, product_desc, product_check, producer_id, small_category_id) VALUES
+                                                                                                                                                       ('유기농 토마토 주스', '2000', 'product_thum_image001.png','product_image001', '통통튀는 상큼한 유기농 상품 착즙 토마토 쥬-스', 'Y', 1, 3),
+                                                                                                                                                       ('콜라', 1200, 'product_thum_image003.png', 'product_image003.png', '시원하고 청량한 탄산 음료 콜라입니다.', 'Y',  1, 2),
+                                                                                                                                                       ('오렌지 주스', 2500, 'product_thum_image004.png', 'product_image004.png', '신선한 오렌지를 착즙한 과채 음료입니다.', 'Y',  2, 3),
+                                                                                                                                                       ('초코 케이크', 5000, 'product_thum_image005.png', 'product_image005.png', '달콤하고 진한 초코 케이크입니다.', 'Y',  2, 4),
+                                                                                                                                                       ('냄비 세트', 30000, 'product_thum_image006.png', 'product_image006.png', '다양한 크기의 냄비로 구성된 주방용품 세트입니다.', 'Y',  2, 5),
+                                                                                                                                                       ('비누 세트', 8000, 'product_thum_image007.png', 'product_image007.png', '피부에 좋은 성분을 사용한 욕실용품 비누 세트입니다.', 'Y',  2, 6),
+                                                                                                                                                       ('베개', 12000, 'product_thum_image008.png', 'product_image008.png', '푹신한 침실용품 베개입니다.', 'Y',  1, 7),
+                                                                                                                                                       ('여름 티셔츠', 7000, 'product_thum_image009.png', 'product_image009.png', '시원하고 편안한 여름 티셔츠입니다.', 'Y', 1, 8),
+                                                                                                                                                       ('수분 크림', 15000, 'product_thum_image010.png', 'product_image010.png', '피부에 촉촉함을 더해주는 스킨케어 수분 크림입니다.', 'Y',  2, 9);
 
 INSERT INTO tbl_review (review_image, review_thumbnail, review, review_rating, product_id, user_id)VALUES
                                                                                                        (NULL, NULL,'너무 맛있어요! 따로 문의 넣어서 정기 구독까지 했어요!', 5, 1, 3),
@@ -130,10 +130,10 @@ INSERT INTO tbl_review (review_image, review_thumbnail, review, review_rating, p
 
 -- tbl_inquiry 데이터 삽입
 INSERT INTO tbl_inquiry (inquiry_title, inquiry_content, inquiry_lock, user_id, product_id ) VALUES
-                                                                                                ('정기 구독 따로 되나요?', '정기적으로 배송받고싶은데 가능한가요?', true, 3, 1),
-                                                                                                ('세트로 구매시 할인 되나요?', '주방용품을 세트로 구매할 경우 할인이 가능한지 궁금합니다.', false, 4, 5),
-                                                                                                ('배송기간이 얼마나 걸리나요?', '비누 세트를 주문했는데 배송 기간이 궁금합니다.', true, 5, 6),
-                                                                                                ('구매 후 환불 절차 문의', '베개를 환불하려고 하는데, 환불 절차가 어떻게 되나요?', false, 5, 7 );
+                                                                                                 ('정기 구독 따로 되나요?', '정기적으로 배송받고싶은데 가능한가요?', true, 3, 1),
+                                                                                                 ('세트로 구매시 할인 되나요?', '주방용품을 세트로 구매할 경우 할인이 가능한지 궁금합니다.', false, 4, 5),
+                                                                                                 ('배송기간이 얼마나 걸리나요?', '비누 세트를 주문했는데 배송 기간이 궁금합니다.', true, 5, 6),
+                                                                                                 ('구매 후 환불 절차 문의', '베개를 환불하려고 하는데, 환불 절차가 어떻게 되나요?', false, 5, 7 );
 
 -- tbl_response 데이터 삽입
 INSERT INTO tbl_response (response_title, response_content,  inquiry_id, producer_id) VALUES
@@ -232,11 +232,11 @@ INSERT INTO tbl_order (order_total_amount, order_total_count, delivery_status, o
 
 
 INSERT INTO tbl_ship_com (ship_com_code, ship_com_name, ship_com_contact)VALUES
-    ('01','우체국택배', '1588-1255'),
-    ('04','CJ대한통운', '1588-1255'),
-    ('05','한진택배', '1588-1255'),
-    ('06','로젠택배', '1588-1255'),
-    ('08','롯데택배', '1588-1255');
+                                                                             ('01','우체국택배', '1588-1255'),
+                                                                             ('04','CJ대한통운', '1588-1255'),
+                                                                             ('05','한진택배', '1588-1255'),
+                                                                             ('06','로젠택배', '1588-1255'),
+                                                                             ('08','롯데택배', '1588-1255');
 
 
 INSERT INTO tbl_shipping (tracking_number, shipping_status, order_id, ship_com_id)VALUES
@@ -259,10 +259,10 @@ INSERT INTO tbl_order_detail (option_id, count, amount,
 #     ();
 
 INSERT INTO tbl_banner (banner_thumbnail, banner_img, banner_url,
-                        banner_create_at, banner_delete_at, producer_id, banner_accept_at, approver_id)VALUES
-                                                                                                           ('banner_thum_image001.png', 'banner_image001.png', 'naver.com','2024-11-12 00:00:00', '2024-12-30 00:00:00',1, '2024-11-11 00:00:00', 8 ),
-                                                                                                           ('banner_thum_image002.png', 'banner_image002.png', 'naver.com','2024-11-20 00:00:00', '2024-12-30 00:00:00',1, '2024-11-11 00:00:00', 8 ),
-                                                                                                           ('banner_thum_image003.png', 'banner_image003.png', 'naver.com','2024-11-11 00:00:00', '2024-12-30 00:00:00',1, NULL, NULL );
+                        banner_create_at, banner_accept_status, banner_delete_at, producer_id, banner_accept_at, approver_id)VALUES
+                                                                                                                                 ('banner_thum_image001.png', '5b42c11407734c42a253883d237c554e.png', 'naver.com','2024-11-12 00:00:00', 'Y','2024-12-30 00:00:00',  1, '2024-11-11 00:00:00', 8 ),
+                                                                                                                                 ('banner_thum_image002.png', 'banner_image002.png', 'naver.com','2024-11-20 00:00:00', 'N', '2024-12-30 00:00:00', 1, '2024-11-11 00:00:00', 8 ),
+                                                                                                                                 ('banner_thum_image003.png', 'banner_image003.png', 'naver.com','2024-11-11 00:00:00','N', '2024-12-30 00:00:00', 1, NULL, NULL );
 INSERT INTO tbl_faq (faq_title, faq_content)VALUES
                                                 ('회원가입은 어떻게 하나요?','회원가입은 하면되는 거죠'),
                                                 ('아이디를 잃어버렸어요.','아이디는 이메일 인증하면 찾을 수 있습니다.')

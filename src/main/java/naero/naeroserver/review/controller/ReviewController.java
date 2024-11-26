@@ -60,12 +60,13 @@ public class ReviewController {
 
     // 리뷰 등록
     @Operation(summary = "리뷰 등록", description = "리뷰 등록이 진행됩니다.", tags = { "ReviewController" })
-    @PostMapping("/")
+    @PostMapping("/{productId}")
     public ResponseEntity<ResponseDTO> addReview(
+            @PathVariable Integer productId,
             @RequestPart("review") ReviewDTO reviewDTO,
             @RequestPart(value = "image", required = false) MultipartFile reviewImage) {
 
-        String result = reviewService.addReview(reviewDTO, reviewImage);
+        String result = reviewService.addReview(productId, reviewDTO, reviewImage);
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "리뷰 등록 성공", result));
     }
 
@@ -83,8 +84,8 @@ public class ReviewController {
 
     // 리뷰 삭제
     @Operation(summary = "리뷰 삭제", description = "리뷰 삭제가 진행됩니다.", tags = { "ReviewController" })
-    @DeleteMapping("/{reviewId}")
-    public ResponseEntity<ResponseDTO> deleteReview(@PathVariable Integer reviewId) {
+    @DeleteMapping("/{productId}/{reviewId}")
+    public ResponseEntity<ResponseDTO> deleteReview(@PathVariable Integer reviewId, @PathVariable Integer productId) {
 
         String result = reviewService.deleteReview(reviewId);
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "리뷰 삭제 성공", result));

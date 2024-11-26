@@ -85,7 +85,7 @@ public class ReviewService {
 
     // 리뷰 등록
     @Transactional
-    public String addReview(ReviewDTO reviewDTO, MultipartFile reviewImage) {
+    public String addReview(Integer productId, ReviewDTO reviewDTO, MultipartFile reviewImage) {
         log.info("[ReviewService] addReview() 시작");
 
         String imageName = UUID.randomUUID().toString().replace("-", "");
