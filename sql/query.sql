@@ -176,19 +176,19 @@ ORDER BY
     pr.producer_name, od.created_at;
 
 # Cross Product Quantity Query
-SELECT
-    pt.product_name,
-    SUM(od.count) AS total_count
-FROM
-    tbl_product pt
-        LEFT JOIN tbl_option op ON pt.product_id = op.product_id
-        LEFT JOIN tbl_order_detail od ON op.option_id = od.option_id
-WHERE
-    od.created_at >= NOW() - INTERVAL 8 DAY
-GROUP BY
-    pt.product_name
-ORDER BY
-    total_count DESC;
+ SELECT
+     pt.product_name,
+     SUM(od.count) AS total_count
+ FROM
+     tbl_product pt
+         LEFT JOIN tbl_option op ON pt.product_id = op.product_id
+         LEFT JOIN tbl_order_detail od ON op.option_id = od.option_id
+ WHERE
+     od.created_at >= NOW() - INTERVAL 8 DAY
+ GROUP BY
+     pt.product_name
+ ORDER BY
+     total_count DESC;
 
 # Series Producer Sales Query
 SELECT
@@ -213,7 +213,7 @@ SELECT
     COUNT(pr.producer_name) AS total_count
 FROM
     tbl_producer pr
-        LEFT JOIN
+LEFT JOIN
     tbl_liked_seller lpr ON pr.producer_id = lpr.producer_id
 WHERE
     lpr.brand_like_date >= NOW() - INTERVAL 1 WEEK

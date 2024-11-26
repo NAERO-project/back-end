@@ -1,5 +1,7 @@
 package naero.naeroserver.product.dto;
 
+import java.util.List;
+
 public class ProductDTO {
 
     private int productId;
@@ -11,14 +13,14 @@ public class ProductDTO {
     private String productCreateAt;
     private String productDeleteAt;
     private String productCheck;
-    private int productQuantity;
     private int producerId;
-    private int smallCategoryId;
+    private CategorySmallDTO smallCategory;
+    private List<OptionDTO> options;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(int productId, String productName, int productPrice, String productThumbnail, String productImg, String productDesc, String productCreateAt, String productDeleteAt, String productCheck, int productQuantity, int producerId, int smallCategoryId) {
+    public ProductDTO(int productId, String productName, int productPrice, String productThumbnail, String productImg, String productDesc, String productCreateAt, String productDeleteAt, String productCheck, int producerId, CategorySmallDTO smallCategory, List<OptionDTO> options) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
@@ -28,9 +30,9 @@ public class ProductDTO {
         this.productCreateAt = productCreateAt;
         this.productDeleteAt = productDeleteAt;
         this.productCheck = productCheck;
-        this.productQuantity = productQuantity;
         this.producerId = producerId;
-        this.smallCategoryId = smallCategoryId;
+        this.smallCategory = smallCategory;
+        this.options = options;
     }
 
     public int getProductId() {
@@ -105,14 +107,6 @@ public class ProductDTO {
         this.productCheck = productCheck;
     }
 
-    public int getProductQuantity() {
-        return productQuantity;
-    }
-
-    public void setProductQuantity(int productQuantity) {
-        this.productQuantity = productQuantity;
-    }
-
     public int getProducerId() {
         return producerId;
     }
@@ -121,12 +115,20 @@ public class ProductDTO {
         this.producerId = producerId;
     }
 
-    public int getSmallCategoryId() {
-        return smallCategoryId;
+    public CategorySmallDTO getSmallCategory() {
+        return smallCategory;
     }
 
-    public void setSmallCategoryId(int smallCategoryId) {
-        this.smallCategoryId = smallCategoryId;
+    public void setSmallCategory(CategorySmallDTO smallCategory) {
+        this.smallCategory = smallCategory;
+    }
+
+    public List<OptionDTO> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<OptionDTO> options) {
+        this.options = options;
     }
 
     @Override
@@ -141,9 +143,9 @@ public class ProductDTO {
                 ", productCreateAt='" + productCreateAt + '\'' +
                 ", productDeleteAt='" + productDeleteAt + '\'' +
                 ", productCheck='" + productCheck + '\'' +
-                ", productQuantity=" + productQuantity +
                 ", producerId=" + producerId +
-                ", smallCategoryId=" + smallCategoryId +
+                ", smallCategory=" + smallCategory +
+                ", options=" + options +
                 '}';
     }
 }

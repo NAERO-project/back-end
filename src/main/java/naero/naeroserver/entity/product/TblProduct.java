@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_product")
@@ -49,10 +50,22 @@ public class TblProduct {
     @Column(name = "producer_id", nullable = false)
     private Integer producerId;
 
-    @NotNull
-    @Column(name = "small_category_id", nullable = false)
-    private Integer smallCategoryId;
+    @OneToMany
+    @JoinColumn(name = "product_id", insertable = false, updatable = false) // 읽기 전용
+    private List<TblOption> options;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "small_category_id", nullable = false)
+    private TblCategorySmall smallCategory;
+
+    public List<TblOption> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<TblOption> options) {
+        this.options = options;
+    }
     public Integer getProductId() {
         return productId;
     }
@@ -133,12 +146,11 @@ public class TblProduct {
         this.producerId = producerId;
     }
 
-    public Integer getSmallCategoryId() {
-        return smallCategoryId;
+    public @NotNull TblCategorySmall getSmallCategory() {
+        return smallCategory;
     }
 
-    public void setSmallCategoryId(Integer smallCategory) {
-        this.smallCategoryId = smallCategory;
+    public void setSmallCategory(@NotNull TblCategorySmall smallCategory) {
+        this.smallCategory = smallCategory;
     }
-
 }

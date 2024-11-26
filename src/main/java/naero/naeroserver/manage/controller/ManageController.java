@@ -80,7 +80,7 @@ public class ManageController {
     //사업장 정지 요청
     @GetMapping("/withdraw/producer/{username}")
     public ResponseEntity<ResponseDTO> withdrawProducer(@PathVariable String username) {
-        System.out.println("임의 유저 탈퇴 요청");
+        System.out.println("임의 판매자 탈퇴 요청");
         userService.withdrawProducer(username);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.ACCEPTED, "사업장 정지처리 완료되었습니다.", null));
     }
