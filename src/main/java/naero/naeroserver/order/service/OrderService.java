@@ -307,16 +307,20 @@ public class OrderService {
                 producerSet.add(product.getProducerId());
             }
 
-            // producerSet에서 루프를 돌려 producer별 배송 엔티티를 생성
+            // 4-2. Map to store producerId and shippingId
+            Map<Integer, Integer> shippingIdByProducer = new HashMap<>();
+
+            // 4-3.producerSet에서 루프를 돌려 producer별 배송 엔티티를 생성
             for (Integer producer : producerSet) {
                 TblShipping shipping = new TblShipping();
 
                 shipping.setShippingStatus("pending");
                 shipping.setOrderId(order.getOrderId());
 
-                tblShippingRepository.save(shipping);
+                TblShipping savedShipping = tblShippingRepository.save(shipping);
+                shippingIdByProducer.put(producer, savedShipping.getShippingId());    // Store the shippingId
             }
-
+            System.out.println("shippingIdByProducer: " + shippingIdByProducer);
 
             // 5. 주문 상세 정보 저장
             for (Map.Entry<Integer, Integer> entry : optionIds.entrySet()) {
@@ -333,6 +337,10 @@ public class OrderService {
                 orderDetail.setCount(entry.getValue());
                 orderDetail.setOrderId(order.getOrderId());
                 orderDetail.setOptionId(entry.getKey());
+
+                // Retrieve the shippingId for the current product's producer
+                Integer shippingId = shippingIdByProducer.get(product.getProducerId());
+                orderDetail.setShippingId(shippingId);  // Assuming TblOrderDetail has a field for shippingId
 
                 orderDetailRepository.save(orderDetail);
             }
