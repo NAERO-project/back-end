@@ -221,3 +221,8 @@ GROUP BY
     pr.producer_name
 ORDER BY
     total_count
+
+SELECT
+    *
+FROM
+    tbl_ship_com

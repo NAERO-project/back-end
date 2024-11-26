@@ -60,6 +60,15 @@ public class ShippingController {
                 .body(new ResponseDTO(HttpStatus.OK, "배송 조회 성공", shippingService.selectShipping(trackingNumber)));
     }
 
+    @Operation(summary = "배송회사 조회 요청", description = "배송회사 정보 조회가 진행됩니다.", tags = {"ShippingController"})
+    @GetMapping("/shipping/company")
+    public ResponseEntity<ResponseDTO> getShippingCompany() {
+
+        return  ResponseEntity
+                .ok()
+                .body(new ResponseDTO(HttpStatus.OK, "배송회사 조회 성공", shippingService.selectShippingCompany()));
+    }
+
     @Operation(summary = "배송 상태 조회 요청", description = "해당 배송건에 대한 상태 조회가 진행됩니다.", tags = {"ShippingController"})
     @GetMapping("/shipping/track-shipment")
     public ResponseEntity<?> getTrackingInfo(
