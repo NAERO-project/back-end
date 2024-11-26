@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class AnswerService {
 
@@ -45,25 +48,70 @@ public class AnswerService {
         log.info("[AnswerService] getAllQuestions() End");
         return questionDTOPage;
     }
+// 모든 답변을 페이징 처리하여 조회
+    public Page<AnswerDTO> getAllAnswers(int page, int size) {
+        log.info("[AnswerService] getAllAnswers() Start");
 
-    // 질문의 총 개수 반환
+        Pageable pageable = PageRequest.of(page, size, Sort.by("answerDate").descending());
+        Page<TblAnswer> answersPage = answerRepository.findAll(pageable);
+
+        // TblAnswer -> AnswerDTO 변환
+        Page<AnswerDTO> answerDTOPage = answersPage.map(answer -> modelMapper.map(answer, AnswerDTO.class));
+
+        log.info("[AnswerService] getAllAnswers() End");
+        return answerDTOPage;
+    }
+
+//     질문의 총 개수 반환
     public long getTotalQuestions() {
         log.info("[AnswerService] getTotalQuestions() Start");
         long count = questionRepository.count();
         log.info("[AnswerService] getTotalQuestions() End - Total Count: " + count);
         return count;
     }
+    public long getTotalAnswers() {
+        log.info("[AnswerService] getTotalAnswers() Start");
+        long count = answerRepository.count();
+        log.info("[AnswerService] getTotalAnswers() End - Total Count: " + count);
+        return count;
+    }
 
     // ID로 특정 질문 조회
-    public QuestionDTO getQuestionById(Integer questionId) {
+//    public QuestionDTO getQuestionById(Integer questionId) {
+//        log.info("[AnswerService] getQuestionById() Start");
+//
+//        TblQuestion question = questionRepository.findById(questionId).orElse(null);
+//        QuestionDTO questionDTO = (question != null) ? modelMapper.map(question, QuestionDTO.class) : null;
+//
+//        TblAnswer answer = answerRepository.findById(questionId).orElse(null);
+//        AnswerDTO answerDTO = (answer != null) ? modelMapper.map(answer, AnswerDTO.class) : null;
+//
+//
+//
+//        log.info("[AnswerService] getQuestionById() End");
+//        return questionDTO;
+//    }
+    public Map<String, Object> getQuestionById(Integer questionId) {
         log.info("[AnswerService] getQuestionById() Start");
 
+        // 질문 조회
         TblQuestion question = questionRepository.findById(questionId).orElse(null);
         QuestionDTO questionDTO = (question != null) ? modelMapper.map(question, QuestionDTO.class) : null;
 
+        // 답변 조회 (최초 답변 하나만 가져오기)
+        TblAnswer answer = answerRepository.findFirstByQuestionId(questionId);
+        AnswerDTO answerDTO = (answer != null) ? modelMapper.map(answer, AnswerDTO.class) : null;
+
+        // 결과 데이터를 Map에 담기
+        Map<String, Object> result = new HashMap<>();
+        result.put("question", questionDTO);
+        result.put("answer", answerDTO);
+
         log.info("[AnswerService] getQuestionById() End");
-        return questionDTO;
+        return result;
     }
+
+
 
     // 답변 등록
     public String createAnswer(Integer questionId, AnswerDTO answerDTO) {

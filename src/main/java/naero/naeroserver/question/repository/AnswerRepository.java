@@ -14,4 +14,6 @@ public interface AnswerRepository extends JpaRepository<TblAnswer, Integer> {
 
     // 1:1 문의 삭제 시 문의 답변도 삭제
     void deleteByQuestionId(Integer questionId);
+
+    TblAnswer findFirstByQuestionId(Integer questionId);
 }

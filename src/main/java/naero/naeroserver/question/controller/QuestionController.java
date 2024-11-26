@@ -28,7 +28,7 @@ public class QuestionController {
 
     // 1:1 문의 등록
     @Operation(summary = "1:1 문의 등록 요청", description = "1:1 문의 등록이 진행됩니다.", tags = { "QuestionController" })
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ResponseDTO> createQuestion(@RequestBody QuestionDTO questionDTO) {
 
         String result = questionService.createQuestion(questionDTO);
@@ -54,30 +54,30 @@ public class QuestionController {
 
     // 특정 문의 상세 조회
     @Operation(summary = "1:1 문의 상세 조회 요청", description = "1:1 문의 상세 조회가 진행됩니다.", tags = { "QuestionController" })
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseDTO> getUserQuestionById(@RequestParam Integer userId, @PathVariable Integer id) {
+    @GetMapping("/{questionId}")
+    public ResponseEntity<ResponseDTO> getUserQuestionById(@RequestParam Integer userId, @PathVariable Integer questionId) {
 
-        QuestionDTO question = questionService.getUserQuestionById(userId, id);
+        QuestionDTO question = questionService.getUserQuestionById(userId, questionId);
 
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "상세 조회 성공", question));
     }
 
     // 1:1 문의 수정
     @Operation(summary = "1:1 문의 수정 요청", description = "1:1 문의 수정이 진행됩니다.", tags = { "QuestionController" })
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseDTO> updateQuestion(@RequestParam Integer userId, @PathVariable Integer id, @RequestBody QuestionDTO questionDTO) {
+    @PutMapping("/{questionId}")
+    public ResponseEntity<ResponseDTO> updateQuestion(@RequestParam Integer userId, @PathVariable Integer questionId, @RequestBody QuestionDTO questionDTO) {
 
-        String result = questionService.updateQuestion(userId, id, questionDTO);
+        String result = questionService.updateQuestion(userId, questionId, questionDTO);
 
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "수정 성공", result));
     }
 
     // 1:1 문의 삭제
     @Operation(summary = "1:1 문의 삭제 요청", description = "1:1 문의 삭제가 진행됩니다.", tags = { "QuestionController" })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDTO> deleteQuestion(@RequestParam Integer userId, @PathVariable Integer id) {
+    @DeleteMapping("/{questionId}")
+    public ResponseEntity<ResponseDTO> deleteQuestion(@RequestParam Integer userId, @PathVariable Integer questionId) {
 
-        String result = questionService.deleteQuestion(userId, id);
+        String result = questionService.deleteQuestion(userId, questionId);
 
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "삭제 성공", result));
     }
