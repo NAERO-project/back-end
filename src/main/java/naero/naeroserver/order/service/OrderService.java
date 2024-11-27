@@ -228,7 +228,7 @@ public class OrderService {
                         -> new IllegalArgumentException("해당 상품에 대한 옵션이 존재하지 않습니다."));;
 
                 if (option.getOptionQuantity() < entry.getValue()) {
-                    throw new IllegalStateException("재고가 부족합니다.");
+                    throw new IllegalStateException("주문 상품 재고가 부족합니다.");
                 } else {
                     option.setOptionQuantity(option.getOptionQuantity() - entry.getValue());
                 }
@@ -251,7 +251,7 @@ public class OrderService {
             order.setOrderTotalAmount(orderDTO.getOrderTotalAmount());
             order.setOrderTotalCount(orderDTO.getOrderTotalCount());
             order.setDeliveryStatus(orderDTO.getDeliveryStatus());
-            order.setOrderStatus(orderDTO.getOrderStatus());
+            order.setOrderStatus("completed");
             order.setDeliveryFee(orderDTO.getDeliveryFee());
             order.setPointDiscount(orderDTO.getPointDiscount());
             order.setCouponDiscount(orderDTO.getCouponDiscount());
@@ -354,7 +354,7 @@ public class OrderService {
             return modelMapper.map(order, OrderDTO.class);
         } catch (Exception e) {
             log.error("[OrderService] Exception: {}", e.getMessage());
-            throw new RuntimeException("주문 처리 중 오류가 발생했습니다."); // 일반 예외 처리
+            throw new RuntimeException(e.getMessage()); // 일반 예외 처리
         }
     }
 
