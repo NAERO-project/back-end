@@ -13,7 +13,7 @@ import java.util.List;
 public interface OrderDetailRepository extends JpaRepository<TblOrderDetail, Integer> {
 
     // 주문 리스트 내 주문번호 별 주문 상품 리스트 조회
-    @Query("SELECT new naero.naeroserver.order.dto.OrderDetailProductDTO(od.orderId, o.optionId, od.count, od.amount, " +
+    @Query("SELECT new naero.naeroserver.order.dto.OrderDetailProductDTO(od.orderDetailId, o.optionId, od.count, od.amount, " +
             "p.productName, p.productImg, p.productThumbnail, o.productId, od.shippingId) " +
             "FROM TblOrderDetail od " +
             "JOIN TblOption o ON od.optionId = o.optionId " + // TblOrderDetail에서 TblOption으로의 관계
@@ -22,7 +22,7 @@ public interface OrderDetailRepository extends JpaRepository<TblOrderDetail, Int
     List<OrderDetailProductDTO> findOrderDetailWithProductByOrder(@Param("orderId") Integer orderId);
 
     // 주문 리스트 내 주문번호 별 해당 판매자의 주문 상품 리스트 조회
-    @Query("SELECT new naero.naeroserver.order.dto.OrderDetailProductDTO(od.orderId, o.optionId, od.count, od.amount, " +
+    @Query("SELECT new naero.naeroserver.order.dto.OrderDetailProductDTO(od.orderDetailId, o.optionId, od.count, od.amount, " +
             "p.productName, p.productImg, p.productThumbnail, o.productId, od.shippingId) " +
             "FROM TblOrderDetail od " +
             "JOIN TblOption o ON od.optionId = o.optionId " +

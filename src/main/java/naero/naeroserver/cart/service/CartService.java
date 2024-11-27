@@ -47,23 +47,26 @@ public class CartService {
             // 상품 재고 확인
             TblOption option = optionRepository.findById(cartDTO.getOptionId())
                     .orElseThrow(() -> new IllegalArgumentException("해당 상품에 대한 옵션이 존재하지 않습니다."));
-
+            System.out.println("1 성공");
             if (option.getOptionQuantity() < cartDTO.getCount()) throw new IllegalStateException("상품 재고가 부족합니다.");
-
+            System.out.println("2 성공");
             // 장바구니에 해당 상품이 이미 있는지 확인
             TblUser user = userRepository.findTblUserByUserId(cartDTO.getUserId());
-            naero.naeroserver.entity.cart.TblCart cart = cartRepository.findByOptionIdAndUserId(option.getOptionId(), user.getUserId());
-
+            System.out.println("3 성공");
+            TblCart cart = cartRepository.findByOptionIdAndUserId(option.getOptionId(), user.getUserId());
+            System.out.println("4 성공");
             if (cart != null) { // 장바구니에 해당 상품이 이미 있을 경우 수량만 추가
                 cart.setCount(cart.getCount() + cartDTO.getCount());
+                cart.setPrice(cart.getPrice() + cartDTO.getPrice());
             } else {    // 장바구니에 해당 상품이 없을 경우 새로 추가
-                naero.naeroserver.entity.cart.TblCart newCart = modelMapper.map(cartDTO, naero.naeroserver.entity.cart.TblCart.class);
+                TblCart newCart = modelMapper.map(cartDTO, TblCart.class);
                 cartRepository.save(newCart);
             }
 
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("해당 상품에 대한 옵션이 존재하지 않습니다.");
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -71,9 +74,9 @@ public class CartService {
     }
 
     // 해당 회원의 장바구니 리스트 조회
-    public Object getCartList(String userId) {
+    public Object getCartList(int userId) {
 
-        List<CartListDTO> cartList = cartRepository.findAllCartOptionsAndProducts(Integer.valueOf(userId));
+        List<CartListDTO> cartList = cartRepository.findAllCartOptionsAndProducts(userId);
 
         for(int i = 0 ; i < cartList.size() ; i++) {
             cartList.get(i).setProductImg(IMG_URL + cartList.get(i).getProductImg());
@@ -86,15 +89,14 @@ public class CartService {
     @Transactional
     public Object updateCartItem(CartDTO cartItem) {
         try {
+            System.out.println("cartItem 비었음?" + cartItem);
             TblCart updateCartItem = cartRepository.findById(cartItem.getCartId()).get();
-            updateCartItem.setCartId(cartItem.getCartId());
-            updateCartItem.setOptionId(cartItem.getOptionId());
             updateCartItem.setCount(cartItem.getCount());
             updateCartItem.setPrice(cartItem.getPrice());
-            updateCartItem.setUserId(cartItem.getUserId());
 
         } catch (Exception e) {
-            log.error("[deleteCartItems] Exception!!", e);
+            log.error("[updateCartItem] Exception!!", e);
+            e.printStackTrace();
             return "장바구니 상품 수정 실패";
         }
 
