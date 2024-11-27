@@ -236,6 +236,7 @@ public class OrderService {
             }
 
             TblUser user = userRepository.findTblUserByUserId(orderDTO.getUserId());
+            user.setUserPoint((int) (user.getUserPoint() + (orderDTO.getOrderTotalAmount() * 0.1)));
 
             // 2. 주문 정보 저장
 //            TblOrder order = modelMapper.map(orderDTO, TblOrder.class);
