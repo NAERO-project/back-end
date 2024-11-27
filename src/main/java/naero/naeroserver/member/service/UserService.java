@@ -244,6 +244,9 @@ public class UserService {
 
     public Integer getUserIdFromUserName(String producerUsername) {
         TblUser user = userRepository.findUserIdByUsername(producerUsername);
+        System.out.println("user jjj: " + user);
         return user.getUserId();
     }
+
+
 }

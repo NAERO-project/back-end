@@ -180,4 +180,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "JOIN TblCategoryLarge cl ON cm.largeCategoryId = cl.largeCategoryId " +
             "WHERE cl.largeCategoryId = :largeId ")
     List<TblCategoryMedium> findAllProductCategory02(@Param("largeId") Integer largeId);
+
+
+    TblProduct findByProductId(int id);
 }
