@@ -137,7 +137,7 @@ public class OrderController {
         // 페이징 처리
         int total = orderService.selectOrderListPage(userId);
 
-        Criteria cri = new Criteria(Integer.valueOf(offset), 3);
+        Criteria cri = new Criteria(Integer.valueOf(offset), 10);
         PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
         pagingResponseDTO.setData(orderService.selectOrderList(userId, cri));
         pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
