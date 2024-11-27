@@ -102,13 +102,14 @@ public class UserService {
             throw new UpdateUserException("사용자를 찾을 수 없습니다.");
         }
 
-        if (user.getUserFullName() != null) {
+        if (!user.getUserFullName().isEmpty()) {
             getUser.setUserFullname(user.getUserFullName());
         }
-        if (user.getUserPhone() != null) {
+        if (!user.getUserPhone().isEmpty()) {
             getUser.setUserPhone(user.getUserPhone());
         }
-        if(user.getPassword()!=null){
+        if(!user.getPassword().isEmpty()){
+            System.out.println("패스워드 확인"+user.getPassword());
             getUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
@@ -149,7 +150,7 @@ public class UserService {
 
     public String searchProducerPage(Integer page, int size, ManageSearchDTO crit){
         // 전체 페이지 수 계산 < 동시 반환이 안됨. 따로 호출
-        int totalCount = searchRepository.getTotalCount(crit);
+        int totalCount = searchRepository.getTotalCountForProducer(crit);
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
         return  (page+1)+"/"+totalPages;
