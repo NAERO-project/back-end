@@ -245,18 +245,11 @@ public class ProductController {
 
     /* 판매자 상품 수정 */
     @Operation(summary = "판매자 상품 수정 요청", description = "상품 수정이 진행됩니다.", tags = { "ProductController" })
-//    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping(value = "/products/update")
     public ResponseEntity<ResponseDTO> updateProduct(@ModelAttribute ProductDTO productDTO,
-                                                     @RequestPart(value = "productImage", required = false) MultipartFile productImage
-//                                                     @RequestParam("producerUsername") String producerUsername
-    ) {
-//        System.out.println("producerUsername 여기여기: " + producerUsername);
-//        int producerId = userService.getUserIdFromUserName(producerUsername);
-//        productDTO.setProducerId(producerId);
-//        System.out.println("producerId:" + producerId);
+                                                     @RequestPart(value = "productImage", required = false) MultipartFile productImage) {
 
-//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 수정 성공",  null));
+        log.info("[ProductService] productDTO!!!!!!!!! : {}", productDTO);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 수정 성공",  productService.updateProduct(productDTO, productImage)));
     }
 
