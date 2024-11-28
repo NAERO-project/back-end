@@ -1,4 +1,4 @@
- SELECT
+SELECT
     pt.product_name,
     SUM(od.amount) AS total_amount
 FROM
@@ -158,18 +158,22 @@ ORDER BY
 # Cross Producer Quantity Query
 SELECT
     pr.producer_name,
-    SUM(od.count) AS total_count
+#     SUM(od.count) AS total_count
+    od.count,
+    od.created_at
 FROM
     tbl_producer pr
         LEFT JOIN tbl_product pt ON pr.producer_id = pt.producer_id
         LEFT JOIN tbl_option op ON pt.product_id = op.product_id
         LEFT JOIN tbl_order_detail od ON op.option_id = od.option_id
 WHERE
-    od.created_at >= NOW() - INTERVAL 1 WEEK
-GROUP BY
-    pr.producer_name
+    od.created_at >= NOW() - INTERVAL 7 DAY
+# GROUP BY
+#     pr.producer_name
+# ORDER BY
+#     total_count;
 ORDER BY
-    total_count DESC;
+    pr.producer_name, od.created_at;
 
 # Cross Product Quantity Query
  SELECT
@@ -203,3 +207,22 @@ GROUP BY
     DATE(od.created_at), pr.producer_name
 ORDER BY
     order_date;
+
+SELECT
+    pr.producer_name,
+    COUNT(pr.producer_name) AS total_count
+FROM
+    tbl_producer pr
+LEFT JOIN
+    tbl_liked_seller lpr ON pr.producer_id = lpr.producer_id
+WHERE
+    lpr.brand_like_date >= NOW() - INTERVAL 1 WEEK
+GROUP BY
+    pr.producer_name
+ORDER BY
+    total_count
+
+SELECT
+    *
+FROM
+    tbl_ship_com

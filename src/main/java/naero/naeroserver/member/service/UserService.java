@@ -6,7 +6,6 @@ import naero.naeroserver.auth.repository.RoleRepository;
 import naero.naeroserver.auth.repository.UserRoleRepository;
 import naero.naeroserver.entity.auth.TblUserRole;
 import naero.naeroserver.entity.user.TblProducer;
-import naero.naeroserver.entity.user.TblProducerGrade;
 import naero.naeroserver.entity.user.TblUser;
 import naero.naeroserver.exception.AuthFailException;
 import naero.naeroserver.exception.DuplicatedUsernameException;
@@ -17,7 +16,6 @@ import naero.naeroserver.manage.DTO.ManageUserDTO;
 import naero.naeroserver.member.dto.ManageSearchDTO;
 import naero.naeroserver.member.dto.ProducerDTO;
 import naero.naeroserver.member.dto.UserDTO;
-import naero.naeroserver.member.dto.UserGradeDTO;
 import naero.naeroserver.manage.repository.SearchRepository;
 import naero.naeroserver.member.repository.ProducerRepository;
 import naero.naeroserver.member.repository.UserRepository;
@@ -244,4 +242,12 @@ public class UserService {
             throw new AuthFailException("비밀번호 인증에 실패했습니다.");
         }
     }
+
+    public Integer getUserIdFromUserName(String producerUsername) {
+        TblUser user = userRepository.findUserIdByUsername(producerUsername);
+        System.out.println("user jjj: " + user);
+        return user.getUserId();
+    }
+
+
 }

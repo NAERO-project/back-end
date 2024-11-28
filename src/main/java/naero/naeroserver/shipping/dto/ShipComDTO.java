@@ -1,60 +1,61 @@
 package naero.naeroserver.shipping.dto;
 
 public class ShipComDTO {
-    private int shippingId;
-    private String shippingComCode;
-    private String shippingComName;
-    private String shippingComContact;
+    private Integer shipComId;
+    private String shipComCode;
+    private String shipComName;
+    private String shipComContact;
 
     public ShipComDTO() {
     }
 
-    public ShipComDTO(int shippingId, String shippingComCode, String shippingComName, String shippingComContact) {
-        this.shippingId = shippingId;
-        this.shippingComCode = shippingComCode;
-        this.shippingComName = shippingComName;
-        this.shippingComContact = shippingComContact;
+    public ShipComDTO(Integer shipComId, String shipComCode,
+                      String shipComName, String shipComContact) {
+        this.shipComId = shipComId;
+        this.shipComCode = shipComCode;
+        this.shipComName = shipComName;
+        this.shipComContact = shipComContact;
     }
 
-    public int getShippingId() {
-        return shippingId;
+    public Integer getShipComId() {
+        return shipComId;
     }
 
-    public void setShippingId(int shippingId) {
-        this.shippingId = shippingId;
+    public void setShipComId(Integer shipComId) {
+        this.shipComId = shipComId;
     }
 
-    public String getShippingComCode() {
-        return shippingComCode;
+    public String getShipComCode() {
+        return shipComCode;
     }
 
-    public void setShippingComCode(String shippingComCode) {
-        this.shippingComCode = shippingComCode;
+    public void setShipComCode(String shipComCode) {
+        this.shipComCode = shipComCode;
     }
 
-    public String getShippingComName() {
-        return shippingComName;
+    public String getShipComName() {
+        return shipComName;
     }
 
-    public void setShippingComName(String shippingComName) {
-        this.shippingComName = shippingComName;
+    public void setShipComName(String shipComName) {
+        this.shipComName = shipComName;
     }
 
-    public String getShippingComContact() {
-        return shippingComContact;
+    public String getShipComContact() {
+        return shipComContact;
     }
 
-    public void setShippingComContact(String shippingComContact) {
-        this.shippingComContact = shippingComContact;
+    public void setShipComContact(String shipComContact) {
+        this.shipComContact = shipComContact;
     }
 
     @Override
     public String toString() {
-        return "TblShipCom{" +
-                "shippingId=" + shippingId +
-                ", shippingComCode='" + shippingComCode + '\'' +
-                ", shippingComName='" + shippingComName + '\'' +
-                ", shippingComContact='" + shippingComContact + '\'' +
+        return "ShipComDTO{" +
+                "shipComId=" + shipComId +
+                ", shipComCode='" + shipComCode + '\'' +
+                ", shipComName='" + shipComName + '\'' +
+                ", shipComContact='" + shipComContact + '\'' +
                 '}';
     }
 }

@@ -8,15 +8,15 @@ public class OrderDetailDTO {
     int optionId;
     int count;
     int amount;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
+    String createdAt;
+    String updatedAt;
     int shippingId;
     int orderId;
 
     public OrderDetailDTO() {
     }
 
-    public OrderDetailDTO(int orderDetailId, int productId, int count, int amount, LocalDateTime createdAt, LocalDateTime updatedAt, int shippingId, int orderId) {
+    public OrderDetailDTO(int orderDetailId, int productId, int count, int amount, String createdAt, String updatedAt, int shippingId, int orderId) {
         this.orderDetailId = orderDetailId;
         this.optionId = productId;
         this.count = count;
@@ -59,19 +59,19 @@ public class OrderDetailDTO {
         this.amount = amount;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 

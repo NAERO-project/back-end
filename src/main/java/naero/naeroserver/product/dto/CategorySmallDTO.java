@@ -4,14 +4,14 @@ import naero.naeroserver.entity.product.TblCategoryMedium;
 
 public class CategorySmallDTO {
 
-    private int smallCategoryId;
+    private Integer smallCategoryId;
     private String smallCategoryName;
-    private int mediumCategoryId;
+    private Integer mediumCategoryId;
 
     public CategorySmallDTO() {
     }
 
-    public CategorySmallDTO(int smallCategoryId, String smallCategoryName, int mediumCategoryId) {
+    public CategorySmallDTO(Integer smallCategoryId, String smallCategoryName, Integer mediumCategoryId) {
         this.smallCategoryId = smallCategoryId;
         this.smallCategoryName = smallCategoryName;
         this.mediumCategoryId = mediumCategoryId;
@@ -25,19 +25,19 @@ public class CategorySmallDTO {
         this.smallCategoryName = smallCategoryName;
     }
 
-    public int getSmallCategoryId() {
+    public Integer getSmallCategoryId() {
         return smallCategoryId;
     }
 
-    public void setSmallCategoryId(int smallCategoryId) {
+    public void setSmallCategoryId(Integer smallCategoryId) {
         this.smallCategoryId = smallCategoryId;
     }
 
-    public int getMediumCategoryId() {
+    public Integer getMediumCategoryId() {
         return mediumCategoryId;
     }
 
-    public void setMediumCategoryId(int mediumCategoryId) {
+    public void setMediumCategoryId(Integer mediumCategoryId) {
         this.mediumCategoryId = mediumCategoryId;
     }
 

@@ -11,12 +11,12 @@ public class BannerDTO {
     private String bannerAcceptStatus;
     private String bannerAcceptAt;
     private String bannerCheck;
-    private int approverId;
+    private Integer approverId;
 
     public BannerDTO() {
     }
 
-    public BannerDTO(int bannerId, String bannerThumbnail, String bannerImg, String bannerUrl, String bannerCreateAt, String bannerDeleteAt, int producerId, String bannerAcceptStatus, String bannerAcceptAt, String bannerCheck, int approverId) {
+    public BannerDTO(int bannerId, String bannerThumbnail, String bannerImg, String bannerUrl, String bannerCreateAt, String bannerDeleteAt, int producerId, String bannerAcceptStatus, String bannerAcceptAt, String bannerCheck, Integer approverId) {
         this.bannerId = bannerId;
         this.bannerThumbnail = bannerThumbnail;
         this.bannerImg = bannerImg;
@@ -110,11 +110,11 @@ public class BannerDTO {
         this.bannerCheck = bannerCheck;
     }
 
-    public int getApproverId() {
+    public Integer getApproverId() {
         return approverId;
     }
 
-    public void setApproverId(int approverId) {
+    public void setApproverId(Integer approverId) {
         this.approverId = approverId;
     }
 

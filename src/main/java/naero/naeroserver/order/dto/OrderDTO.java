@@ -22,14 +22,14 @@ public class OrderDTO {
     private String addressName;
     private String deliveryNote;
     private String trackingNumber;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
     private Integer userId;
 
     public OrderDTO() {
     }
 
-    public OrderDTO(Integer orderId, LocalDateTime orderDatetime, Integer orderTotalAmount, Integer orderTotalCount, String deliveryStatus, String orderStatus, Integer deliveryFee, Integer pointDiscount, Integer couponId, Integer couponDiscount, String recipientName, String recipientPhoneNumber, String postalCode, String addressRoad, String addressDetail, String addressName, String deliveryNote, String trackingNumber, LocalDateTime createdAt, LocalDateTime updatedAt, Integer userId) {
+    public OrderDTO(Integer orderId, LocalDateTime orderDatetime, Integer orderTotalAmount, Integer orderTotalCount, String deliveryStatus, String orderStatus, Integer deliveryFee, Integer pointDiscount, Integer couponId, Integer couponDiscount, String recipientName, String recipientPhoneNumber, String postalCode, String addressRoad, String addressDetail, String addressName, String deliveryNote, String trackingNumber, String createdAt, String updatedAt, Integer userId) {
         this.orderId = orderId;
         this.orderDatetime = orderDatetime;
         this.orderTotalAmount = orderTotalAmount;
@@ -197,19 +197,19 @@ public class OrderDTO {
         this.trackingNumber = trackingNumber;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 

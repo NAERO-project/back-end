@@ -78,10 +78,10 @@ public class MonitoringService {
         double ratio = (oneDayAgoValue != 0) ? ((double) (oneDayAgoValue - twoDaysAgoValue) / oneDayAgoValue) : 0.0;
 
         Map<String, Object> result = new HashMap<>();
-        result.put(label + "Level", oneDayAgoValue);
-        result.put(label + "Ratio", ratio);
+        result.put("Level", oneDayAgoValue);
+        result.put("Ratio", ratio);
 
-        log.info("{} Calculation Completed: {}Level={}, {}Ratio={}", label, label, oneDayAgoValue, label, ratio);
+        log.info("{} Calculation Completed: Level={}, {}Ratio={}", label, oneDayAgoValue, ratio);
 
         return result;
     }

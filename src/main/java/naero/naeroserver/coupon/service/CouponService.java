@@ -114,5 +114,10 @@ public class CouponService {
 
     }
 
-
+    // 해당 회원의 발급받은 쿠폰 리스트 조회
+    public Object getIssuedCouponList(int userId) {
+        List<MyPageCouponListDTO> couponList = couponListRepository.findTblCouponListByUserId(userId);
+        System.out.println("couponList" + couponList);
+        return couponList;
+    }
 }

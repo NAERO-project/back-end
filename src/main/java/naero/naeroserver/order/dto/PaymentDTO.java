@@ -15,14 +15,14 @@ public class PaymentDTO {
     private String transactionId;
     private String failReason;
     private String receiptUrl;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
     private int OrderId;
 
     public PaymentDTO() {
     }
 
-    public PaymentDTO(int paymentId, int userId, int amount, String currency, String paymentMethod, String paymentStatus, String impUid, String merchantUid, String transactionId, String failReason, String receiptUrl, LocalDateTime createdAt, LocalDateTime updatedAt, int orderId) {
+    public PaymentDTO(int paymentId, int userId, int amount, String currency, String paymentMethod, String paymentStatus, String impUid, String merchantUid, String transactionId, String failReason, String receiptUrl, String createdAt, String updatedAt, int orderId) {
         this.paymentId = paymentId;
         this.userId = userId;
         this.amount = amount;
@@ -127,19 +127,19 @@ public class PaymentDTO {
         this.receiptUrl = receiptUrl;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
