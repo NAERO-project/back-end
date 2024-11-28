@@ -18,8 +18,8 @@ public interface CartRepository extends JpaRepository<TblCart, Integer> {
 
     // 회원번호로 장바구니 리스트 조회
     @Query("SELECT new naero.naeroserver.cart.dto.CartListDTO(" +
-            "c.cartId, c.optionId, c.count," +
-            "o.addPrice, o.optionQuantity," +
+            "c.cartId, c.optionId, c.count, c.price, " +
+            "o.addPrice, o.optionQuantity, o.optionDesc, " +
             "p.productId, p.productName, p.productPrice, p.productThumbnail, p.productImg, p.productCheck) " +
             "FROM TblCart c " +
             "LEFT JOIN TblOption o ON c.optionId = o.optionId " +

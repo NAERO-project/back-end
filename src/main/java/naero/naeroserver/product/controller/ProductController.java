@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -244,9 +245,11 @@ public class ProductController {
 
     /* 판매자 상품 수정 */
     @Operation(summary = "판매자 상품 수정 요청", description = "상품 수정이 진행됩니다.", tags = { "ProductController" })
-    @PutMapping(value = "/products")
-    public ResponseEntity<ResponseDTO> updateProduct(@ModelAttribute ProductDTO productDTO, MultipartFile productImage) {
+    @PutMapping(value = "/products/update")
+    public ResponseEntity<ResponseDTO> updateProduct(@ModelAttribute ProductDTO productDTO,
+                                                     @RequestPart(value = "productImage", required = false) MultipartFile productImage) {
 
+        log.info("[ProductService] productDTO!!!!!!!!! : {}", productDTO);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "상품 수정 성공",  productService.updateProduct(productDTO, productImage)));
     }
 
