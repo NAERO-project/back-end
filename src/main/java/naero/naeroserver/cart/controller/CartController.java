@@ -30,7 +30,14 @@ public class CartController {
 
     @Operation(summary = "장바구니 등록 요청", description = "장바구니에 상품 정보가 등록됩니다.", tags = { "CartController" })
     @PostMapping("/cart/insert")
-    public ResponseEntity<ResponseDTO> insertCartItem(@RequestBody CartDTO cartDTO) {
+    public ResponseEntity<ResponseDTO> insertCartItem(@RequestParam(name = "username") String username, @RequestBody CartDTO cartDTO) {
+
+        int userId = 0;
+        if (username != null) {
+            userId = userService.getUserIdFromUserName(username);
+            cartDTO.setUserId(userId);
+        }
+
         try {
             return ResponseEntity.ok().body(
                     new ResponseDTO(HttpStatus.OK, "장바구니 추가 성공", cartService.insertCartItem(cartDTO)));

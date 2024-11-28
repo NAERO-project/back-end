@@ -1,9 +1,11 @@
 package naero.naeroserver.product.service;
 
+import naero.naeroserver.cart.dto.CartDTO;
 import naero.naeroserver.common.Criteria;
 import naero.naeroserver.entity.order.TblOrder;
 import naero.naeroserver.entity.product.*;
 import naero.naeroserver.entity.user.TblProducer;
+import naero.naeroserver.order.dto.OrderPageProductDTO;
 import naero.naeroserver.product.dto.*;
 import naero.naeroserver.product.repository.*;
 import naero.naeroserver.util.FileUploadUtils;
@@ -329,11 +331,12 @@ public class ProductService {
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-        Page<ProductOptionDTO> result = productRepository.findProductListByProducer(producerId, paging);
-        List<ProductOptionDTO> productList = result.getContent();
+        Page<TblProduct> result = productRepository.findProductListByProducer(producerId, paging);
+        List<TblProduct> productList = result.getContent();
 
-        for(int i = 0; i<productList.size(); i++){
-            productList.get(i).getProduct().setProductThumbnail(IMAGE_URL + productList.get(i).getProduct().getProductThumbnail());
+        for (TblProduct tblProduct : productList) {
+            tblProduct.setProductThumbnail(IMAGE_URL + tblProduct.getProductThumbnail());
+            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
         }
 
         log.info(productList.toString());
@@ -378,6 +381,9 @@ public class ProductService {
 
         TblProduct product = productRepository.findByIdAndOption(productId);
 
+        product.setProductImg(IMAGE_URL + product.getProductImg());
+        product.setProductThumbnail(IMAGE_URL + product.getProductThumbnail());
+
         log.info("[ProductService] selectProductDetail() 종료");
 
         return modelMapper.map(product, ProductDTO.class);
@@ -408,18 +414,21 @@ public class ProductService {
 
             // Option 저장
             List<OptionDTO> options = productDTO.getOptions();
-            if (options != null && !options.isEmpty()) { // 옵션 리스트가 null이 아니고 비어있지 않을 경우
+            if (options != null && !options.isEmpty()) {
+
                 List<TblOption> optionModel = new ArrayList<>();
                 for (OptionDTO option : options) {
                     log.info("옵션 정보: {}", option);
                     TblOption tblOption = new TblOption();
-                    tblOption.setProductId(savedProduct.getProductId()); // 연관된 productId 설정
                     tblOption.setOptionDesc(option.getOptionDesc());
                     tblOption.setOptionQuantity(option.getOptionQuantity());
                     tblOption.setAddPrice(option.getAddPrice());
+                    tblOption.setOptionCheck("Y");
+                    tblOption.setProductId(savedProduct.getProductId());
                     optionModel.add(tblOption);
                 }
 
+                // 새로운 옵션 저장
                 optionRepository.saveAll(optionModel);
             }
 
@@ -437,6 +446,7 @@ public class ProductService {
 //    public Object updateProduct(ProductDTO productDTO, productDTO.getProductImg()) {
         log.info("[ProductService] updateProduct() Start");
         log.info("[ProductService] productDTO : {}", productDTO);
+        log.info("[productImage] {}", productImage);
 
         String replaceFileName = null;
         int result = 0;
@@ -445,8 +455,7 @@ public class ProductService {
 
             /* 설명. update 할 엔티티 조회 */
             TblProduct product = productRepository.findByProductId(productDTO.getProductId());
-            TblProduct savedProduct = productRepository.save(product); // 저장 후 ID 생성
-            String oriImage = product.getProductThumbnail();
+            String oriImage = product.getProductImg();
             log.info("[updateProduct] oriImage : {}", oriImage);
 
             /* 설명. update를 위한 엔티티 값 수정 */
@@ -454,22 +463,32 @@ public class ProductService {
             product.setProductPrice(productDTO.getProductPrice());
             product.setProductDesc(productDTO.getProductDesc());
             product.setProductCheck(productDTO.getProductCheck());
-            product.setProductThumbnail(productDTO.getProductThumbnail());
+
+            List<TblOption> existingOptions = optionRepository.findByProductId(productDTO.getProductId());
+            for (TblOption option : existingOptions) {
+                option.setOptionCheck("N");
+            }
+            optionRepository.saveAll(existingOptions);
 
             // Option 저장
             List<OptionDTO> options = productDTO.getOptions();
-            if (options != null && !options.isEmpty()) { // 옵션 리스트가 null이 아니고 비어있지 않을 경우
+            if (options != null && !options.isEmpty()) {
+                // 기존 옵션 삭제
+                optionRepository.deleteByProductId(productDTO.getProductId());
+
                 List<TblOption> optionModel = new ArrayList<>();
                 for (OptionDTO option : options) {
                     log.info("옵션 정보: {}", option);
                     TblOption tblOption = new TblOption();
-                    tblOption.setProductId(savedProduct.getProductId()); // 연관된 productId 설정
                     tblOption.setOptionDesc(option.getOptionDesc());
                     tblOption.setOptionQuantity(option.getOptionQuantity());
                     tblOption.setAddPrice(option.getAddPrice());
+                    tblOption.setOptionCheck("Y");
+                    tblOption.setProductId(productDTO.getProductId());
                     optionModel.add(tblOption);
                 }
 
+                // 새로운 옵션 저장
                 optionRepository.saveAll(optionModel);
             }
 
@@ -478,7 +497,7 @@ public class ProductService {
                 replaceFileName = FileUploadUtils.saveFile(IMAGE_DIR, imageName, productImage);
                 log.info("[updateProduct] InsertFileName : {}", replaceFileName);
 
-                product.setProductThumbnail(replaceFileName);	// 새로운 파일 이름으로 update
+                product.setProductImg(replaceFileName);	// 새로운 파일 이름으로 update
                 log.info("[updateProduct] deleteImage : {}", oriImage);
 
                 boolean isDelete = FileUploadUtils.deleteFile(IMAGE_DIR, oriImage);
@@ -486,7 +505,7 @@ public class ProductService {
             } else {
 
                 /* 설명. 이미지 변경 없을 경우 */
-                product.setProductThumbnail(oriImage);
+                product.setProductImg(oriImage);
             }
 
             result = 1;

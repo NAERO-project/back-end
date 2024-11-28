@@ -9,7 +9,7 @@ import java.util.List;
 public interface OptionRepository extends JpaRepository<TblOption, Integer> {
 
     // 단일 상품 결제 시 해당 상품 옵션아이디 조회
-    TblOption findByProductId(Integer productId);
+    List<TblOption> findByProductId(Integer productId);
 
     // 옵션 아이디로 옵션 재고 조회
     Integer findOptionQuantityByOptionId(int optionId);
@@ -20,4 +20,5 @@ public interface OptionRepository extends JpaRepository<TblOption, Integer> {
     // 옵션아이디로 상품아이디 조회
     TblOption findProductIdByOptionId(int optionId);
 
+    void deleteByProductId(int productId);
 }
