@@ -107,6 +107,7 @@ public class OrderService {
         orderUser.setUserFullName(userInfo.getUserFullname());
         orderUser.setUserEmail(userInfo.getUserEmail());
         orderUser.setUserPhone(userInfo.getUserPhone());
+        orderUser.setUserPoint(userInfo.getUserPoint());
 
         // 배송지 정보 + 할인 정보(잔여 포인트)
         newOrder.setUserId(userId);
