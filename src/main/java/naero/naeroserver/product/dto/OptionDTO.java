@@ -7,16 +7,18 @@ public class OptionDTO {
     private Integer addPrice;
     private Integer productId;
     private Integer optionQuantity;
+    private String optionCheck;
 
     public OptionDTO() {
     }
 
-    public OptionDTO(Integer optionId, String optionDesc, Integer addPrice, Integer productId, Integer optionQuantity) {
+    public OptionDTO(Integer optionId, String optionDesc, Integer addPrice, Integer productId, Integer optionQuantity, String optionCheck) {
         this.optionId = optionId;
         this.optionDesc = optionDesc;
         this.addPrice = addPrice;
         this.productId = productId;
         this.optionQuantity = optionQuantity;
+        this.optionCheck = optionCheck;
     }
 
     public Integer getOptionId() {
@@ -59,6 +61,14 @@ public class OptionDTO {
         this.optionQuantity = optionQuantity;
     }
 
+    public String getOptionCheck() {
+        return optionCheck;
+    }
+
+    public void setOptionCheck(String optionCheck) {
+        this.optionCheck = optionCheck;
+    }
+
     @Override
     public String toString() {
         return "OptionDTO{" +
@@ -67,6 +77,7 @@ public class OptionDTO {
                 ", addPrice=" + addPrice +
                 ", productId=" + productId +
                 ", optionQuantity=" + optionQuantity +
+                ", optionCheck='" + optionCheck + '\'' +
                 '}';
     }
 }
