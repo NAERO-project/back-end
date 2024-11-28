@@ -91,7 +91,7 @@ public class AnswerService {
 //        log.info("[AnswerService] getQuestionById() End");
 //        return questionDTO;
 //    }
-    public Map<String, Object> getQuestionById(Integer questionId, Integer userId) {
+    public Map<String, Object> getQuestionById(Integer questionId, Integer userId, Integer answerId) {
         log.info("[AnswerService] getQuestionById() Start");
 
         // 질문 조회
@@ -107,6 +107,7 @@ public class AnswerService {
         result.put("question", questionDTO);
         result.put("answer", answerDTO);
         result.put("userId", userId);
+        result.put("answerId", answerId);
 
         log.info("[AnswerService] getQuestionById() End");
         return result;

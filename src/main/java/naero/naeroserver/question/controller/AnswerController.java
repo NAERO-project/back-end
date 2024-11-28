@@ -85,7 +85,7 @@ public class AnswerController {
 
         int userId = userService.getUserIdFromUserName(username);
 
-        Map<String, Object> questionWithAnswer = answerService.getQuestionById(questionId, userId);
+        Map<String, Object> questionWithAnswer = answerService.getQuestionById(questionId, userId, answerId);
 
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "조회 성공", questionWithAnswer));
     }

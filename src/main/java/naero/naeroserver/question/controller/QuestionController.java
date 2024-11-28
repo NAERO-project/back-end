@@ -62,7 +62,7 @@ public class QuestionController {
 
     // 특정 문의 상세 조회
     @Operation(summary = "1:1 문의 상세 조회 요청", description = "1:1 문의 상세 조회가 진행됩니다.", tags = { "QuestionController" })
-    @GetMapping("/{username}/{questionId}")
+    @GetMapping("/{questionId}/{username}")
     public ResponseEntity<ResponseDTO> getUserQuestionById(@PathVariable String username, @PathVariable Integer questionId) {
 
         int userId = userService.getUserIdFromUserName(username);
