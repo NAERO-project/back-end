@@ -464,31 +464,34 @@ public class ProductService {
             product.setProductDesc(productDTO.getProductDesc());
             product.setProductCheck(productDTO.getProductCheck());
 
-            List<TblOption> existingOptions = optionRepository.findByProductId(productDTO.getProductId());
-            for (TblOption option : existingOptions) {
-                option.setOptionCheck("N");
-            }
-            optionRepository.saveAll(existingOptions);
+//            List<TblOption> existingOptions = optionRepository.findByProductId(productDTO.getProductId());
+//            for (TblOption option : existingOptions) {
+//                option.setOptionCheck("N");
+//            }
+//            optionRepository.saveAll(existingOptions);
 
-            // Option 저장
             List<OptionDTO> options = productDTO.getOptions();
+            List<TblOption> optionModel = new ArrayList<>();
             if (options != null && !options.isEmpty()) {
-                // 기존 옵션 삭제
-                optionRepository.deleteByProductId(productDTO.getProductId());
-
-                List<TblOption> optionModel = new ArrayList<>();
                 for (OptionDTO option : options) {
-                    log.info("옵션 정보: {}", option);
-                    TblOption tblOption = new TblOption();
-                    tblOption.setOptionDesc(option.getOptionDesc());
-                    tblOption.setOptionQuantity(option.getOptionQuantity());
-                    tblOption.setAddPrice(option.getAddPrice());
-                    tblOption.setOptionCheck("Y");
-                    tblOption.setProductId(productDTO.getProductId());
-                    optionModel.add(tblOption);
+                    if (option.getOptionId() != null) {
+                    TblOption existingOption = optionRepository.findTblOptionByOptionId(option.getOptionId());
+                    existingOption.setOptionCheck(option.getOptionCheck());
+                    existingOption.setOptionQuantity(option.getOptionQuantity());
+                    existingOption.setOptionDesc(option.getOptionDesc());
+                    existingOption.setAddPrice(option.getAddPrice());
+                    optionRepository.save(existingOption);
+                    } else if (option.getOptionId() == null) {
+                        TblOption tblOption = new TblOption();
+                        tblOption.setOptionDesc(option.getOptionDesc());
+                        tblOption.setOptionQuantity(option.getOptionQuantity());
+                        tblOption.setAddPrice(option.getAddPrice());
+                        tblOption.setOptionCheck(option.getOptionCheck());
+                        tblOption.setProductId(productDTO.getProductId());
+                        optionModel.add(tblOption);
+                    }
                 }
-
-                // 새로운 옵션 저장
+                System.out.println("ㅁ왜앤뢘ㅇㄹ냉론ㅇ" + optionModel);
                 optionRepository.saveAll(optionModel);
             }
 
