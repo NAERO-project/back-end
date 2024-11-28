@@ -16,4 +16,6 @@ public interface AnswerRepository extends JpaRepository<TblAnswer, Integer> {
     void deleteByQuestionId(Integer questionId);
 
     TblAnswer findFirstByQuestionId(Integer questionId);
+
+
 }

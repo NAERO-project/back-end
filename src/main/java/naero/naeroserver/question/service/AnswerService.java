@@ -1,5 +1,6 @@
 package naero.naeroserver.question.service;
 
+import naero.naeroserver.common.Criteria;
 import naero.naeroserver.entity.inquiry.TblAnswer;
 import naero.naeroserver.entity.inquiry.TblQuestion;
 import naero.naeroserver.question.dto.AnswerDTO;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -37,43 +39,41 @@ public class AnswerService {
     }
 
     // 모든 질문을 페이징하여 조회
-    public Page<QuestionDTO> getAllQuestions(int page, int size) {
-        log.info("[AnswerService] getAllQuestions() Start");
+    public Object getAllQuestions(Criteria cri) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("questionDate").descending());
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+
+        Pageable pageable = PageRequest.of(index, count, Sort.by("questionId").descending());
+
         Page<TblQuestion> questionsPage = questionRepository.findAll(pageable);
+        List<TblQuestion> questionList = questionsPage.getContent();
 
-        Page<QuestionDTO> questionDTOPage = questionsPage.map(question -> modelMapper.map(question, QuestionDTO.class));
-
-        log.info("[AnswerService] getAllQuestions() End");
-        return questionDTOPage;
+        return questionList.stream().map(question -> modelMapper.map(question, QuestionDTO.class));
     }
 // 모든 답변을 페이징 처리하여 조회
-    public Page<AnswerDTO> getAllAnswers(int page, int size) {
-        log.info("[AnswerService] getAllAnswers() Start");
+    public Object getAllAnswers(Criteria cri, int total) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("answerDate").descending());
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+
+        Pageable pageable = PageRequest.of(index, count, Sort.by("answerId").descending());
+
         Page<TblAnswer> answersPage = answerRepository.findAll(pageable);
+        List<TblAnswer> answerList = answersPage.getContent();
 
-        // TblAnswer -> AnswerDTO 변환
-        Page<AnswerDTO> answerDTOPage = answersPage.map(answer -> modelMapper.map(answer, AnswerDTO.class));
-
-        log.info("[AnswerService] getAllAnswers() End");
-        return answerDTOPage;
+        return answerList.stream().map(answer -> modelMapper.map(answer, AnswerDTO.class));
     }
 
 //     질문의 총 개수 반환
-    public long getTotalQuestions() {
-        log.info("[AnswerService] getTotalQuestions() Start");
-        long count = questionRepository.count();
-        log.info("[AnswerService] getTotalQuestions() End - Total Count: " + count);
-        return count;
+    public int getTotalQuestions() {
+        return (int) questionRepository.count();
     }
-    public long getTotalAnswers() {
-        log.info("[AnswerService] getTotalAnswers() Start");
-        long count = answerRepository.count();
-        log.info("[AnswerService] getTotalAnswers() End - Total Count: " + count);
-        return count;
+
+    public int getTotalAnswers() {
+        // answerRepository의 총 개수를 반환
+        long count = answerRepository.count(); // count()는 long 타입을 반환
+        return (int) count; // int로 변환하여 반환
     }
 
     // ID로 특정 질문 조회
@@ -91,7 +91,7 @@ public class AnswerService {
 //        log.info("[AnswerService] getQuestionById() End");
 //        return questionDTO;
 //    }
-    public Map<String, Object> getQuestionById(Integer questionId) {
+    public Map<String, Object> getQuestionById(Integer questionId, Integer userId) {
         log.info("[AnswerService] getQuestionById() Start");
 
         // 질문 조회
@@ -106,6 +106,7 @@ public class AnswerService {
         Map<String, Object> result = new HashMap<>();
         result.put("question", questionDTO);
         result.put("answer", answerDTO);
+        result.put("userId", userId);
 
         log.info("[AnswerService] getQuestionById() End");
         return result;
@@ -114,7 +115,7 @@ public class AnswerService {
 
 
     // 답변 등록
-    public String createAnswer(Integer questionId, AnswerDTO answerDTO) {
+    public Object createAnswer(Integer questionId, AnswerDTO answerDTO) {
         log.info("[AnswerService] createAnswer() Start");
 
         try {
@@ -131,7 +132,7 @@ public class AnswerService {
             answerRepository.save(answer);
 
             log.info("[AnswerService] createAnswer() End - Success");
-            return "답변 등록 성공";
+            return answer;
         } catch (Exception e) {
             log.error("[AnswerService] createAnswer() Error", e);
             return "답변 등록 실패";

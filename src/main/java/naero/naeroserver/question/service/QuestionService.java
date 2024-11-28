@@ -1,5 +1,6 @@
 package naero.naeroserver.question.service;
 
+import naero.naeroserver.common.Criteria;
 import naero.naeroserver.entity.inquiry.TblQuestion;
 import naero.naeroserver.question.dto.QuestionDTO;
 import naero.naeroserver.question.repository.AnswerRepository;
@@ -9,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class QuestionService {
@@ -27,25 +31,33 @@ public class QuestionService {
     }
 
     // 1:1 문의 등록
-    public String createQuestion(QuestionDTO questionDTO) {
+    public TblQuestion createQuestion(QuestionDTO questionDTO, Integer userId) {
         // 필수 필드에 대한 Null 체크
         if (questionDTO.getQuestionContent() == null || questionDTO.getQuestionContent().trim().isEmpty()) {
             throw new IllegalArgumentException("문의 내용은 필수 입력 사항입니다.");
         }
 
+
         TblQuestion question = modelMapper.map(questionDTO, TblQuestion.class);
+        question.setUserId(userId);
 
         questionRepository.save(question);
 
-        return "문의 등록 성공";
+        return question;
     }
 
 
     // 1:1 문의 전체 조회
-    public Page<QuestionDTO> getUserQuestions(Integer userId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Object getUserQuestions(Integer userId, Criteria cri) {
+
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+
+        Pageable pageable = PageRequest.of(index, count, Sort.by("questionId").descending());
+
         Page<TblQuestion> questionsPage = questionRepository.findByUserId(userId, pageable);
-        return questionsPage.map(question -> modelMapper.map(question, QuestionDTO.class));
+        List<TblQuestion> questionList = questionsPage.getContent();
+        return questionList.stream().map(question -> modelMapper.map(question, QuestionDTO.class));
     }
 
     // 1:1 문의 상세 조회
@@ -56,13 +68,8 @@ public class QuestionService {
 
     // 1:1 문의 수정
     @Transactional
-    public String updateQuestion(Integer userId, Integer questionId, QuestionDTO questionDTO) {
+    public TblQuestion updateQuestion(Integer userId, Integer questionId, QuestionDTO questionDTO) {
         TblQuestion question = questionRepository.findByQuestionIdAndUserId(questionId, userId);
-
-        // 예외?
-        if (question == null || question.getQuestionStatus()) {
-            return "수정 불가 상태입니다.";
-        }
 
         // 수정할때 null이면 그대로
         if (questionDTO.getQuestionTitle() != null) {
@@ -76,7 +83,7 @@ public class QuestionService {
         }
 
         questionRepository.save(question);
-        return "문의 수정 성공";
+        return question;
     }
 
 
