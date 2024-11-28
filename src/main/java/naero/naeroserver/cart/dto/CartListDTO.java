@@ -5,8 +5,10 @@ public class CartListDTO {
    private Integer cartId;
    private Integer optionId;
    private Integer count;
+   private Integer price;
    private Integer addPrice;
    private Integer optionQuantity;
+   private String optionDesc;
    private Integer productId;
    private String productName;
    private Integer productPrice;
@@ -17,12 +19,14 @@ public class CartListDTO {
     public CartListDTO() {
     }
 
-    public CartListDTO(Integer cartId, Integer optionId, Integer count, Integer addPrice, Integer optionQuantity, Integer productId, String productName, Integer productPrice, String productThumbnail, String productImg, String productCheck) {
+    public CartListDTO(Integer cartId, Integer optionId, Integer count, Integer price, Integer addPrice, Integer optionQuantity, String optionDesc, Integer productId, String productName, Integer productPrice, String productThumbnail, String productImg, String productCheck) {
         this.cartId = cartId;
         this.optionId = optionId;
         this.count = count;
+        this.price = price;
         this.addPrice = addPrice;
         this.optionQuantity = optionQuantity;
+        this.optionDesc = optionDesc;
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
@@ -119,14 +123,32 @@ public class CartListDTO {
         this.productCheck = productCheck;
     }
 
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public String getOptionDesc() {
+        return optionDesc;
+    }
+
+    public void setOptionDesc(String optionDesc) {
+        this.optionDesc = optionDesc;
+    }
+
     @Override
     public String toString() {
         return "CartListDTO{" +
                 "cartId=" + cartId +
                 ", optionId=" + optionId +
                 ", count=" + count +
+                ", price=" + price +
                 ", addPrice=" + addPrice +
                 ", optionQuantity=" + optionQuantity +
+                ", optionDesc='" + optionDesc + '\'' +
                 ", productId=" + productId +
                 ", productName='" + productName + '\'' +
                 ", productPrice=" + productPrice +

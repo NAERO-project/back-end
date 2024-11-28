@@ -43,7 +43,7 @@ public class ManageController {
                 userService.updateDetail(user)));
     }
 
-    @GetMapping("/search/user/{page}")
+    @PostMapping("/search/user/{page}")
     public ResponseEntity<ResponseDTO> userSearch(@PathVariable Integer page, @RequestBody ManageSearchDTO crit){
         System.out.println("crit 확인"+ crit);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,
@@ -69,10 +69,10 @@ public class ManageController {
     }
 
     //판매자 회원만 검색
-    @GetMapping("/search/producer/{page}")
+    @PostMapping("/search/producer/{page}")
     public ResponseEntity<ResponseDTO> producerSearch(@PathVariable Integer page, @RequestBody ManageSearchDTO crit){
         System.out.println("crit 확인"+ crit);
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"message",
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, userService.searchProducerPage(page,SIZE , crit),
                 userService.searchProducer(page,SIZE , crit)
         ));
     }

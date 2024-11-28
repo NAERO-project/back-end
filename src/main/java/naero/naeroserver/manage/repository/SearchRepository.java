@@ -92,7 +92,7 @@ public class SearchRepository {
                 "b.username as username," +
                 " b.user_fullname as userFullname, " +
                 "a.producer_name as producerName, " +
-                "b.with_status as withStatus," +
+                "a.with_status as withStatus," +
                 " c.pgrade_name as gradeName " +
                 "FROM tbl_producer a " +
                 "LEFT JOIN tbl_user b " +
@@ -107,7 +107,7 @@ public class SearchRepository {
         int filterCount = 0;
         for (Map.Entry<String, String> filter : filters.entrySet()) {
             if (filterCount == 0) {
-                sql.append(" AND (a.");
+                sql.append(" AND (");
             } else {
                 sql.append(" OR ");
             }
@@ -121,7 +121,7 @@ public class SearchRepository {
         // 2. 키워드 조건 추가
         Map<String, String> keywords = dto.getKeyword();
         for (Map.Entry<String, String> keyword : keywords.entrySet()) {
-            sql.append(" AND a.").append(keyword.getKey())
+            sql.append(" AND ").append(keyword.getKey())
                     .append(" LIKE CONCAT('%', :keywordValue, '%')");
         }
 
@@ -163,26 +163,43 @@ public class SearchRepository {
 
 
     public int getTotalCount(ManageSearchDTO dto) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM tbl_user WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM tbl_user a LEFT JOIN tbl_grade b ON a.grade_id = b.grade_id WHERE 1=1");
 
+        // 필터 조건 추가
         Map<String, String> filters = dto.getFilter();
+        int filterCount = 0;
         for (Map.Entry<String, String> filter : filters.entrySet()) {
-            sql.append(" AND ").append(filter.getKey()).append(" = :filterValue");
+            if (filterCount == 0) {
+                sql.append(" AND (a.");
+            } else {
+                sql.append(" OR ");
+            }
+            sql.append(filter.getKey()).append(" = :filter").append(filterCount);
+            filterCount++;
         }
+        if (filterCount > 0) {
+            sql.append(")");
+        }
+
+        // 키워드 조건 추가
         Map<String, String> keywords = dto.getKeyword();
         for (Map.Entry<String, String> keyword : keywords.entrySet()) {
             sql.append(" AND ").append(keyword.getKey())
-                    .append(" LIKE CONCAT('%', :keywordValue, '%')");
+                    .append(" LIKE CONCAT('%', :keyword").append(keyword.getKey()).append(", '%')");
         }
 
         Query query = entityManager.createNativeQuery(sql.toString());
 
-        // 파라미터 바인딩
+        // 필터 파라미터 바인딩
+        filterCount = 0;
         for (Map.Entry<String, String> filter : filters.entrySet()) {
-            query.setParameter("filterValue", filter.getValue());
+            query.setParameter("filter" + filterCount, filter.getValue());
+            filterCount++;
         }
+
+        // 키워드 파라미터 바인딩
         for (Map.Entry<String, String> keyword : keywords.entrySet()) {
-            query.setParameter("keywordValue", keyword.getValue());
+            query.setParameter("keyword" + keyword.getKey(), keyword.getValue());
         }
 
         return ((Number) query.getSingleResult()).intValue();
@@ -193,24 +210,39 @@ public class SearchRepository {
                 "LEFT JOIN tbl_user b ON a.producer_id = b.user_id " +
                 "LEFT JOIN tbl_producer_grade c ON a.pgrade_id = c.pgrade_id WHERE 1=1");
 
+        // 1. 필터 조건 추가
         Map<String, String> filters = dto.getFilter();
+        int filterCount = 0;
         for (Map.Entry<String, String> filter : filters.entrySet()) {
-            sql.append(" AND ").append(filter.getKey()).append(" = :filterValue");
+            if (filterCount == 0) {
+                sql.append(" AND (");
+            } else {
+                sql.append(" OR ");
+            }
+            sql.append(filter.getKey()).append(" = :filter").append(filterCount);
+            filterCount++;
         }
+        if (filterCount > 0) {
+            sql.append(")");
+        }
+
+        // 2. 키워드 조건 추가
         Map<String, String> keywords = dto.getKeyword();
         for (Map.Entry<String, String> keyword : keywords.entrySet()) {
             sql.append(" AND ").append(keyword.getKey())
-                    .append(" LIKE CONCAT('%', :keywordValue, '%')");
+                    .append(" LIKE CONCAT('%', :keyword").append(keyword.getKey()).append(", '%')");
         }
 
         Query query = entityManager.createNativeQuery(sql.toString());
 
         // 파라미터 바인딩
+        filterCount = 0;
         for (Map.Entry<String, String> filter : filters.entrySet()) {
-            query.setParameter("filterValue", filter.getValue());
+            query.setParameter("filter" + filterCount, filter.getValue());
+            filterCount++;
         }
         for (Map.Entry<String, String> keyword : keywords.entrySet()) {
-            query.setParameter("keywordValue", keyword.getValue());
+            query.setParameter("keyword" + keyword.getKey(), keyword.getValue());
         }
 
         return ((Number) query.getSingleResult()).intValue();
