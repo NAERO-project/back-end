@@ -56,18 +56,28 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "AND p.productCheck = 'Y' " +
             "ORDER BY p.productCreateAt desc ")
     Page<TblProduct> findPagedProductCheckAndSmallCategory(@Param("mediumId") Integer mediumId,
-                                                          Pageable paging);
+                                                           Pageable paging);
 
     //    상품 리스트 미리보기 조회
     @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.productCreateAt DESC")
     List<TblProduct> findAllProductWithLimit(Pageable pageable);
 
-    @Query("SELECT p FROM TblProduct p, TblCategorySmall sc, TblCategoryMedium mc " +
-            "WHERE p.smallCategory.smallCategoryId = sc.smallCategoryId " +
-            "AND sc.mediumCategoryId = mc.mediumCategoryId AND mc.mediumCategoryId = :mediumId " +
+//    @Query("SELECT p FROM TblProduct p, TblCategorySmall sc, TblCategoryMedium mc " +
+//            "WHERE p.smallCategory.smallCategoryId = sc.smallCategoryId " +
+//            "AND sc.mediumCategoryId = mc.mediumCategoryId AND mc.mediumCategoryId = :mediumId " +
+//            "AND p.productCheck = 'Y' " +
+//            "ORDER BY p.productCreateAt DESC")
+//    List<TblProduct> findByFoodProductWithLimit(@Param("mediumId") Integer mediumId, Pageable pageable);
+
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "JOIN TblCategorySmall cs ON p.smallCategory.smallCategoryId = cs.smallCategoryId " +
+            "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
+            "JOIN TblCategoryLarge cl ON cm.largeCategoryId = cl.largeCategoryId " +
+            "AND cl.largeCategoryId = :largeId " +
             "AND p.productCheck = 'Y' " +
-            "ORDER BY p.productCreateAt DESC")
-    List<TblProduct> findByFoodProductWithLimit(@Param("mediumId") Integer mediumId, Pageable pageable);
+            "ORDER BY p.productCreateAt desc ")
+    List<TblProduct> selectProductCategoryPreviewLargeList(@Param("largeId") Integer largeId, Pageable pageable);
 
     //    브랜드 전체 페이지 상품 조회 (미리보기)
     @Query("SELECT p " +
@@ -93,7 +103,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "AND p.productCheck = 'Y' " +
             "ORDER BY p.productCreateAt desc ")
     Page<TblProduct> findByPageProductCheckAndId(@Param("producerId") Integer producerId,
-                                                     Pageable paging);
+                                                 Pageable paging);
 
     // 판매자 페이지 상품 조회
 //    @Query("SELECT new naero.naeroserver.product.dto.ProductOptionDTO(p, o.addPrice, o.optionDesc, o.optionQuantity) " +
@@ -113,28 +123,31 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
     Page<TblProduct> findProductListByProducer(@Param("producerId") Integer producerId,
                                                      Pageable paging);
 
-    @Query("SELECT p " +
-            "FROM TblProduct p " +
-            "JOIN TblCategorySmall cs ON p.smallCategory.smallCategoryId = cs.smallCategoryId " +
-            "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
-            "WHERE p.producerId = :producerId " +
-            "AND cm.mediumCategoryId = :mediumId " +
-            "AND p.productCheck = 'Y' " +
-            "ORDER BY p.productCreateAt desc ")
-    List<TblProduct> findByProductCheckAndSmallCategoryIdAndProducerId(@Param("producerId") Integer producerId,
-                                                                       @Param("mediumId") Integer mediumId);
 
     @Query("SELECT p " +
             "FROM TblProduct p " +
             "JOIN TblCategorySmall cs ON p.smallCategory.smallCategoryId = cs.smallCategoryId " +
             "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
+            "JOIN TblCategoryLarge cl ON cm.largeCategoryId = cl.largeCategoryId " +
             "WHERE p.producerId = :producerId " +
-            "AND cm.mediumCategoryId = :mediumId " +
+            "AND cl.largeCategoryId = :largeId " +
+            "AND p.productCheck = 'Y' " +
+            "ORDER BY p.productCreateAt desc ")
+    List<TblProduct> findByProductCheckAndSmallCategoryIdAndProducerId(@Param("producerId") Integer producerId,
+                                                                       @Param("largeId") Integer largeId);
+
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "JOIN TblCategorySmall cs ON p.smallCategory.smallCategoryId = cs.smallCategoryId " +
+            "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
+            "JOIN TblCategoryLarge cl ON cm.largeCategoryId = cl.largeCategoryId " +
+            "WHERE p.producerId = :producerId " +
+            "AND cl.largeCategoryId = :largeId " +
             "AND p.productCheck = 'Y' " +
             "ORDER BY p.productCreateAt desc ")
     Page<TblProduct> findByProductCheckAndSmallCategoryIdAndProducerId(@Param("producerId") Integer producerId,
-                                                                               @Param("mediumId") Integer mediumId,
-                                                                               Pageable paging);
+                                                                       @Param("largeId") Integer largeId,
+                                                                       Pageable paging);
 
 
 //    @Query("SELECT new naero.naeroserver.product.dto.ProductOptionDTO(p, op.addPrice, op.optionDesc, op.optionQuantity) " +
@@ -189,6 +202,12 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "WHERE cl.largeCategoryId = :largeId ")
     List<TblCategoryMedium> findAllProductCategory02(@Param("largeId") Integer largeId);
 
+//    @Query("SELECT cl " +
+//            "FROM  TblCategoryLarge cl" )
+//    List<TblCategoryLarge> findAllProductProducerCategory01(@Param("producerId") Integer producerId);
+
 
     TblProduct findByProductId(int id);
+
+
 }
