@@ -107,6 +107,7 @@ public class OrderService {
         orderUser.setUserFullName(userInfo.getUserFullname());
         orderUser.setUserEmail(userInfo.getUserEmail());
         orderUser.setUserPhone(userInfo.getUserPhone());
+        orderUser.setUserPoint(userInfo.getUserPoint());
 
         // 배송지 정보 + 할인 정보(잔여 포인트)
         newOrder.setUserId(userId);
@@ -236,6 +237,7 @@ public class OrderService {
             }
 
             TblUser user = userRepository.findTblUserByUserId(orderDTO.getUserId());
+            user.setUserPoint((int) (user.getUserPoint() + (orderDTO.getOrderTotalAmount() * 0.1)));
 
             // 2. 주문 정보 저장
 //            TblOrder order = modelMapper.map(orderDTO, TblOrder.class);

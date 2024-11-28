@@ -96,14 +96,22 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
                                                      Pageable paging);
 
     // 판매자 페이지 상품 조회
-    @Query("SELECT new naero.naeroserver.product.dto.ProductOptionDTO(p, o.addPrice, o.optionDesc, o.optionQuantity) " +
+//    @Query("SELECT new naero.naeroserver.product.dto.ProductOptionDTO(p, o.addPrice, o.optionDesc, o.optionQuantity) " +
+//            "FROM TblProduct p " +
+//            "LEFT JOIN TblOption o ON p.productId = o.productId " +
+//            "WHERE p.producerId = :producerId " +
+//            "AND p.productCheck = 'Y' " +
+//            "ORDER BY p.productCreateAt desc ")
+//    Page<ProductOptionDTO> findProductListByProducer(@Param("producerId") Integer producerId,
+//                                                 Pageable paging);
+
+    // 판매자 페이지 상품 조회
+    @Query("SELECT p " +
             "FROM TblProduct p " +
-            "LEFT JOIN TblOption o ON p.productId = o.productId " +
             "WHERE p.producerId = :producerId " +
-            "AND p.productCheck = 'Y' " +
             "ORDER BY p.productCreateAt desc ")
-    Page<ProductOptionDTO> findProductListByProducer(@Param("producerId") Integer producerId,
-                                                 Pageable paging);
+    Page<TblProduct> findProductListByProducer(@Param("producerId") Integer producerId,
+                                                     Pageable paging);
 
     @Query("SELECT p " +
             "FROM TblProduct p " +
@@ -180,4 +188,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "JOIN TblCategoryLarge cl ON cm.largeCategoryId = cl.largeCategoryId " +
             "WHERE cl.largeCategoryId = :largeId ")
     List<TblCategoryMedium> findAllProductCategory02(@Param("largeId") Integer largeId);
+
+
+    TblProduct findByProductId(int id);
 }
