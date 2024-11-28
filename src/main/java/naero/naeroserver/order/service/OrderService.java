@@ -218,7 +218,8 @@ public class OrderService {
                 paymentDTO.setReceiptUrl((String) paymentInfo.get("receipt_url"));
                 paymentDTO.setPaymentStatus("completed"); // 결제 완료로 설정
             } else {
-                paymentDTO.setPaymentStatus("pending"); // 결제 완료로 설정
+                paymentDTO.setPaymentStatus("pending"); // 무통장 입금은 바로 결제 완료가 아님
+                paymentDTO.setImpUid("payment-" + new Date().getTime());
             }
 
 

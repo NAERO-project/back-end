@@ -380,8 +380,6 @@ public class ProductService {
             // Option 저장
             List<OptionDTO> options = productDTO.getOptions();
             if (options != null && !options.isEmpty()) {
-                // 기존 옵션 삭제
-                optionRepository.deleteByProductId(productDTO.getProductId());
 
                 List<TblOption> optionModel = new ArrayList<>();
                 for (OptionDTO option : options) {
@@ -390,7 +388,8 @@ public class ProductService {
                     tblOption.setOptionDesc(option.getOptionDesc());
                     tblOption.setOptionQuantity(option.getOptionQuantity());
                     tblOption.setAddPrice(option.getAddPrice());
-                    tblOption.setProductId(productDTO.getProductId());
+                    tblOption.setOptionCheck("Y");
+                    tblOption.setProductId(savedProduct.getProductId());
                     optionModel.add(tblOption);
                 }
 
@@ -432,7 +431,7 @@ public class ProductService {
 
             List<TblOption> existingOptions = optionRepository.findByProductId(productDTO.getProductId());
             for (TblOption option : existingOptions) {
-                option.setProductId(2147483647); // 사용되지 않는 값으로 설정
+                option.setOptionCheck("N");
             }
             optionRepository.saveAll(existingOptions);
 
@@ -449,6 +448,7 @@ public class ProductService {
                     tblOption.setOptionDesc(option.getOptionDesc());
                     tblOption.setOptionQuantity(option.getOptionQuantity());
                     tblOption.setAddPrice(option.getAddPrice());
+                    tblOption.setOptionCheck("Y");
                     tblOption.setProductId(productDTO.getProductId());
                     optionModel.add(tblOption);
                 }
