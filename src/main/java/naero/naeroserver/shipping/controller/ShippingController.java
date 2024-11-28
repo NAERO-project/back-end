@@ -52,12 +52,15 @@ public class ShippingController {
      *      details about the potential HTTP responses that yor API might return.
      *  */
     @Operation(summary = "배송 조회 요청", description = "해당 배송건에 대한 정보 조회가 진행됩니다.", tags = {"ShippingController"})
-    @GetMapping("/shipping/{trackingNumber}")
-    public ResponseEntity<ResponseDTO> getShipping(@PathVariable String trackingNumber) {
+//    @GetMapping("/shipping/{trackingNumber}")
+    @GetMapping("/shipping/{shippingId}")
+//    public ResponseEntity<ResponseDTO> getShipping(@PathVariable String trackingNumber) {
+    public ResponseEntity<ResponseDTO> getShipping(@PathVariable Integer shippingId) {
 
         return ResponseEntity
                 .ok()
-                .body(new ResponseDTO(HttpStatus.OK, "배송 조회 성공", shippingService.selectShipping(trackingNumber)));
+//                .body(new ResponseDTO(HttpStatus.OK, "배송 조회 성공", shippingService.selectShipping(trackingNumber)));
+                .body(new ResponseDTO(HttpStatus.OK, "배송 조회 성공", shippingService.selectShipping(shippingId)));
     }
 
     @Operation(summary = "배송회사 조회 요청", description = "배송회사 정보 조회가 진행됩니다.", tags = {"ShippingController"})

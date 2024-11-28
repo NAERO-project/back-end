@@ -72,11 +72,13 @@ public class ShippingService {
         this.tblShipComRepository = tblShipComRepository;
     }
 
-    public Object selectShipping(String trackingNumber) {
+//    public Object selectShipping(String trackingNumber) {
+    public Object selectShipping(Integer shippingId) {
         log.info("[ShippingService] selectShippingList() Start");
 
         /* 설명. 메서드 이름은 반드시 레포지터리의 콜럼명이랑 일치해야 함. 아니면 에러 발생 */
-        TblShipping shippingDetail = tblShippingRepository.findByTrackingNumber(trackingNumber);
+//        TblShipping shippingDetail = tblShippingRepository.findByTrackingNumber(trackingNumber);
+        TblShipping shippingDetail = tblShippingRepository.findByShippingId(shippingId);
 
         log.info("[ShippingService] shippingList {}", shippingDetail);
         log.info("[ShippingService] selectShippingList() End");
@@ -138,8 +140,6 @@ public class ShippingService {
 
         shippingComList.stream().map(company -> modelMapper.map(company, ShipComDTO.class))
                 .collect(Collectors.toList());
-
-//        System.out.println("shippingComListCov = " + shippingComListCov);
 
         return shippingComList;
     }
