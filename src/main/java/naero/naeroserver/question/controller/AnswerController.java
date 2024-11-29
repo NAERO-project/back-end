@@ -106,7 +106,7 @@ public class AnswerController {
     @PutMapping("/questions/{questionId}/answers/{answerId}")
     public ResponseEntity<ResponseDTO> updateAnswer(@PathVariable Integer questionId, @PathVariable Integer answerId, @RequestBody AnswerDTO answerDTO) {
 
-        String result = answerService.updateAnswer(questionId, answerDTO);
+        String result = answerService.updateAnswer(answerId, answerDTO);
 
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "수정 성공", result));
     }
