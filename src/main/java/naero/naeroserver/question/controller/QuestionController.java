@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/questions")
 public class QuestionController {
@@ -62,14 +64,14 @@ public class QuestionController {
 
     // 특정 문의 상세 조회
     @Operation(summary = "1:1 문의 상세 조회 요청", description = "1:1 문의 상세 조회가 진행됩니다.", tags = { "QuestionController" })
-    @GetMapping("/{questionId}/{username}")
-    public ResponseEntity<ResponseDTO> getUserQuestionById(@PathVariable String username, @PathVariable Integer questionId) {
+    @GetMapping("/{questionId}/answers/{answerId}/{username}")
+    public ResponseEntity<ResponseDTO> getUserQuestionById(@PathVariable String username, @PathVariable Integer questionId, @PathVariable Integer answerId) {
 
         int userId = userService.getUserIdFromUserName(username);
 
-        QuestionDTO question = questionService.getUserQuestionById(userId, questionId);
+        Map<String, Object> questionWithAnswer = questionService.getUserQuestionById(questionId, userId, answerId);
 
-        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "상세 조회 성공", question));
+        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "상세 조회 성공", questionWithAnswer));
     }
 
     // 1:1 문의 수정

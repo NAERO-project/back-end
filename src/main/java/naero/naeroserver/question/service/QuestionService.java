@@ -1,7 +1,9 @@
 package naero.naeroserver.question.service;
 
 import naero.naeroserver.common.Criteria;
+import naero.naeroserver.entity.inquiry.TblAnswer;
 import naero.naeroserver.entity.inquiry.TblQuestion;
+import naero.naeroserver.question.dto.AnswerDTO;
 import naero.naeroserver.question.dto.QuestionDTO;
 import naero.naeroserver.question.repository.AnswerRepository;
 import naero.naeroserver.question.repository.QuestionRepository;
@@ -14,7 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class QuestionService {
@@ -61,9 +65,20 @@ public class QuestionService {
     }
 
     // 1:1 문의 상세 조회
-    public QuestionDTO getUserQuestionById(Integer userId, Integer questionId) {
+    public Map<String, Object> getUserQuestionById(Integer userId, Integer questionId, Integer answerId) {
         TblQuestion question = questionRepository.findByQuestionIdAndUserId(questionId, userId);
-        return question == null ? null : modelMapper.map(question, QuestionDTO.class);
+        QuestionDTO questionDTO = (question != null) ? modelMapper.map(question, QuestionDTO.class) : null;
+
+        TblAnswer answer = answerRepository.findFirstByQuestionId(questionId);
+        AnswerDTO answerDTO = (answer != null) ? modelMapper.map(answer, AnswerDTO.class) : null;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("question", questionDTO);
+        result.put("answer", answerDTO);
+        result.put("userId", userId);
+        result.put("answerId", answerId);
+
+        return result;
     }
 
     // 1:1 문의 수정

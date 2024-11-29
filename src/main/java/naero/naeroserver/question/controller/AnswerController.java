@@ -42,7 +42,7 @@ public class AnswerController {
 
         int total = (int) answerService.getTotalQuestions();
 
-        Criteria cri = new Criteria(Integer.valueOf(offset), 2);
+        Criteria cri = new Criteria(Integer.valueOf(offset), 5);
         PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
         pagingResponseDTO.setData(answerService.getAllQuestions(cri));
         pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
@@ -58,7 +58,7 @@ public class AnswerController {
         int total = (int) answerService.getTotalAnswers();
 
         // 페이징 정보를 설정
-        Criteria cri = new Criteria(Integer.valueOf(offset), 2);
+        Criteria cri = new Criteria(Integer.valueOf(offset), 200);
 
         // 응답 데이터를 설정
         PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();

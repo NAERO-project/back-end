@@ -42,7 +42,7 @@ public class ReviewController {
 
         int total = reviewService.getTotalQuestions(userId);
 
-        Criteria cri = new Criteria(Integer.valueOf(offset), 2);
+        Criteria cri = new Criteria(Integer.valueOf(offset), 10);
 
         PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
         pagingResponseDTO.setData(reviewService.getAllReviewsByUser(userId, cri));
