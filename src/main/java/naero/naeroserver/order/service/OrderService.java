@@ -94,6 +94,7 @@ public class OrderService {
     // 주문 페이지로 이동 시 들고갈 정보 생성
     public OrderPageDTO startOrder(List<CartDTO> cartDTOList) {
 
+        System.out.println("왔네");
         Integer userId = cartDTOList.get(0).getUserId();    // 회원번호
 
         OrderDTO newOrder = new OrderDTO();
@@ -114,10 +115,13 @@ public class OrderService {
         newOrder.setRecipientName(userInfo.getUserFullname());
         newOrder.setRecipientPhoneNumber(userInfo.getUserPhone());
         newOrder.setPointDiscount(userInfo.getUserPoint());
-        newOrder.setPostalCode(userAddressInfo.get(0).getPostalCode());
-        newOrder.setAddressRoad(userAddressInfo.get(0).getAddressRoad());
-        newOrder.setAddressDetail(userAddressInfo.get(0).getAddressDetail());
-        newOrder.setAddressName(userAddressInfo.get(0).getAddressName());
+
+        if (!userAddressInfo.isEmpty()) {
+            newOrder.setPostalCode(userAddressInfo.get(0).getPostalCode());
+            newOrder.setAddressRoad(userAddressInfo.get(0).getAddressRoad());
+            newOrder.setAddressDetail(userAddressInfo.get(0).getAddressDetail());
+            newOrder.setAddressName(userAddressInfo.get(0).getAddressName());
+        }
 
         // 주문할 상품 정보 조회해서 리스트에 담기
         List<OrderPageProductDTO> orderProductsInfo = new ArrayList<>();
@@ -541,7 +545,7 @@ public class OrderService {
 
         TblPayment payment = paymentRepository.findByOrderId(Integer.valueOf(orderId));
 
-        if (!order.getDeliveryStatus().equals("pending") || order.getOrderStatus().equals("canceled")) {
+        if (order.getOrderStatus().equals("canceled")) {
             throw new IllegalStateException("취소 불가한 주문 건 입니다.");
         }
 

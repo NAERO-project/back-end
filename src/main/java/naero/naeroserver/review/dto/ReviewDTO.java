@@ -11,13 +11,13 @@ public class ReviewDTO {
     private int reviewRating;
     private LocalDateTime date;
 
-    private int productId;
-    private int userId;
+    private Integer productId;
+    private Integer userId;
 
     public ReviewDTO() {
     }
 
-    public ReviewDTO(Integer reviewId, String review, String reviewImage, String reviewThumbnail, int reviewRating, LocalDateTime date, int productId, int userId) {
+    public ReviewDTO(Integer reviewId, String review, String reviewImage, String reviewThumbnail, int reviewRating, LocalDateTime date, Integer productId, Integer userId) {
         this.reviewId = reviewId;
         this.review = review;
         this.reviewImage = reviewImage;
@@ -76,7 +76,7 @@ public class ReviewDTO {
         this.date = date;
     }
 
-    public int getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
@@ -84,7 +84,7 @@ public class ReviewDTO {
         this.productId = productId;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
