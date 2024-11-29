@@ -7,4 +7,6 @@ public interface TblShippingRepository extends CrudRepository<TblShipping, Integ
 
     /* 설명. 송장번호를 통한 배송상세 조회 */
     TblShipping findByTrackingNumber(String trackingNumber);
+
+    TblShipping findByShippingId(Integer shippingId);
 }

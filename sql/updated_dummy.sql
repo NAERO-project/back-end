@@ -12,6 +12,7 @@ INSERT INTO tbl_producer_grade (pgrade_name, crit_sales, crit_review) VALUES
 ;
 
 
+
 INSERT INTO tbl_role (role_name)VALUES
                                     ('ROLE_USER'),
                                     ('ROLE_PRODUCER'),
@@ -21,52 +22,80 @@ INSERT INTO tbl_role (role_name)VALUES
                                     ('ROLE_CS_ADMIN')
 ;
 #유저데이터에 들어가는 평문 패스워드 더미는 로그인 되지 않습니다
-INSERT INTO tbl_user (user_fullname, username, password, user_email, user_phone) VALUES
-                                                                                     ('김민수', 'producer001', '$2a$10$HP4FtkWmgmdyMcO26OQA4uo5oKiPhcNCEwTtRMlcaWzvWTPn6ahRS', 'user001@mail.com',   '010-1111-1111'), #비밀번호: pass001
-                                                                                     ('이영희', 'producer002', '$2a$10$tQW/8wT3l6c6eN6BOAO6ye1LHbR35rEEwCOGNhzq/vtcXCPLm9NCS', 'user002@mail.com',   '010-2222-2222'),#비밀번호: pass002
-                                                                                     ('박민지', 'user003'    , '$2a$10$b7TscGZWX6qgqFGUME2gVe2H.1dmPPO77fqnH7KILi3uqIPE.Qih6', 'user003@mail.com',       '010-3333-3333'),#비밀번호: pass003
-                                                                                     ('최수지', 'user004'    , '$2a$10$5CTB9ZpEMcuqtLuEXs4AAuM/45EtmF9SpRjgPCvW1M0Os9MjMxYwG', 'user004@mail.com',       '010-4444-4444'),#비밀번호: pass004
-                                                                                     ('제갈명진', 'user005'  ,  '$2a$10$kj5/L3Yyu6mEQWuM8K8QHujAJXssAPkpsTpzbmhn9qZYWSbc2e/fS', 'user005@mail.com',       '010-5555-5555'),#비밀번호: pass005
-                                                                                     ('감유진', 'user006'    , '$2a$10$MeMKaVZF3yYX./sVeVA6o.BcAqBbKySGc.zhVJel/zM73HLiIwN2e'  , 'user006@mail.com',       '010-6666-6666'),#비밀번호: pass006
-                                                                                     ('간리자', 'admin001'   , '$2a$10$hYDStBt17vWyNFtsTBymqu2o0xloLARtc96hftXJDMr0ng9eAqoUK', 'admin001@mail.com',    NULL), #비밀번호 admin001
-                                                                                     ('리간자', 'admin002'   , '$2a$10$RmQLLj/nagiSykiYpq5yQuAXAE/lkuqvxPlHEOKv9/JL249d3oI3e', 'admin002@mail.com',    NULL), #비밀번호 admin002
-                                                                                     ('cs직원', 'admin003'   ,'$2a$10$R06k1HxbCF0n7Ve9ZFPPC.D8PHjPQsayjjXN58GGAaZdpEsYM0.4G' , 'admin003@mail.com',   NULL) #비밀번호 admin003
+INSERT INTO tbl_user (user_fullname, username, password, user_email, user_phone, user_point) VALUES
+                                                                                                 ('김민수', 'producer001', '$2a$10$HP4FtkWmgmdyMcO26OQA4uo5oKiPhcNCEwTtRMlcaWzvWTPn6ahRS', 'producer001@mail.com',   '010-1111-1111', 100), #비밀번호: pass001
+                                                                                                 ('이영희', 'producer002', '$2a$10$tQW/8wT3l6c6eN6BOAO6ye1LHbR35rEEwCOGNhzq/vtcXCPLm9NCS', 'producer002@mail.com',   '010-2222-2222', 0), #비밀번호: pass002
+                                                                                                 ('박지훈', 'producer003', '$2a$10$z8XEJuIQ72E3h3ZKZ/UayO6mB2.Y2xDt4Bp8bHbCeZtEFQSdaYxMu', 'producer003@mail.com', '010-3333-3333', 50), -- 비밀번호: pass003
+                                                                                                 ('최수민', 'producer004', '$2a$10$kRXC9zF3pFO9o2k9e2zHBOwzEfhb0ppzy/gbft0Pp9N3N9FqsH5o2', 'producer004@mail.com', '010-4444-4444', 120), -- 비밀번호: pass004
+                                                                                                 ('한지민', 'producer005', '$2a$10$JW3V7tlfGH0zRqsBtk5pluOu5mbrWUVgpQtVtBV2SeCEGgLyM4a0G', 'producer005@mail.com', '010-5555-5555', 80), -- 비밀번호: pass005
+                                                                                                 ('김철수', 'producer006', '$2a$10$n/T.uexEIp3XqDJNUix3yeKovW6zKv2syrFZ4PteTXcLF7QjWVRoS', 'producer006@mail.com', '010-6666-6666', 0), -- 비밀번호: pass006
+                                                                                                 ('이하은', 'producer007', '$2a$10$UFrTtLbVdp9RuMLNCEVylOFtFghzVP2zPbV/MZHeXcLzHTqjWu8Si', 'producer007@mail.com', '010-7777-7777', 30), -- 비밀번호: pass007
+                                                                                                 ('오준서', 'producer008', '$2a$10$TcC90b8Lnfn2DgFMY/V5F.KVbNSLqH0Dd6Fzv6pb9bOAF7R9NtGcO', 'producer008@mail.com', '010-8888-8888', 200), -- 비밀번호: pass008
+                                                                                                 ('정민호', 'producer009', '$2a$10$B3cQf.JzXMQu5CQpkn5.1.GjUzBXFnz9CBMez/MFqQftx1RpuWJLy', 'producer009@mail.com', '010-9999-9999', 15), -- 비밀번호: pass009
+                                                                                                 ('문수아', 'producer010', '$2a$10$sVOc.v4cHtBMs4FEZHzcFeOpYlTV8t.bhpqvBxeKHe9P6HhfVbXu2', 'producer010@mail.com', '010-0000-0000', 75), -- 비밀번호: pass010
+                                                                                                 ('박민지', 'user003'    , '$2a$10$b7TscGZWX6qgqFGUME2gVe2H.1dmPPO77fqnH7KILi3uqIPE.Qih6', 'user003@mail.com',       '010-3333-3333', 3200),#비밀번호: pass003
+                                                                                                 ('최수지', 'user004'    , '$2a$10$5CTB9ZpEMcuqtLuEXs4AAuM/45EtmF9SpRjgPCvW1M0Os9MjMxYwG', 'user004@mail.com',       '010-4444-4444', 1000),#비밀번호: pass004
+                                                                                                 ('제갈명진', 'user005'  ,  '$2a$10$kj5/L3Yyu6mEQWuM8K8QHujAJXssAPkpsTpzbmhn9qZYWSbc2e/fS', 'user005@mail.com',       '010-5555-5555', 4000),#비밀번호: pass005
+                                                                                                 ('감유진', 'user006'    , '$2a$10$MeMKaVZF3yYX./sVeVA6o.BcAqBbKySGc.zhVJel/zM73HLiIwN2e'  , 'user006@mail.com',       '010-6666-6666', 500),#비밀번호: pass006
+                                                                                                 ('간리자', 'admin001'   , '$2a$10$hYDStBt17vWyNFtsTBymqu2o0xloLARtc96hftXJDMr0ng9eAqoUK', 'admin001@mail.com',NULL, 0), #비밀번호 admin001
+                                                                                                 ('리간자', 'admin002'   , '$2a$10$RmQLLj/nagiSykiYpq5yQuAXAE/lkuqvxPlHEOKv9/JL249d3oI3e', 'admin002@mail.com',    NULL, 0), #비밀번호 admin002
+                                                                                                 ('cs직원', 'admin003'   ,'$2a$10$R06k1HxbCF0n7Ve9ZFPPC.D8PHjPQsayjjXN58GGAaZdpEsYM0.4G' , 'admin003@mail.com',   NULL, 0); #비밀번호 admin003
 ;
 
 INSERT INTO tbl_producer (producer_id, busi_no, producer_add, producer_name, producer_phone, delivery_fee, delivery_crit) VALUES
-                                                                                                                              (1,'1234578910', '서울특별시 구로구 ㅇㅇ동 ㅇㅇ건물 ㅇㅇ호', 'ㅇㅇ상회', '02-0000-1111', 1000, 30000),
-                                                                                                                              (2,'1234578960', '인천광역시  ㅇㅇ호', 'ㅇㅇ푸드', '032-0000-1111', 0, 0);
+                                                                                                                              (1, '1234578910', '서울 구로구 구로동로 2', '미도리크리머리', '02-0000-1111', 1000, 30000), -- NON-DAIRIES Items
+                                                                                                                              (2, '1234578961', '인천 강화군 강화읍 갑룡길 3', '그린스낵', '032-0000-1112', 2000, 40000), -- SNACK Items
+                                                                                                                              (3, '1234578962', '경기 성남시 분당구 판교역로 166', '베지델리', '031-0000-1113', 1500, 25000), -- FROZEN NOVELTIES/MEALS Items
+                                                                                                                              (4, '1234578963', '서울 강남구 가로수길 9', '비건푸드', '02-0000-1114', 0, 50000), -- PLANT-BASED Meat
+                                                                                                                              (5, '1234578964', '서울 송파구 동남로 105', '오가닉베이커리', '02-0000-1115', 1000, 30000), -- BAKERY Items
+                                                                                                                              (6, '1234578965', '서울 성동구 서울숲길 18', '내츄럴드링크', '02-0000-1116', 0, 40000), -- DRINKS Items
+                                                                                                                              (7, '1234578966', '서울 용산구 두텁바위로 9', '프레쉬팜', '02-0000-1117', 1500, 20000), -- PRODUCE
+                                                                                                                              (8, '1234578967', '서울 금천구 가마산로 96', '헬스케어코리아', '02-0000-1118', 0, 0), -- Health & Beauty
+                                                                                                                              (9, '1234578968', '서울 종로구 송월길 2', '클린리빙', '02-0000-1119', 1000, 25000), -- PERSONAL HYGIENE
+                                                                                                                              (10, '1234578969', '경기 의정부시 가금로 29', '에코스킨', '031-0000-1120', 2000, 30000); -- SKINCARE
 
 INSERT INTO tbl_user_role (user_id, role_id)VALUES
                                                 (1,2),
                                                 (2,2),
-                                                (5,2),
-                                                (5,3),
-                                                (7,2),
-                                                (7,3),
-                                                (7,4),
-                                                (7,5),
-                                                (7,6),
-                                                (8,2),
-                                                (8,3),
-                                                (8,4),
-                                                (8,5),
-                                                (8,6),
-                                                (9,6)
+                                                (3, 2),
+                                                (3, 2),
+                                                (4, 2),
+                                                (5, 2),
+                                                (6, 2),
+                                                (7, 2),
+                                                (8, 2),
+                                                (9, 2),
+                                                (10, 2),
+                                                (1,1),
+                                                (2,1),
+                                                (3, 1),
+                                                (3, 1),
+                                                (4, 1),
+                                                (5, 1),
+                                                (6, 1),
+                                                (7, 1),
+                                                (8, 1),
+                                                (9, 1),
+                                                (10, 1),
+                                                (15,5),
+                                                (16,5),
+                                                (17,5),
+                                                (11,1),
+                                                (12,1),
+                                                (13,1),
+                                                (14,1);
 ;
 
 INSERT INTO tbl_question (question_title, question_content, question_image, user_id)VALUES
-                                                                                        ('상품 등록이 안됩니다.', '상품 등록을 하려고 하는데, ㅇㅇㅇㅇ라는 안내가 뜨는 화면에서 넘어가지 않습니다.', 'qus_image1.png', 1),
-                                                                                        ('상품에 여러가지 옵션 등록이 가능한가요?', '같은 상품에 용량에 따라 다른 가격을 받아 판매하고 싶습니다.', 'qus_image2.png', 1),
-                                                                                        ('배달비 문의.', '상품 배달비를 무료로 하고싶습니다. 설정하는 법을 알려주세요', NULL, 2),
-                                                                                        ('옵션이 뭐예요?.', '상품 구매할 때, 옵션이란 뭔가요? 꼭 선택해야하나요? ', 'qus_image4.png', 3);
+                                                                                        ('상품 등록이 안됩니다.', '상품 등록을 하려고 하는데, 관리자에게 문의하라는 안내가 뜨는 화면에서 넘어가지 않습니다.', 'qus_image1.png', 11),
+                                                                                        ('상품에 여러가지 옵션 등록이 가능한가요?', '같은 상품에 용량에 따라 다른 가격을 받아 판매하고 싶습니다.', 'qus_image2.png', 12),
+                                                                                        ('배달비 문의.', '상품 배달비를 무료로 하고싶습니다. 설정하는 법을 알려주세요', NULL, 13),
+                                                                                        ('옵션이 뭐예요?.', '상품 구매할 때, 옵션이란 뭔가요? 꼭 선택해야하나요? ', 'qus_image4.png', 14);
 
 UPDATE tbl_question
 SET question_title = '업데이트 테스트를 진행합니다 시간이 조금 지났어요',
     question_content = '새로운 내용'
 WHERE question_id=4;
-
-
 
 INSERT INTO tbl_answer (answer_title, answer_content, question_id, answer_emp_id) VALUES
                                                                                       ('상품 등록에 대해 안내드립니다.', '불편을 드려 죄송합니다 고객님. 문의 주신 내용의 경우, 첨부해주신 화면에서 -로 이동후, 설정을 해주시면 등록이 정상적으로 완료됩니다.', 1, 6),
@@ -76,73 +105,272 @@ INSERT INTO tbl_alarm (alarm_url, alarm_detail, user_id)VALUES
                                                             (NULL, '새 상품이 입고되었습니다', 1 ),
                                                             ('https://m.map.kakao.com/','카카오맵으로 이동하는 임시 url입니다.', 1);
 
-INSERT INTO tbl_category_large (large_category_name)VALUES
-                                                        ('기타'),
-                                                        ('음식'),
-                                                        ('생활'),
-                                                        ('뷰티')
+INSERT INTO tbl_category_large (large_category_id, large_category_name)VALUES
+                                                        (1,'전체'),
+                                                        (2,'식품'),
+                                                        (3,'헬스케어'),
+                                                        (4,'패션')
 ;
-INSERT INTO tbl_category_medium (medium_category_name, large_category_id)VALUES
-                                                                             ('기타',1),
-                                                                             ('음료',2),
-                                                                             ('디저트',2),
-                                                                             ('주방',3),
-                                                                             ('욕실',3),
-                                                                             ('침실',3),
-                                                                             ('옷', 4),
-                                                                             ('화장품', 4);
+INSERT INTO tbl_category_medium (medium_category_id, medium_category_name, large_category_id)VALUES
+                                                                             (1, '델리',2),
+                                                                             (2, '음료',2),
+                                                                             (3,'간식',2),
+                                                                             (4,'제과',2),
+                                                                             (5,'과일/야채',2),
+                                                                             (6,'비건 유제품',2),
+                                                                             (7,'건강 기능 식품', 3),
+                                                                             (8,'생활용품', 3),
+                                                                             (9,'스킨케어', 3),
+                                                                             (10,'의류', 4),
+                                                                             (11,'신발', 4),
+                                                                             (12,'가방', 4);
 
 INSERT INTO tbl_category_small (small_category_name, medium_category_id) VALUES
-                                                                             ('기타',1),
-                                                                             ('탄산', 2),
-                                                                             ('과채', 2),
-                                                                             ('케이크', 3),
-                                                                             ('주방용품', 4),
-                                                                             ('욕실용품', 5),
-                                                                             ('침실용품', 6),
-                                                                             ('상의', 7),
-                                                                             ('스킨케어', 8);
+                                                                             ('프루테리언', 1),
+                                                                             ('비건', 1),
+                                                                             ('락토', 1),
+                                                                             ('오보', 1),
+                                                                             ('락토오보', 1),
+                                                                             ('페스코', 1),
+                                                                             ('폴로', 1),
+                                                                             ('플렉시테리언', 1),
+                                                                             ('기타', 1),
+                                                                             ('프루테리언', 2),
+                                                                             ('비건', 2),
+                                                                             ('락토', 2),
+                                                                             ('오보', 2),
+                                                                             ('락토오보', 2),
+                                                                             ('페스코', 2),
+                                                                             ('폴로', 2),
+                                                                             ('플렉시테리언', 2),
+                                                                             ('기타', 2),
+                                                                             ('프루테리언', 3),
+                                                                             ('비건', 3),
+                                                                             ('락토', 3),
+                                                                             ('오보', 3),
+                                                                             ('락토오보', 3),
+                                                                             ('페스코', 3),
+                                                                             ('폴로', 3),
+                                                                             ('플렉시테리언', 3),
+                                                                             ('기타', 3),
+                                                                             ('프루테리언', 4),
+                                                                             ('비건', 4),
+                                                                             ('락토', 4),
+                                                                             ('오보', 4),
+                                                                             ('락토오보', 4),
+                                                                             ('페스코', 4),
+                                                                             ('폴로', 4),
+                                                                             ('플렉시테리언', 4),
+                                                                             ('기타', 4),
+                                                                             ('프루테리언', 5),
+                                                                             ('비건', 5),
+                                                                             ('락토', 5),
+                                                                             ('오보', 5),
+                                                                             ('락토오보', 5),
+                                                                             ('페스코', 5),
+                                                                             ('폴로', 5),
+                                                                             ('플렉시테리언', 5),
+                                                                             ('기타', 5),
+                                                                             ('프루테리언', 6),
+                                                                             ('비건', 6),
+                                                                             ('락토', 6),
+                                                                             ('오보', 6),
+                                                                             ('락토오보', 6),
+                                                                             ('페스코', 6),
+                                                                             ('폴로', 6),
+                                                                             ('플렉시테리언', 6),
+                                                                             ('기타', 6),
+                                                                             ('프루테리언', 7),
+                                                                             ('비건', 7),
+                                                                             ('락토', 7),
+                                                                             ('오보', 7),
+                                                                             ('락토오보', 7),
+                                                                             ('페스코', 7),
+                                                                             ('폴로', 7),
+                                                                             ('플렉시테리언', 7),
+                                                                             ('기타', 7),
+                                                                             ('프루테리언', 8),
+                                                                             ('비건', 8),
+                                                                             ('락토', 8),
+                                                                             ('오보', 8),
+                                                                             ('락토오보', 8),
+                                                                             ('페스코', 8),
+                                                                             ('폴로', 8),
+                                                                             ('플렉시테리언', 8),
+                                                                             ('기타', 8),
+                                                                             ('프루테리언', 9),
+                                                                             ('비건', 9),
+                                                                             ('락토', 9),
+                                                                             ('오보', 9),
+                                                                             ('락토오보', 9),
+                                                                             ('페스코', 9),
+                                                                             ('폴로', 9),
+                                                                             ('플렉시테리언', 9),
+                                                                             ('기타', 9),
+                                                                             ('프루테리언', 10),
+                                                                             ('비건', 10),
+                                                                             ('락토', 10),
+                                                                             ('오보', 10),
+                                                                             ('락토오보', 10),
+                                                                             ('페스코', 10),
+                                                                             ('폴로', 10),
+                                                                             ('플렉시테리언', 10),
+                                                                             ('기타', 10),
+                                                                             ('프루테리언', 11),
+                                                                             ('비건', 11),
+                                                                             ('락토', 11),
+                                                                             ('오보', 11),
+                                                                             ('락토오보', 11),
+                                                                             ('페스코', 11),
+                                                                             ('폴로', 11),
+                                                                             ('플렉시테리언', 11),
+                                                                             ('기타', 11),
+                                                                             ('프루테리언', 12),
+                                                                             ('비건', 12),
+                                                                             ('락토', 12),
+                                                                             ('오보', 12),
+                                                                             ('락토오보', 12),
+                                                                             ('페스코', 12),
+                                                                             ('폴로', 12),
+                                                                             ('플렉시테리언', 12),
+                                                                             ('기타', 12);
 
 INSERT INTO tbl_product (product_name, product_price, product_thumbnail, product_img, product_desc, product_check, producer_id, small_category_id) VALUES
-                                                                                                                                                                         ('유기농 토마토 주스', '2000', 'product_thum_image001.png','product_image001', '통통튀는 상큼한 유기농 상품 착즙 토마토 쥬-스', 'Y', 1, 3),
-                                                                                                                                                                         ('콜라', 1200, 'product_thum_image003.png', 'product_image003.png', '시원하고 청량한 탄산 음료 콜라입니다.', 'Y',  1, 2),
-                                                                                                                                                                         ('오렌지 주스', 2500, 'product_thum_image004.png', 'product_image004.png', '신선한 오렌지를 착즙한 과채 음료입니다.', 'Y',  2, 3),
-                                                                                                                                                                         ('초코 케이크', 5000, 'product_thum_image005.png', 'product_image005.png', '달콤하고 진한 초코 케이크입니다.', 'Y',  2, 4),
-                                                                                                                                                                         ('냄비 세트', 30000, 'product_thum_image006.png', 'product_image006.png', '다양한 크기의 냄비로 구성된 주방용품 세트입니다.', 'Y',  2, 5),
-                                                                                                                                                                         ('비누 세트', 8000, 'product_thum_image007.png', 'product_image007.png', '피부에 좋은 성분을 사용한 욕실용품 비누 세트입니다.', 'Y',  2, 6),
-                                                                                                                                                                         ('베개', 12000, 'product_thum_image008.png', 'product_image008.png', '푹신한 침실용품 베개입니다.', 'Y',  1, 7),
-                                                                                                                                                                         ('여름 티셔츠', 7000, 'product_thum_image009.png', 'product_image009.png', '시원하고 편안한 여름 티셔츠입니다.', 'Y', 1, 8),
-                                                                                                                                                                         ('수분 크림', 15000, 'product_thum_image010.png', 'product_image010.png', '피부에 촉촉함을 더해주는 스킨케어 수분 크림입니다.', 'Y',  2, 9);
+-- Medium 카테고리 1: 델리
+-- Small 카테고리 1: 프루테리언
+('비건 치즈 버거', 13000, 'thum_image_5.png', 'image_5.jpg', '식물성 패티와 비건 치즈로 만든 맛있는 버거입니다.', 'Y', 1, 2),
+('템페', 9000, 'thum_image_8.png', '15436328-7cb3-4efa-b333-980f63f8634a.jpg', '국산 콩으로 만든 식물성 단백질 템페입니다.', 'Y', 1, 2),
+('비건 라이스볼', 9000, 'thum_image_4.png', 'premium_photo-1721494882150-e2a03451b163.jpg', '건강한 아침 식사 메뉴입니다.', 'Y', 1, 1),
+('크로스바디 백', 60000, 'thum_image_50.png', 'bag_7a61753b-e372-4ca0-84a9-24423da4cf8c.png', '실용적이고 스타일리시한 크로스바디 백입니다.', 'Y', 10, 108),
+('아로마 앰플', 15000, 'thum_image_48.png', 'maison-meunier-active-botanical-facial-serum-with-coenzyme-q10-30ml-16085244149873_400x.jpg', '친환경 성분으로 이루어진 앰플입니다.', 'Y', 10, 74),
+('비건 가죽 부츠', 60000, 'thum_image_52.png', 'boots_137d9e31-1dc8-4e47-92e3-107a95f80ab2.png', '비건 가죽 롱부츠입니다.', 'Y', 10, 108),
+('영양제', 50000, 'thum_image_52.png', '2165e5455cb7db8360467b73b352af73.jpg', '현대인에게 필수인 멀티비타민입니다', 'Y', 10, 55),
+('귤 향수', 20000, 'thum_image_52.png', 'minuit-sur-terre-equinoxe-30650224574577_400x.jpg', '심플한 디자인의 비건 가죽 클러치 백입니다.', 'Y', 10, 74),
+('친황경 천연 비누', 3000, 'thum_image_52.png', 'maison-meunier-activated-charcoal-face-body-vegan-cleansing-bar-lavender-tea-tree-100g-29437750837361_400x.jpg', '차콜 성분의 페이셜 클렌징도 가능한 비누입니다.', 'Y', 10, 74),
+('비건 가죽 운동화', 30000, 'thum_image_52.png', 'sn.png', '사과 껍질 가죽으로 만든 유니크한 운동화입니다.', 'Y', 10, 108),
+('비건 가죽 구두', 60000, 'thum_image_52.png', 'Screenshot_2023-08-08_at_16.35.19_5d4f73bd-28ea-44fc-9316-9695c1846cc2.jpg', '비건 가죽 구두입니다.', 'Y', 10, 108),
+('비건 애플 크럼블', 9500, 'thum_image_40.png', '36e3929f53b0c.jpg', '쌀클럼블이 올라간 떠먹는 사과 파이.', 'Y', 4, 26),
+('신선한 샤인 머스켓', 12000, 'thum_image_1.png', '028215_20240729161946.jpg', '당도 보장, 유기농 샤인머스켓입니다', 'Y', 1, 1),
 
-INSERT INTO tbl_review (review_image, review_thumbnail, review, review_rating, product_id, user_id)VALUES
-                                                                                                       (NULL, NULL,'너무 맛있어요! 따로 문의 넣어서 정기 구독까지 했어요!', 5, 1, 3),
-                                                                                                       ('review_image001.png', 'review_thum_image001.png','너무 맛있어요! 따로 문의 넣어서 정기 구독까지 했어요!', 5, 1, 3),
-                                                                                                       ('review_image002.png', 'review_thum_image002.png','상큼하고 정제된 맛이 느껴지지 않아요. 그런데도 유기농? 멋진 제품인 것 같아요.', 5, 1, 4),
-                                                                                                       (NULL, NULL, '다양한 소품들이 있어서 너무 좋아요!', 4, 1, 3),  -- 'user003'의 리뷰
-                                                                                                       ('review_image003.png', 'review_thum_image003.png', '탄산이 적당하고 상쾌해요!', 5, 2, 4),  -- 'user004'의 리뷰
-                                                                                                       (NULL, NULL, '상큼하고 신선한 맛이에요. 건강한 느낌!', 5, 3, 5),  -- 'user005'의 리뷰
-                                                                                                       ('review_image004.png', 'review_thum_image004.png', '초코가 진하고 너무 맛있어요!', 5, 4, 6),  -- 'user006'의 리뷰
-                                                                                                       (NULL, NULL, '주방에서 정말 유용하게 쓰고 있어요. 크기도 다양하고 튼튼해요.', 4, 5, 4),  -- 'user004'의 리뷰
-                                                                                                       ('review_image005.png', 'review_thum_image005.png', '부드럽고 피부에 자극이 없어서 좋아요.', 5, 6, 5),  -- 'user005'의 리뷰
-                                                                                                       (NULL, NULL, '베개가 너무 편안하고 잘 맞아요.', 4, 7, 3),  -- 'user003'의 리뷰
-                                                                                                       ('review_image006.png', 'review_thum_image006.png', '여름에 시원하고 가볍게 입을 수 있어서 좋아요.', 5, 8, 6),  -- 'user006'의 리뷰
-                                                                                                       (NULL, NULL, '피부에 촉촉함이 오래 남아 좋아요.', 5, 9, 3);  -- 'user003'의 리뷰
+('트로피컬 스무디', 10000, 'thum_image_2.png', 'image_2.png', '망고, 파인애플 등 열대과일을 블렌딩한 상큼한 스무디입니다.', 'Y', 1, 1),
+('딸기 바나나 파르페', 11000, 'thum_image_3.png', 'image_3.png', '신선한 딸기와 바나나로 만든 달콤한 디저트입니다.', 'Y', 1, 1),
+
+-- Small 카테고리 2: 비건
+('매콤한 비건 타코', 12000, 'thum_image_6.png', 'image_6.png', '신선한 채소와 매콤한 소스로 맛을 낸 비건 타코입니다.', 'Y', 1, 2),
+('비건 크림 파스타', 14000, 'thum_image_7.png', 'image_7.png', '식물성 크림으로 만든 부드러운 파스타입니다.', 'Y', 1, 2),
+('비건 랩 샌드위치', 11000, 'thum_image_8.png', 'image_8.png', '다양한 채소와 비건 소스를 넣은 랩 샌드위치입니다.', 'Y', 1, 2),
+
+-- Small 카테고리 3: 락토
+('치즈 크로켓', 10000, 'thum_image_9.png', 'image_9.png', '고소한 치즈를 가득 넣은 바삭한 크로켓입니다.', 'Y', 1, 3),
+('크림 머쉬룸 파스타', 13000, 'thum_image_10.png', 'image_10.png', '크림 소스와 버섯을 활용한 풍미 가득한 파스타입니다.', 'Y', 1, 3),
+('치즈 오믈렛', 9000, 'thum_image_11.png', 'image_11.png', '부드러운 계란과 치즈로 만든 오믈렛입니다.', 'Y', 1, 3),
+('치즈 피자', 15000, 'thum_image_12.png', 'image_12.png', '쫄깃한 도우 위에 치즈를 듬뿍 올린 피자입니다.', 'Y', 1, 3),
+
+-- Small 카테고리 4: 오보
+('에그 샐러드 샌드위치', 8000, 'thum_image_13.png', 'image_13.png', '삶은 계란과 신선한 채소로 만든 샌드위치입니다.', 'Y', 1, 4),
+('스파니쉬 오믈렛', 10000, 'thum_image_14.png', 'image_14.png', '감자와 양파를 넣은 두툼한 스페인식 오믈렛입니다.', 'Y', 1, 4),
+('에그 베네딕트', 12000, 'thum_image_15.png', 'image_15.png', '포치드 에그와 홀랜다이즈 소스를 곁들인 클래식 메뉴입니다.', 'Y', 1, 4),
+('에그 프라이드 라이스', 9000, 'thum_image_16.png', 'image_16.png', '계란을 넣어 고소한 맛을 더한 볶음밥입니다.', 'Y', 1, 4),
+
+-- Small 카테고리 5: 락토오보
+('치즈 에그 토스트', 8000, 'thum_image_17.png', 'image_17.png', '치즈와 계란을 올려 구운 토스트입니다.', 'Y', 1, 5),
+('크림 에그 파스타', 13000, 'thum_image_18.png', 'image_18.png', '크림 소스와 계란을 활용한 부드러운 파스타입니다.', 'Y', 1, 5),
+('치즈 에그 샐러드', 10000, 'thum_image_19.png', 'image_19.png', '치즈와 계란을 곁들인 신선한 샐러드입니다.', 'Y', 1, 5),
+('에그 치즈 베이글', 9000, 'thum_image_20.png', 'image_20.png', '계란과 치즈를 넣은 베이글 샌드위치입니다.', 'Y', 1, 5),
+
+-- Medium 카테고리 2: 음료
+-- Small 카테고리 1: 프루테리언
+('오렌지 착즙 주스', 7000, 'thum_image_21.png', 'image_21.png', '신선한 오렌지를 직접 착즙하여 만든 주스입니다.', 'Y', 2, 10),
+('딸기 바나나 스무디', 8000, 'thum_image_22.png', 'image_22.png', '딸기와 바나나를 블렌딩한 달콤한 스무디입니다.', 'Y', 2, 10),
+('키위 애플 주스', 7500, 'thum_image_23.png', 'image_23.png', '키위와 사과를 조합한 상큼한 주스입니다.', 'Y', 2, 10),
+('트로피컬 프루트 펀치', 8500, 'thum_image_24.png', 'image_24.png', '여러 열대과일을 혼합한 시원한 음료입니다.', 'Y', 2, 10),
+
+-- Small 카테고리 2: 비건
+('아몬드 밀크 라떼', 6000, 'thum_image_25.png', 'image_25.png', '아몬드 밀크로 만든 부드러운 라떼입니다.', 'Y', 2, 11),
+('코코넛 워터', 5000, 'thum_image_26.png', 'image_26.png', '신선한 코코넛에서 추출한 천연 음료입니다.', 'Y', 2, 11),
+('비건 초콜릿 쉐이크', 7000, 'thum_image_27.png', 'image_27.png', '식물성 재료로 만든 달콤한 초콜릿 쉐이크입니다.', 'Y', 2, 11),
+('허브 티', 4000, 'thum_image_28.png', 'image_28.png', '다양한 허브로 블렌딩한 향긋한 티입니다.', 'Y', 2, 11),
+
+-- Small 카테고리 3: 락토
+('밀크티', 5500, 'thum_image_29.png', 'image_29.png', '부드러운 우유와 홍차를 조합한 밀크티입니다.', 'Y', 2, 12),
+('요거트 스무디', 6500, 'thum_image_30.png', 'image_30.png', '신선한 과일과 요거트로 만든 스무디입니다.', 'Y', 2, 12),
+('카라멜 마끼아또', 6000, 'thum_image_31.png', 'image_31.png', '우유와 카라멜 시럽을 더한 달콤한 커피 음료입니다.', 'Y', 2, 12),
+('화이트 초콜릿 모카', 6500, 'thum_image_32.png', 'image_32.png', '화이트 초콜릿과 우유로 만든 진한 모카입니다.', 'Y', 2, 12),
+
+-- Medium 카테고리 3: 간식
+-- Small 카테고리 1: 프루테리언
+('건조 과일 믹스', 8000, 'thum_image_33.png', 'image_33.png', '다양한 과일을 건조시켜 만든 건강한 스낵입니다.', 'Y', 3, 19),
+('과일 젤리', 5000, 'thum_image_34.png', 'image_34.png', '신선한 과일 주스로 만든 젤리입니다.', 'Y', 3, 19),
+('애플 칩스', 6000, 'thum_image_35.png', 'image_35.png', '얇게 썬 사과를 바삭하게 구운 칩스입니다.', 'Y', 3, 19),
+('망고 말랭이', 7000, 'thum_image_36.png', 'image_36.png', '달콤한 망고를 말린 간식입니다.', 'Y', 3, 19),
+
+-- Medium 카테고리 4: 제과
+-- Small 카테고리 2: 비건
+('비건 브라우니', 9000, 'thum_image_37.png', 'image_37.png', '유제품 없이 만든 진한 초콜릿 브라우니입니다.', 'Y', 4, 26),
+('오트밀 쿠키', 8000, 'thum_image_38.png', 'image_38.png', '오트밀과 건포도를 넣어 만든 건강한 쿠키입니다.', 'Y', 4, 26),
+('비건 머핀', 8500, 'thum_image_39.png', 'image_39.png', '신선한 블루베리를 넣은 비건 머핀입니다.', 'Y', 4, 26),
+('당근 케이크', 9500, 'thum_image_40.png', 'image_40.png', '당근과 호두를 넣어 만든 촉촉한 케이크입니다.', 'Y', 4, 26),
+
+-- Medium 카테고리 5: 과일/야채
+-- Small 카테고리 1: 프루테리언
+('유기농 바나나', 4000, 'thum_image_41.png', 'image_41.png', '신선하고 달콤한 유기농 바나나입니다.', 'Y', 5, 37),
+('제철 사과', 5000, 'thum_image_42.png', 'image_42.png', '아삭하고 신선한 제철 사과입니다.', 'Y', 5, 37),
+('친환경 블루베리', 6000, 'thum_image_43.png', 'image_43.png', '영양이 풍부한 친환경 블루베리입니다.', 'Y', 5, 37),
+('신선한 딸기', 7000, 'thum_image_44.png', 'image_44.png', '달콤하고 신선한 딸기입니다.', 'Y', 5, 37),
+
+-- Medium 카테고리 10: 의류
+-- Small 카테고리 2: 비건
+('오가닉 코튼 티셔츠', 25000, 'thum_image_45.png', 'image_45.png', '친환경 소재로 만든 베이직한 디자인의 티셔츠입니다.', 'Y', 10, 91),
+('리넨 팬츠', 45000, 'thum_image_46.png', 'image_46.png', '시원하고 편안한 착용감의 리넨 팬츠입니다.', 'Y', 10, 91),
+('비건 가죽 재킷', 80000, 'thum_image_47.png', 'image_47.png', '친환경 비건 가죽으로 만든 스타일리시한 재킷입니다.', 'Y', 10, 91),
+('에코 백', 15000, 'thum_image_48.png', 'image_48.png', '캔버스 소재로 만든 실용적인 에코 백입니다.', 'Y', 10, 91),
+
+-- Medium 카테고리 12: 가방
+-- Small 카테고리 2: 비건
+('비건 레더 백팩', 85000, 'thum_image_49.png', 'image_49.png', '친환경 비건 가죽으로 만든 모던한 디자인의 백팩입니다.', 'Y', 10, 108),
+('토트 백', 70000, 'thum_image_51.png', 'image_51.png', '넉넉한 수납공간을 가진 비건 가죽 토트 백입니다.', 'Y', 10, 108),
+('클러치 백', 50000, 'thum_image_52.png', 'image_52.png', '심플한 디자인의 비건 가죽 클러치 백입니다.', 'Y', 10, 108);
+
+
+
+
+
+# INSERT INTO tbl_product (product_name, product_price, product_thumbnail, product_img, product_desc, product_check, producer_id, small_category_id) VALUES
+#                                                                                                                                                                          ('유기농 토마토 주스', '2000', 'product_thum_image001.png','product_image001', '통통튀는 상큼한 유기농 상품 착즙 토마토 쥬-스', 'Y', 1, 3),
+#                                                                                                                                                                          ('콜라', 1200, 'product_thum_image003.png', 'product_image003.png', '시원하고 청량한 탄산 음료 콜라입니다.', 'Y',  1, 2),
+#                                                                                                                                                                          ('오렌지 주스', 2500, 'product_thum_image004.png', 'product_image004.png', '신선한 오렌지를 착즙한 과채 음료입니다.', 'Y',  2, 3),
+#                                                                                                                                                                          ('초코 케이크', 5000, 'product_thum_image005.png', 'product_image005.png', '달콤하고 진한 초코 케이크입니다.', 'Y',  2, 4),
+#                                                                                                                                                                          ('냄비 세트', 30000, 'product_thum_image006.png', 'product_image006.png', '다양한 크기의 냄비로 구성된 주방용품 세트입니다.', 'Y',  2, 5),
+#                                                                                                                                                                          ('비누 세트', 8000, 'product_thum_image007.png', 'product_image007.png', '피부에 좋은 성분을 사용한 욕실용품 비누 세트입니다.', 'Y',  2, 6),
+#                                                                                                                                                                          ('베개', 12000, 'product_thum_image008.png', 'product_image008.png', '푹신한 침실용품 베개입니다.', 'Y',  1, 7),
+#                                                                                                                                                                          ('여름 티셔츠', 7000, 'product_thum_image009.png', 'product_image009.png', '시원하고 편안한 여름 티셔츠입니다.', 'Y', 1, 8),
+#                                                                                                                                                                          ('수분 크림', 15000, 'product_thum_image010.png', 'product_image010.png', '피부에 촉촉함을 더해주는 스킨케어 수분 크림입니다.', 'Y',  2, 9);
+
+INSERT INTO tbl_review (review_image, review_thumbnail, review, review_rating, product_id, user_id) VALUES
+                                                                                                        ('review_image_1.png', 'review_thumbnail_1.png', '다른 제품과 비교해도 월등히 뛰어납니다.', 4, 1, 9),
+                                                                                                        (NULL, NULL, '가격대비 품질이 훌륭해요! 추천합니다.', 4, 1, 7),
+                                                                                                        ('review_image_3.png', 'review_thumbnail_3.png', '가격대비 품질이 훌륭해요! 추천합니다.', 4, 2, 10),
+                                                                                                        (NULL, NULL, '탄산이 적당하고 상쾌해요!', 5, 3, 7),
+                                                                                                        (NULL, NULL, '사용감이 편하고 매우 만족스럽습니다.', 4, 3, 6),
+                                                                                                        ('review_image_6.png', 'review_thumbnail_6.png', '디자인이 너무 예쁘고 실용적이에요.', 3, 3, 1),
+                                                                                                        ('review_image_7.png', 'review_thumbnail_7.png', '다른 제품과 비교해도 월등히 뛰어납니다.', 5, 3, 2),
+                                                                                                        ('review_image_8.png', 'review_thumbnail_8.png', '너무 맛있어요! 따로 문의 넣어서 정기 구독까지 했어요!', 4, 4, 8);
 
 -- tbl_inquiry 데이터 삽입
-INSERT INTO tbl_inquiry (inquiry_title, inquiry_content, inquiry_lock, user_id, product_id ) VALUES
+INSERT INTO tbl_inquiry (inquiry_title, inquiry_content, inquiry_lock, user_id, product_id ) VALUES -- 수정 안함
                                                                                                 ('정기 구독 따로 되나요?', '정기적으로 배송받고싶은데 가능한가요?', true, 3, 1),
                                                                                                 ('세트로 구매시 할인 되나요?', '주방용품을 세트로 구매할 경우 할인이 가능한지 궁금합니다.', false, 4, 5),
                                                                                                 ('배송기간이 얼마나 걸리나요?', '비누 세트를 주문했는데 배송 기간이 궁금합니다.', true, 5, 6),
                                                                                                 ('구매 후 환불 절차 문의', '베개를 환불하려고 하는데, 환불 절차가 어떻게 되나요?', false, 5, 7 );
 
 -- tbl_response 데이터 삽입
-INSERT INTO tbl_response (response_title, response_content,  inquiry_id, producer_id) VALUES
+INSERT INTO tbl_response (response_title, response_content,  inquiry_id, producer_id) VALUES    -- 수정 안함
                                                                                           ('정기 구독에 대해 안내드립니다.', '정기 구독 옵션은 현재 준비 중입니다. 빠른 시일 내 제공하도록 하겠습니다.', 1, 1),
                                                                                           ('세트 구매 할인 안내', '현재 주방용품 세트에 대해 할인을 제공하고 있지 않습니다.', 2, 2),
                                                                                           ('배송기간 안내', '비누 세트의 경우 주문 후 3일 이내 배송됩니다.', 3, 2),
                                                                                           ('환불 절차 안내', '베개의 환불 절차는 제품 수령 후 7일 이내에 가능하며, 고객센터로 연락 바랍니다.', 4, 1);
 
-INSERT INTO tbl_address (address_name, address_road, address_detail, postal_code, user_id) VALUES
+INSERT INTO tbl_address (address_name, address_road, address_detail, postal_code, user_id) VALUES   -- 수정 안함
                                                                                                ('학원', '서울 종로구 인사동길 12', '7층', '03163', 3),
                                                                                                ('하나은행 건물', '서울 중구 을지로 35', '00동 00호', '04523', 1),
                                                                                                ('삼성타워', '서울 강남구 테헤란로 108', '15층 1503호', '06235', 2),
@@ -170,58 +398,391 @@ INSERT INTO tbl_liked_seller (producer_id, user_id) VALUES
                                                         (2, 6),
                                                         (1, 5),
                                                         (2, 3);
-INSERT INTO tbl_coupon (coupon_name, producer_id, sale_price, max_sale_price, usable_price, pub_date, end_date, quantity, coupon_type)VALUES
+INSERT INTO tbl_coupon (coupon_name, producer_id, sale_price, max_sale_price, usable_price, pub_date, end_date, quantity, coupon_type)VALUES    -- 수정 안함
                                                                                                                                           ('첫 구매 고객 한정! 무조건 2000원 할인쿠폰!', 1, 2000, NULL, NULL, NULL, '2030-12-30 00:00:00', NULL , 'price'),
                                                                                                                                           ('매출 200만 감사 이벤트, 500명 한정 20%할인 쿠폰 (최대 5000원)', 1, 20, 5000, NULL, NULL, '2030-12-30 00:00:00', 500 , 'percent'),
                                                                                                                                           ('타임 세일! 100명 한정 쿠폰! 30000원 이상 구매시 10% 할인!', 1, 10, NULL, 30000, NULL, '2024-12-30 00:00:00', 100 , 'percent'),
                                                                                                                                           ('오픈 기념 1000원 할인 감사 쿠폰 제공!', 2, 1000, NULL, 10000, NULL, '2024-12-30 00:00:00', NULL, 'price' );
 INSERT INTO tbl_coupon_list (user_id, coupon_id) VALUES
-                                                     (3,1),
-                                                     (3,2),
-                                                     (3,2),
-                                                     (3,2),
-                                                     (3,2),
-                                                     (3,2);
+                                                     (11,1),
+                                                     (11,2),
+                                                     (11,3),
+                                                     (13,4),
+                                                     (12,1),
+                                                     (12,2);
 
--- 옵션이 없는 상품에 대한 더미 데이터 (NULL 값으로 채운 옵션)
-INSERT INTO tbl_option (product_id, option_quantity)VALUES
-                                                        (1, 50),   -- '토마토 쥬스 소품' 상품 (옵션 없음)
-                                                        (2, 200),  -- '콜라' 상품에 대한 옵션 없음
-                                                        (3, 150),  -- '오렌지 주스' 상품에 대한 옵션 없음
-                                                        (4, 75),   -- '초코 케이크' 상품에 대한 옵션 없음
-                                                        (5, 45),   -- '냄비 세트' 상품에 대한 옵션 없음
-                                                        (6, 150),  -- '비누 세트' 상품 (옵션 없음)
-                                                        (7, 100),  -- '베개' 상품 (옵션 없음)
-                                                        (8, 200);  -- '여름 티셔츠' 상품 (옵션 없음)
+INSERT INTO tbl_option (option_desc, add_price, product_id, option_quantity, option_check) VALUES
+                                                                                               ('프리미엄 업그레이드', 5000, 1, 20, 'Y'),
+                                                                                               ('사이다', 500, 1, 150, 'Y'),
+                                                                                               ('추가 사은품', 2000, 2, 30, 'Y'),
+                                                                                               ('추가 재료 선택', 1500, 2, 70, 'Y'),
+                                                                                               ('사이다', 500, 3, 150, 'Y'),
+                                                                                               ('홀케이크로 변경', 20000, 3, 50, 'Y'),
+                                                                                               ('용량 선택', 500, 4, 100, 'Y'),
+                                                                                               ('추가 사은품', 2000, 4, 30, 'Y'),
+                                                                                               ('프리미엄 업그레이드', 5000, 5, 20, 'Y'),
+                                                                                               ('추가 사은품', 2000, 6, 30, 'Y'),
+                                                                                               ('제로 칼로리', 300, 7, 150, 'Y'),
+                                                                                               ('1.25리터', 1000, 8, 100, 'Y'),
+                                                                                               ('사이다', 500, 9, 150, 'Y'),
+                                                                                               ('추가 재료 선택', 1500, 10, 70, 'Y'),
+                                                                                               ('프리미엄 업그레이드', 5000, 11, 20, 'Y'),
+                                                                                               ('추가 사은품', 2000, 12, 30, 'Y'),
+                                                                                               ('홀케이크로 변경', 20000, 13, 50, 'Y'),
+                                                                                               ('추가 재료 선택', 1500, 14, 70, 'Y'),
+                                                                                               ('프리미엄 업그레이드', 5000, 15, 20, 'Y'),
+                                                                                               ('추가 사은품', 2000, 16, 30, 'Y');
 
--- 옵션이 있는 상품에 대한 더미 데이터 (옵션이 없는 항목 추가)
-INSERT INTO tbl_option (option_desc, add_price, product_id, option_quantity)VALUES
-                                                                                ('제로 칼로리', 300, 2, 150),    -- '콜라' 상품에 대한 옵션
-                                                                                ('사이다', 500, 2, 150),        -- '콜라' 상품에 대한 옵션
-                                                                                ('1.25리터', 1000, 2, 150),    -- '콜라' 상품에 대한 옵션
-                                                                                ('용량 선택', 500, 3, 100),         -- '오렌지 주스' 상품에 대한 옵션
-                                                                                ('홀케이크로 변경 ', 20000, 4, 50), -- '초코 케이크' 상품에 대한 옵션
-                                                                                ('추가 사은품', 2000, 5, 30);  -- '냄비 세트' 상품에 대한 옵션
 
--- 옵션이 없는 상품
-INSERT INTO tbl_cart (option_id, count, price, user_id) VALUES
-                                                            (1, 2, 3000, 3),
-                                                            (2, 3, 3600, 3),
-                                                            (3, 1, 2500, 4),
-                                                            (4, 1, 5000, 4),
-                                                            (5, 2, 60000, 5),
-                                                            (6, 1, 8000, 5),
-                                                            (7, 3, 36000, 6),
-                                                            (8, 1, 7000, 6);
+# INSERT INTO tbl_option (option_desc, add_price, product_id, option_quantity, option_check) VALUES
+#                                                                                                ('프리미엄 업그레이드', 5000, 1, 20, 'Y'),
+#                                                                                                ('사이다', 500, 1, 150, 'Y'),
+#                                                                                                ('사이다', 500, 2, 150, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 2, 30, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 2, 70, 'Y'),
+#                                                                                                ('사이다', 500, 3, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 3, 50, 'Y'),
+#                                                                                                ('용량 선택', 500, 4, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 4, 30, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 4, 70, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 5, 50, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 6, 20, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 7, 20, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 7, 50, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 7, 70, 'Y'),
+#                                                                                                ('용량 선택', 500, 8, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 8, 30, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 9, 50, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 9, 30, 'Y'),
+#                                                                                                ('1.25리터', 1000, 9, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 10, 20, 'Y'),
+#                                                                                                ('1.25리터', 1000, 10, 100, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 10, 50, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 11, 50, 'Y'),
+#                                                                                                ('용량 선택', 500, 11, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 12, 150, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 13, 70, 'Y'),
+#                                                                                                ('용량 선택', 500, 13, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 14, 150, 'Y'),
+#                                                                                                ('1.25리터', 1000, 14, 100, 'Y'),
+#                                                                                                ('용량 선택', 500, 14, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 15, 20, 'Y'),
+#                                                                                                ('1.25리터', 1000, 15, 100, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 15, 50, 'Y'),
+#                                                                                                ('용량 선택', 500, 16, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 16, 150, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 17, 20, 'Y'),
+#                                                                                                ('용량 선택', 500, 17, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 17, 150, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 18, 150, 'Y'),
+#                                                                                                ('사이다', 500, 18, 150, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 18, 30, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 19, 20, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 19, 30, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 19, 50, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 20, 70, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 20, 30, 'Y'),
+#                                                                                                ('1.25리터', 1000, 20, 100, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 21, 50, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 21, 20, 'Y'),
+#                                                                                                ('사이다', 500, 21, 150, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 22, 20, 'Y'),
+#                                                                                                ('1.25리터', 1000, 22, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 23, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 23, 100, 'Y'),
+#                                                                                                ('용량 선택', 500, 24, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 24, 30, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 25, 30, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 26, 20, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 26, 30, 'Y'),
+#                                                                                                ('사이다', 500, 27, 150, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 27, 150, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 27, 30, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 28, 70, 'Y'),
+#                                                                                                ('사이다', 500, 29, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 29, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 30, 30, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 30, 20, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 31, 70, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 31, 30, 'Y'),
+#                                                                                                ('용량 선택', 500, 31, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 32, 30, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 32, 70, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 32, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 33, 100, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 33, 50, 'Y'),
+#                                                                                                ('사이다', 500, 33, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 34, 50, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 35, 20, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 36, 70, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 36, 50, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 36, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 37, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 37, 20, 'Y'),
+#                                                                                                ('1.25리터', 1000, 37, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 38, 20, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 38, 70, 'Y'),
+#                                                                                                ('사이다', 500, 38, 150, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 39, 30, 'Y'),
+#                                                                                                ('사이다', 500, 40, 150, 'Y'),
+#                                                                                                ('1.25리터', 1000, 41, 100, 'Y'),
+#                                                                                                ('1.25리터', 1000, 42, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 42, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 42, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 43, 30, 'Y'),
+#                                                                                                ('사이다', 500, 44, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 44, 50, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 44, 30, 'Y'),
+#                                                                                                ('1.25리터', 1000, 45, 100, 'Y'),
+#                                                                                                ('1.25리터', 1000, 46, 100, 'Y'),
+#                                                                                                ('사이다', 500, 46, 150, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 47, 30, 'Y'),
+#                                                                                                ('1.25리터', 1000, 48, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 48, 30, 'Y'),
+#                                                                                                ('용량 선택', 500, 49, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 49, 30, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 49, 50, 'Y'),
+#                                                                                                ('1.25리터', 1000, 50, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 50, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 50, 100, 'Y'),
+#                                                                                                ('사이다', 500, 51, 150, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 51, 20, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 52, 30, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 52, 50, 'Y'),
+#                                                                                                ('용량 선택', 500, 52, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 53, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 53, 100, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 53, 50, 'Y'),
+#                                                                                                ('사이다', 500, 54, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 54, 50, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 55, 30, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 56, 20, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 56, 50, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 56, 150, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 57, 150, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 57, 70, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 57, 50, 'Y'),
+#                                                                                                ('사이다', 500, 58, 150, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 58, 20, 'Y'),
+#                                                                                                ('용량 선택', 500, 58, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 59, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 59, 100, 'Y'),
+#                                                                                                ('1.25리터', 1000, 60, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 60, 20, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 61, 20, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 61, 30, 'Y'),
+#                                                                                                ('1.25리터', 1000, 61, 100, 'Y'),
+#                                                                                                ('1.25리터', 1000, 62, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 63, 150, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 63, 70, 'Y'),
+#                                                                                                ('1.25리터', 1000, 63, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 64, 30, 'Y'),
+#                                                                                                ('사이다', 500, 65, 150, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 65, 70, 'Y'),
+#                                                                                                ('1.25리터', 1000, 66, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 66, 30, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 66, 20, 'Y'),
+#                                                                                                ('1.25리터', 1000, 67, 100, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 67, 70, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 68, 70, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 69, 50, 'Y'),
+#                                                                                                ('용량 선택', 500, 69, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 69, 30, 'Y'),
+#                                                                                                ('사이다', 500, 70, 150, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 70, 70, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 70, 30, 'Y'),
+#                                                                                                ('용량 선택', 500, 71, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 71, 20, 'Y'),
+#                                                                                                ('1.25리터', 1000, 71, 100, 'Y'),
+#                                                                                                ('사이다', 500, 72, 150, 'Y'),
+#                                                                                                ('사이다', 500, 73, 150, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 73, 70, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 74, 70, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 74, 20, 'Y'),
+#                                                                                                ('용량 선택', 500, 74, 100, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 75, 70, 'Y'),
+#                                                                                                ('용량 선택', 500, 75, 100, 'Y'),
+#                                                                                                ('용량 선택', 500, 76, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 76, 30, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 76, 70, 'Y'),
+#                                                                                                ('1.25리터', 1000, 77, 100, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 77, 50, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 77, 20, 'Y'),
+#                                                                                                ('용량 선택', 500, 78, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 78, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 79, 100, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 80, 70, 'Y'),
+#                                                                                                ('사이다', 500, 80, 150, 'Y'),
+#                                                                                                ('1.25리터', 1000, 80, 100, 'Y'),
+#                                                                                                ('1.25리터', 1000, 81, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 81, 150, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 82, 20, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 82, 70, 'Y'),
+#                                                                                                ('1.25리터', 1000, 82, 100, 'Y'),
+#                                                                                                ('1.25리터', 1000, 83, 100, 'Y'),
+#                                                                                                ('사이다', 500, 83, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 83, 50, 'Y'),
+#                                                                                                ('사이다', 500, 84, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 84, 50, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 85, 70, 'Y'),
+#                                                                                                ('사이다', 500, 86, 150, 'Y'),
+#                                                                                                ('1.25리터', 1000, 87, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 87, 30, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 88, 30, 'Y'),
+#                                                                                                ('용량 선택', 500, 88, 100, 'Y'),
+#                                                                                                ('사이다', 500, 88, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 89, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 89, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 90, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 90, 20, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 91, 70, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 91, 150, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 91, 30, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 92, 30, 'Y'),
+#                                                                                                ('1.25리터', 1000, 92, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 93, 20, 'Y'),
+#                                                                                                ('사이다', 500, 93, 150, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 94, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 94, 50, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 95, 50, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 95, 20, 'Y'),
+#                                                                                                ('1.25리터', 1000, 95, 100, 'Y'),
+#                                                                                                ('사이다', 500, 96, 150, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 96, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 96, 50, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 97, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 97, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 98, 20, 'Y'),
+#                                                                                                ('용량 선택', 500, 98, 100, 'Y'),
+#                                                                                                ('사이다', 500, 98, 150, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 99, 70, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 99, 50, 'Y'),
+#                                                                                                ('사이다', 500, 100, 150, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 100, 20, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 100, 150, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 101, 20, 'Y'),
+#                                                                                                ('1.25리터', 1000, 101, 100, 'Y'),
+#                                                                                                ('용량 선택', 500, 101, 100, 'Y'),
+#                                                                                                ('1.25리터', 1000, 102, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 102, 150, 'Y'),
+#                                                                                                ('사이다', 500, 102, 150, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 103, 150, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 104, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 104, 100, 'Y'),
+#                                                                                                ('사이다', 500, 104, 150, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 105, 20, 'Y'),
+#                                                                                                ('용량 선택', 500, 105, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 106, 150, 'Y'),
+#                                                                                                ('사이다', 500, 106, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 106, 50, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 107, 50, 'Y'),
+#                                                                                                ('용량 선택', 500, 107, 100, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 107, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 108, 50, 'Y'),
+#                                                                                                ('사이다', 500, 109, 150, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 110, 150, 'Y'),
+#                                                                                                ('1.25리터', 1000, 110, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 110, 20, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 111, 30, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 112, 70, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 112, 30, 'Y'),
+#                                                                                                ('용량 선택', 500, 112, 100, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 113, 70, 'Y'),
+#                                                                                                ('1.25리터', 1000, 114, 100, 'Y'),
+#                                                                                                ('용량 선택', 500, 114, 100, 'Y'),
+#                                                                                                ('사이다', 500, 114, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 115, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 116, 30, 'Y'),
+#                                                                                                ('사이다', 500, 116, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 117, 100, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 117, 70, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 117, 20, 'Y'),
+#                                                                                                ('1.25리터', 1000, 118, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 118, 20, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 118, 70, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 119, 150, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 120, 30, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 120, 50, 'Y'),
+#                                                                                                ('사이다', 500, 120, 150, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 121, 150, 'Y'),
+#                                                                                                ('1.25리터', 1000, 121, 100, 'Y'),
+#                                                                                                ('용량 선택', 500, 121, 100, 'Y'),
+#                                                                                                ('용량 선택', 500, 122, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 122, 20, 'Y'),
+#                                                                                                ('사이다', 500, 122, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 123, 50, 'Y'),
+#                                                                                                ('1.25리터', 1000, 123, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 123, 30, 'Y'),
+#                                                                                                ('사이다', 500, 124, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 125, 50, 'Y'),
+#                                                                                                ('사이다', 500, 125, 150, 'Y'),
+#                                                                                                ('1.25리터', 1000, 125, 100, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 126, 50, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 126, 70, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 127, 70, 'Y'),
+#                                                                                                ('1.25리터', 1000, 127, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 127, 20, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 128, 30, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 128, 70, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 128, 50, 'Y'),
+#                                                                                                ('1.25리터', 1000, 129, 100, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 129, 20, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 130, 70, 'Y'),
+#                                                                                                ('사이다', 500, 130, 150, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 130, 150, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 131, 30, 'Y'),
+#                                                                                                ('사이다', 500, 131, 150, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 132, 30, 'Y'),
+#                                                                                                ('사이다', 500, 133, 150, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 133, 70, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 133, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 134, 100, 'Y'),
+#                                                                                                ('용량 선택', 500, 135, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 135, 30, 'Y'),
+#                                                                                                ('용량 선택', 500, 136, 100, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 136, 70, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 137, 150, 'Y'),
+#                                                                                                ('사이다', 500, 137, 150, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 137, 30, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 138, 70, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 138, 20, 'Y'),
+#                                                                                                ('사이다', 500, 138, 150, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 139, 70, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 139, 150, 'Y'),
+#                                                                                                ('1.25리터', 1000, 139, 100, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 140, 50, 'Y'),
+#                                                                                                ('사이다', 500, 140, 150, 'Y'),
+#                                                                                                ('사이다', 500, 141, 150, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 141, 150, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 142, 150, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 142, 70, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 142, 50, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 143, 150, 'Y'),
+#                                                                                                ('용량 선택', 500, 143, 100, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 143, 50, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 144, 50, 'Y'),
+#                                                                                                ('사이다', 500, 144, 150, 'Y');
 
--- 옵션이 있는 상품
-INSERT INTO tbl_cart (option_id, count, price, user_id) VALUES
-                                                            (9, 2, 3900, 3),  -- 제로 칼로리
-                                                            (10, 1, 5000, 4), -- 사이다
-                                                            (11, 1, 5500, 5), -- 1.25리터
-                                                            (12, 2, 4000, 6), -- 용량 선택
-                                                            (13, 1, 22000, 3), -- 홀케이크로 변경
-                                                            (14, 2, 64000, 5); -- 추가 사은품
+
+# -- 옵션이 없는 상품
+# INSERT INTO tbl_cart (option_id, count, price, user_id) VALUES
+#                                                             (1, 2, 3000, 3),
+#                                                             (2, 3, 3600, 3),
+#                                                             (3, 1, 2500, 4),
+#                                                             (4, 1, 5000, 4),
+#                                                             (5, 2, 60000, 5),
+#                                                             (6, 1, 8000, 5),
+#                                                             (7, 3, 36000, 6),
+#                                                             (8, 1, 7000, 6);
+#
+# -- 옵션이 있는 상품
+# INSERT INTO tbl_cart (option_id, count, price, user_id) VALUES
+#                                                             (9, 2, 3900, 3),  -- 제로 칼로리
+#                                                             (10, 1, 5000, 4), -- 사이다
+#                                                             (11, 1, 5500, 5), -- 1.25리터
+#                                                             (12, 2, 4000, 6), -- 용량 선택
+#                                                             (13, 1, 22000, 3), -- 홀케이크로 변경
+#                                                             (14, 2, 64000, 5); -- 추가 사은품
 
 INSERT INTO tbl_order (order_total_amount, order_total_count, delivery_status, order_status,
                        delivery_fee, point_discount, coupon_id, coupon_discount, discount_amount,
@@ -260,16 +821,16 @@ INSERT INTO tbl_order_detail (option_id, count, amount,
 
 INSERT INTO tbl_banner (banner_thumbnail, banner_img, banner_url,
                         banner_create_at, banner_accept_status, banner_delete_at, producer_id, banner_accept_at, approver_id)VALUES
-                                                                                                           ('banner_thum_image001.png', '5b42c11407734c42a253883d237c554e.png', 'naver.com','2024-11-12 00:00:00', 'Y','2024-12-30 00:00:00',  1, '2024-11-11 00:00:00', 8 ),
-                                                                                                           ('banner_thum_image002.png', 'banner_image002.png', 'naver.com','2024-11-20 00:00:00', 'N', '2024-12-30 00:00:00', 1, '2024-11-11 00:00:00', 8 ),
-                                                                                                           ('banner_thum_image003.png', 'banner_image003.png', 'naver.com','2024-11-11 00:00:00','N', '2024-12-30 00:00:00', 1, NULL, NULL );
-INSERT INTO tbl_faq (faq_title, faq_content)VALUES
-                                                ('회원가입은 어떻게 하나요?','회원가입은 하면되는 거죠'),
-                                                ('아이디를 잃어버렸어요.','아이디는 이메일 인증하면 찾을 수 있습니다.')
+                                                                                                           ('banner_thum_image001.png', 'photo-1615366105533-5b8f3255ea5d.jpg', 'nnn.com','2024-11-12 00:00:00', 'Y','2024-12-30 00:00:00',  1, '2024-11-11 00:00:00', 8 ),
+                                                                                                           ('banner_thum_image002.png', 'photo-1615802546478-7380efa2d365.jpg', 'nnn.com','2024-11-20 00:00:00', 'Y', '2024-12-30 00:00:00', 2, '2024-11-11 00:00:00', 8 ),
+                                                                                                           ('banner_thum_image003.png', '5b42c11407734c42a253883d237c554e.png', 'mmm.com','2024-11-11 00:00:00','N', '2024-12-30 00:00:00', 3, NULL, NULL );
+# INSERT INTO tbl_faq (faq_title, faq_content)VALUES
+#                                                 ('회원가입은 어떻게 하나요?','회원가입은 하면되는 거죠'),
+#                                                 ('아이디를 잃어버렸어요.','아이디는 이메일 인증하면 찾을 수 있습니다.')
 ;
-INSERT INTO tbl_magazine ( magazine_title, magazine_content, magazine_photo) VALUES
-    ('html 형식으로 할 것을 건의합니다', '<h1>html 형식으로 넣으면 나중에 inner HTML으로 html랜더링이 가능하다는 사실. 알고 계셧나요.</h1> <div> 아무튼 그렇다고 합니다. </div>',
-     'magazine_image001.png');
+# INSERT INTO tbl_magazine ( magazine_title, magazine_content, magazine_photo) VALUES
+#     ('html 형식으로 할 것을 건의합니다', '<h1>html 형식으로 넣으면 나중에 inner HTML으로 html랜더링이 가능하다는 사실. 알고 계셧나요.</h1> <div> 아무튼 그렇다고 합니다. </div>',
+#      'magazine_image001.png');
 
 # INSERT INTO tbl_auth ()VALUES
 #     (),

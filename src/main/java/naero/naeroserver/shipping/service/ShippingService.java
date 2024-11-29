@@ -1,7 +1,10 @@
 package naero.naeroserver.shipping.service;
 
+import naero.naeroserver.entity.ship.TblShipCom;
 import naero.naeroserver.entity.ship.TblShipping;
+import naero.naeroserver.shipping.dto.ShipComDTO;
 import naero.naeroserver.shipping.dto.ShippingDTO;
+import naero.naeroserver.shipping.repository.TblShipComRepository;
 import naero.naeroserver.shipping.repository.TblShippingRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -12,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ShippingService {
@@ -52,6 +57,7 @@ public class ShippingService {
     private static final Logger log = LoggerFactory.getLogger(ShippingService.class);
     private final TblShippingRepository tblShippingRepository;
     private final ModelMapper modelMapper;
+    private final TblShipComRepository tblShipComRepository;
 
     /* 설명. 스마트택배 API 관련 필드 */
     @Value("${sweettracker.api.base-url}")
@@ -60,16 +66,19 @@ public class ShippingService {
     private String apiKey;
 
     @Autowired
-    public ShippingService(TblShippingRepository tblShippingRepository, ModelMapper modelMapper) {
+    public ShippingService(TblShippingRepository tblShippingRepository, ModelMapper modelMapper, TblShipComRepository tblShipComRepository) {
         this.tblShippingRepository = tblShippingRepository;
         this.modelMapper = modelMapper;
+        this.tblShipComRepository = tblShipComRepository;
     }
 
-    public Object selectShipping(String trackingNumber) {
+//    public Object selectShipping(String trackingNumber) {
+    public Object selectShipping(Integer shippingId) {
         log.info("[ShippingService] selectShippingList() Start");
 
         /* 설명. 메서드 이름은 반드시 레포지터리의 콜럼명이랑 일치해야 함. 아니면 에러 발생 */
-        TblShipping shippingDetail = tblShippingRepository.findByTrackingNumber(trackingNumber);
+//        TblShipping shippingDetail = tblShippingRepository.findByTrackingNumber(trackingNumber);
+        TblShipping shippingDetail = tblShippingRepository.findByShippingId(shippingId);
 
         log.info("[ShippingService] shippingList {}", shippingDetail);
         log.info("[ShippingService] selectShippingList() End");
@@ -122,4 +131,16 @@ public class ShippingService {
         return (result > 0) ? "배송 업데이트 성공" : "배송 업데이트 실패";
     }
 
+    public Object selectShippingCompany() {
+        log.info("[ShippingService] selectShippingCompany() Start");
+
+        List<TblShipCom> shippingComList = tblShipComRepository.findAll();
+
+        log.info("[ShippingService] selectShippingCompany() End");
+
+        shippingComList.stream().map(company -> modelMapper.map(company, ShipComDTO.class))
+                .collect(Collectors.toList());
+
+        return shippingComList;
+    }
 }
