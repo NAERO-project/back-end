@@ -3,6 +3,7 @@ package naero.naeroserver.entity.product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "tbl_option")
@@ -19,11 +20,23 @@ public class TblOption {
     @Column(name = "add_price")
     private Integer addPrice;
 
+    @Column(name="option_check", length = 1)
+    @ColumnDefault("'Y'")
+    private String optionCheck;
+
     @Column(name = "product_id")
     private Integer productId;
 
     @Column(name = "option_quantity")
     private Integer optionQuantity;
+
+    public String getOptionCheck() {
+        return optionCheck;
+    }
+
+    public void setOptionCheck(String optionCheck) {
+        this.optionCheck = optionCheck;
+    }
 
     public Integer getOptionId() {
         return optionId;

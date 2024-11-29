@@ -388,6 +388,7 @@ CREATE TABLE `tbl_option` (
                               `option_desc`	varchar(255)	NULL DEFAULT NULL	COMMENT '옵션 내용',
                               `add_price`	int	NULL	DEFAULT NULL COMMENT '추가금액',
                               `product_id`	int	NOT NULL COMMENT '상품 번호',
+                              `option_check`	varchar(1)	NULL DEFAULT 'Y'	COMMENT '판매여부',
                               `option_quantity` int NOT NULL COMMENT '옵션에 따른 재고'
 );
 
