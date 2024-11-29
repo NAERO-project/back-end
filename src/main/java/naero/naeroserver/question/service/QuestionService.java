@@ -65,21 +65,19 @@ public class QuestionService {
     }
 
     // 1:1 문의 상세 조회
-    public Map<String, Object> getUserQuestionById(Integer userId, Integer questionId, Integer answerId) {
+    public QuestionDTO getUserQuestionById(Integer questionId, Integer userId) {
+        // 주어진 questionId와 userId에 해당하는 문의 정보를 조회합니다.
         TblQuestion question = questionRepository.findByQuestionIdAndUserId(questionId, userId);
-        QuestionDTO questionDTO = (question != null) ? modelMapper.map(question, QuestionDTO.class) : null;
 
-        TblAnswer answer = answerRepository.findFirstByQuestionId(questionId);
-        AnswerDTO answerDTO = (answer != null) ? modelMapper.map(answer, AnswerDTO.class) : null;
+        // 조회된 문의가 없는 경우 예외를 던집니다.
+        if (question == null) {
+            throw new IllegalArgumentException("해당 문의를 찾을 수 없습니다.");
+        }
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("question", questionDTO);
-        result.put("answer", answerDTO);
-        result.put("userId", userId);
-        result.put("answerId", answerId);
-
-        return result;
+        // 조회된 질문 엔티티를 DTO로 매핑하여 반환합니다.
+        return modelMapper.map(question, QuestionDTO.class);
     }
+
 
     // 1:1 문의 수정
     @Transactional
@@ -120,6 +118,19 @@ public class QuestionService {
     public int getTotalQuestions(Integer userId) {
         return (int) questionRepository.countByUserId(userId);
     }
+
+    public AnswerDTO getAnswerByQuestionId(Integer questionId) {
+        // 질문 ID와 사용자 ID를 사용하여 답변을 조회합니다.
+
+        TblAnswer answer = answerRepository.findByQuestionId(questionId);
+        // 답변이 존재할 경우 DTO로 매핑합니다.
+        if (answer != null) {
+            return modelMapper.map(answer, AnswerDTO.class);
+        } else {
+            return null;
+        }
+    }
+
 }
 
 

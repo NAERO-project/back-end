@@ -6,6 +6,7 @@ import naero.naeroserver.common.PageDTO;
 import naero.naeroserver.common.PagingResponseDTO;
 import naero.naeroserver.common.ResponseDTO;
 import naero.naeroserver.member.service.UserService;
+import naero.naeroserver.question.dto.AnswerDTO;
 import naero.naeroserver.question.dto.QuestionDTO;
 import naero.naeroserver.question.service.QuestionService;
 import org.slf4j.Logger;
@@ -64,14 +65,14 @@ public class QuestionController {
 
     // 특정 문의 상세 조회
     @Operation(summary = "1:1 문의 상세 조회 요청", description = "1:1 문의 상세 조회가 진행됩니다.", tags = { "QuestionController" })
-    @GetMapping("/{questionId}/answers/{answerId}/{username}")
-    public ResponseEntity<ResponseDTO> getUserQuestionById(@PathVariable String username, @PathVariable Integer questionId, @PathVariable Integer answerId) {
+    @GetMapping("/{questionId}/{username}")
+    public ResponseEntity<ResponseDTO> getUserQuestionById(@PathVariable String username, @PathVariable Integer questionId) {
 
         int userId = userService.getUserIdFromUserName(username);
 
-        Map<String, Object> questionWithAnswer = questionService.getUserQuestionById(questionId, userId, answerId);
+        QuestionDTO questionDTO = questionService.getUserQuestionById(questionId, userId);
 
-        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "상세 조회 성공", questionWithAnswer));
+        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "상세 조회 성공", questionDTO));
     }
 
     // 1:1 문의 수정
@@ -97,4 +98,15 @@ public class QuestionController {
 
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "삭제 성공", result));
     }
+
+    @Operation(summary = "특정 문의에 대한 답변 조회 요청", description = "특정 문의에 대한 답변을 조회합니다.", tags = { "AnswerController" })
+    @GetMapping("/{questionId}/answers")
+    public ResponseEntity<ResponseDTO> getAnswerByQuestionId(
+            @PathVariable Integer questionId) {
+
+        AnswerDTO answerDTO = questionService.getAnswerByQuestionId(questionId);
+
+        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "조회성공", answerDTO));
+    }
+
 }
