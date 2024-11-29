@@ -5,6 +5,8 @@ import naero.naeroserver.common.Criteria;
 import naero.naeroserver.common.PageDTO;
 import naero.naeroserver.common.PagingResponseDTO;
 import naero.naeroserver.common.ResponseDTO;
+import naero.naeroserver.member.service.UserService;
+import naero.naeroserver.question.dto.AnswerDTO;
 import naero.naeroserver.question.dto.QuestionDTO;
 import naero.naeroserver.question.service.QuestionService;
 import org.slf4j.Logger;
@@ -14,71 +16,97 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/questions")
 public class QuestionController {
 
     private static final Logger log = LoggerFactory.getLogger(QuestionController.class);
     private final QuestionService questionService;
+    private final UserService userService;
 
     @Autowired
-    public QuestionController(QuestionService questionService) {
+    public QuestionController(QuestionService questionService, UserService userService) {
         this.questionService = questionService;
+        this.userService = userService;
     }
 
     // 1:1 문의 등록
     @Operation(summary = "1:1 문의 등록 요청", description = "1:1 문의 등록이 진행됩니다.", tags = { "QuestionController" })
-    @PostMapping("/")
-    public ResponseEntity<ResponseDTO> createQuestion(@RequestBody QuestionDTO questionDTO) {
+    @PostMapping("/{username}")
+    public ResponseEntity<ResponseDTO> createQuestion(@PathVariable String username, @RequestBody QuestionDTO questionDTO) {
 
-        String result = questionService.createQuestion(questionDTO);
+        Integer userId = userService.getUserIdFromUserName(username);
+
+        String result = String.valueOf(questionService.createQuestion(questionDTO, userId));
 
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "등록 성공", result));
     }
 
     // 1:1 문의 전체 조회
     @Operation(summary = "1:1 문의 전체 조회 요청", description = "1:1 전체 조회가 진행됩니다.", tags = { "QuestionController" })
-    @GetMapping
+    @GetMapping("/list/{username}")
     public ResponseEntity<ResponseDTO> getUserQuestions(
-            @RequestParam Integer userId,
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size) {
+            @PathVariable String username,
+            @RequestParam(name = "offset", defaultValue = "1") String offset) {
 
-        Criteria criteria = new Criteria(page, size);
+        int userId = userService.getUserIdFromUserName(username);
+
+        int total = questionService.getTotalQuestions(userId);
+
+        Criteria cri = new Criteria(Integer.valueOf(offset), 2);
         PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
-        pagingResponseDTO.setPageInfo(new PageDTO(criteria, questionService.getTotalQuestions(userId)));
-        pagingResponseDTO.setData(questionService.getUserQuestions(userId, page - 1, size));
+        pagingResponseDTO.setData(questionService.getUserQuestions(userId, cri));
+        pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
 
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "조회 성공", pagingResponseDTO));
     }
 
     // 특정 문의 상세 조회
     @Operation(summary = "1:1 문의 상세 조회 요청", description = "1:1 문의 상세 조회가 진행됩니다.", tags = { "QuestionController" })
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseDTO> getUserQuestionById(@RequestParam Integer userId, @PathVariable Integer id) {
+    @GetMapping("/{questionId}/{username}")
+    public ResponseEntity<ResponseDTO> getUserQuestionById(@PathVariable String username, @PathVariable Integer questionId) {
 
-        QuestionDTO question = questionService.getUserQuestionById(userId, id);
+        int userId = userService.getUserIdFromUserName(username);
 
-        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "상세 조회 성공", question));
+        QuestionDTO questionDTO = questionService.getUserQuestionById(questionId, userId);
+
+        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "상세 조회 성공", questionDTO));
     }
 
     // 1:1 문의 수정
     @Operation(summary = "1:1 문의 수정 요청", description = "1:1 문의 수정이 진행됩니다.", tags = { "QuestionController" })
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseDTO> updateQuestion(@RequestParam Integer userId, @PathVariable Integer id, @RequestBody QuestionDTO questionDTO) {
+    @PutMapping("/{username}/{questionId}")
+    public ResponseEntity<ResponseDTO> updateQuestion(@PathVariable String username, @PathVariable Integer questionId, @RequestBody QuestionDTO questionDTO) {
 
-        String result = questionService.updateQuestion(userId, id, questionDTO);
+        int userId = userService.getUserIdFromUserName(username);
+
+        String result = String.valueOf(questionService.updateQuestion(userId, questionId, questionDTO));
 
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "수정 성공", result));
     }
 
     // 1:1 문의 삭제
     @Operation(summary = "1:1 문의 삭제 요청", description = "1:1 문의 삭제가 진행됩니다.", tags = { "QuestionController" })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDTO> deleteQuestion(@RequestParam Integer userId, @PathVariable Integer id) {
+    @DeleteMapping("/{username}/{questionId}")
+    public ResponseEntity<ResponseDTO> deleteQuestion(@PathVariable String username, @PathVariable Integer questionId) {
 
-        String result = questionService.deleteQuestion(userId, id);
+        int userId = userService.getUserIdFromUserName(username);
+
+        String result = questionService.deleteQuestion(userId, questionId);
 
         return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "삭제 성공", result));
     }
+
+    @Operation(summary = "특정 문의에 대한 답변 조회 요청", description = "특정 문의에 대한 답변을 조회합니다.", tags = { "AnswerController" })
+    @GetMapping("/{questionId}/answers")
+    public ResponseEntity<ResponseDTO> getAnswerByQuestionId(
+            @PathVariable Integer questionId) {
+
+        AnswerDTO answerDTO = questionService.getAnswerByQuestionId(questionId);
+
+        return ResponseEntity.ok(new ResponseDTO(HttpStatus.OK, "조회성공", answerDTO));
+    }
+
 }
