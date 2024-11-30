@@ -6,9 +6,6 @@ public class ProducerGradeDTO {
     private int critSales;
     private int critReview;
 
-    public ProducerGradeDTO() {
-    }
-
     public ProducerGradeDTO(int pgradeId, String pgradeName, int critSales, int critReview) {
         this.pgradeId = pgradeId;
         this.pgradeName = pgradeName;
