@@ -120,7 +120,7 @@ public class MonitoringController {
                 categoryOption, indexOption, startDate, endDate, specification);
 
         // Validate and parse dates to Instant
-        Instant parsedStartInstant = validateAndParseDateTime(startDate, LocalDateTime.now().minusWeeks(1));
+        Instant parsedStartInstant = validateAndParseDateTime(startDate, LocalDateTime.now().minusMonths(2));
         Instant parsedEndInstant = validateAndParseDateTime(endDate, LocalDateTime.now());
 
         System.out.println("[날자확인] parsedStartInstant = " + parsedStartInstant);

@@ -169,6 +169,22 @@ public class ProductService {
     }
 
 
+    /*===============================*/
+//    public Object selectProductBrandCategoryLarge(int producerId) {
+//
+//        log.info("[ProductService] selectProductBrandCategoryLarge() 시작");
+//
+//        List<TblCategoryLarge> ProductCategoryList01 = productRepository.findAllProductProducerCategory01(producerId);
+//
+//        log.info("[ProductService] selectProductBrandCategoryLarge() 종료");
+//
+//        return ProductCategoryList01.stream().map(product -> modelMapper.map(product, CategoryLargeDTO.class))
+//                .collect(Collectors.toList());
+//    }
+
+    /*===============================*/
+
+
     /* 상품 리스트 미리보기 조회 */
     public Object selectProductListPreview() {
         log.info("[ProductService] selectProductListPreview() 시작");
@@ -186,53 +202,72 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public Object selectProductListAboutFoodPreview() {
-        log.info("[ProductService] selectProductListAboutFoodPreview() 시작");
+//    public Object selectProductListAboutFoodPreview() {
+//        log.info("[ProductService] selectProductListAboutFoodPreview() 시작");
+//
+//        Pageable pageable = PageRequest.of(0, 8);
+//        List<TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(3, pageable);
+//
+//        for (TblProduct tblProduct : productListPreview) {
+//            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
+//        }
+//
+//        log.info("[ProductService] selectProductListAboutFoodPreview() 종료");
+//
+//        return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+//                .collect(Collectors.toList());
+//    }
+//
+//    public Object selectProductListAboutCosmeticsPreview() {
+//        log.info("[ProductService] selectProductListAboutCosmeticsPreview() 시작");
+//
+//        Pageable pageable = PageRequest.of(0, 8);
+//        List<TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(4, pageable);
+//
+//        for (TblProduct tblProduct : productListPreview) {
+//            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
+//        }
+//
+//        log.info("[ProductService] selectProductListAboutCosmeticsPreview() 종료");
+//
+//        return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+//                .collect(Collectors.toList());
+//    }
+//
+//    public Object selectProductListAboutFashionPreview() {
+//        log.info("[ProductService] selectProductListAboutFashionPreview() 시작");
+//
+//        Pageable pageable = PageRequest.of(0, 8);
+//        List<TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(3, pageable);
+//
+//        for (TblProduct tblProduct : productListPreview) {
+//            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
+//        }
+//
+//        log.info("[ProductService] selectProductListAboutFashionPreview() 종료");
+//
+//        return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+//                .collect(Collectors.toList());
+//    }
 
-        Pageable pageable = PageRequest.of(0, 8);
-        List<TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(3, pageable);
+    public Object selectProductCategoryPreviewLargeList(int largeId) {
+        log.info("[ProductService] selectProductCategoryPreviewLargeList() 시작");
+
+        Pageable pageable = PageRequest.of(0, 4);
+        List<TblProduct> productListPreview = productRepository.selectProductCategoryPreviewLargeList(largeId, pageable);
 
         for (TblProduct tblProduct : productListPreview) {
             tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
         }
 
-        log.info("[ProductService] selectProductListAboutFoodPreview() 종료");
+        log.info("[ProductService] selectProductCategoryPreviewLargeList() 종료");
 
         return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public Object selectProductListAboutCosmeticsPreview() {
-        log.info("[ProductService] selectProductListAboutCosmeticsPreview() 시작");
 
-        Pageable pageable = PageRequest.of(0, 8);
-        List<TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(4, pageable);
 
-        for (TblProduct tblProduct : productListPreview) {
-            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
-        }
-
-        log.info("[ProductService] selectProductListAboutCosmeticsPreview() 종료");
-
-        return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    public Object selectProductListAboutFashionPreview() {
-        log.info("[ProductService] selectProductListAboutFashionPreview() 시작");
-
-        Pageable pageable = PageRequest.of(0, 8);
-        List<TblProduct> productListPreview = productRepository.findByFoodProductWithLimit(3, pageable);
-
-        for (TblProduct tblProduct : productListPreview) {
-            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
-        }
-
-        log.info("[ProductService] selectProductListAboutFashionPreview() 종료");
-
-        return productListPreview.stream().map(product -> modelMapper.map(product, ProductDTO.class))
-                .collect(Collectors.toList());
-    }
 
     /* 브랜드 전체 페이지 상품 조회 (미리보기) */
     public List<ProductProducerDTO> selectProducerProductList() {
@@ -311,24 +346,24 @@ public class ProductService {
     }
 
     /* 브랜드별 페이지 카테고리 상품 조회 (페이징) */
-    public int selectProducerProductCategoryListPage(int producerId, int mediumId) {
+    public int selectProducerProductCategoryListPage(int producerId, int largeId) {
         log.info("[ProductService] selectProducerProductCategoryListPage 시작");
 
-        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryIdAndProducerId(producerId, mediumId);
+        List<TblProduct> productList = productRepository.findByProductCheckAndSmallCategoryIdAndProducerId(producerId, largeId);
 
         log.info("[ProductService] selectProducerProductCategoryListPage 종료");
 
         return productList.size();
     }
 
-    public Object selectProducerProductCategoryListPaging(int producerId, int mediumId, Criteria cri) {
+    public Object selectProducerProductCategoryListPaging(int producerId, int largeId, Criteria cri) {
         log.info("[ProductService] selectProducerProductCategoryListPaging() 시작");
 
         int index = cri.getPageNum() -1;
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryIdAndProducerId(producerId, mediumId, paging);
+        Page<TblProduct> result = productRepository.findByProductCheckAndSmallCategoryIdAndProducerId(producerId, largeId, paging);
         List<TblProduct> productList = (List<TblProduct>)result.getContent();
 
         for(int i = 0 ; i < productList.size() ; i++) {
@@ -429,31 +464,34 @@ public class ProductService {
             product.setProductDesc(productDTO.getProductDesc());
             product.setProductCheck(productDTO.getProductCheck());
 
-            List<TblOption> existingOptions = optionRepository.findByProductId(productDTO.getProductId());
-            for (TblOption option : existingOptions) {
-                option.setOptionCheck("N");
-            }
-            optionRepository.saveAll(existingOptions);
+//            List<TblOption> existingOptions = optionRepository.findByProductId(productDTO.getProductId());
+//            for (TblOption option : existingOptions) {
+//                option.setOptionCheck("N");
+//            }
+//            optionRepository.saveAll(existingOptions);
 
-            // Option 저장
             List<OptionDTO> options = productDTO.getOptions();
+            List<TblOption> optionModel = new ArrayList<>();
             if (options != null && !options.isEmpty()) {
-                // 기존 옵션 삭제
-                optionRepository.deleteByProductId(productDTO.getProductId());
-
-                List<TblOption> optionModel = new ArrayList<>();
                 for (OptionDTO option : options) {
-                    log.info("옵션 정보: {}", option);
-                    TblOption tblOption = new TblOption();
-                    tblOption.setOptionDesc(option.getOptionDesc());
-                    tblOption.setOptionQuantity(option.getOptionQuantity());
-                    tblOption.setAddPrice(option.getAddPrice());
-                    tblOption.setOptionCheck("Y");
-                    tblOption.setProductId(productDTO.getProductId());
-                    optionModel.add(tblOption);
+                    if (option.getOptionId() != null) {
+                    TblOption existingOption = optionRepository.findTblOptionByOptionId(option.getOptionId());
+                    existingOption.setOptionCheck(option.getOptionCheck());
+                    existingOption.setOptionQuantity(option.getOptionQuantity());
+                    existingOption.setOptionDesc(option.getOptionDesc());
+                    existingOption.setAddPrice(option.getAddPrice());
+                    optionRepository.save(existingOption);
+                    } else if (option.getOptionId() == null) {
+                        TblOption tblOption = new TblOption();
+                        tblOption.setOptionDesc(option.getOptionDesc());
+                        tblOption.setOptionQuantity(option.getOptionQuantity());
+                        tblOption.setAddPrice(option.getAddPrice());
+                        tblOption.setOptionCheck(option.getOptionCheck());
+                        tblOption.setProductId(productDTO.getProductId());
+                        optionModel.add(tblOption);
+                    }
                 }
-
-                // 새로운 옵션 저장
+                System.out.println("ㅁ왜앤뢘ㅇㄹ냉론ㅇ" + optionModel);
                 optionRepository.saveAll(optionModel);
             }
 
@@ -563,4 +601,7 @@ public class ProductService {
     public Object selectProductIdByOptionId(int optionId) {
         return optionRepository.findProductIdByOptionId(optionId).getProductId();
     }
+
+
+
 }
