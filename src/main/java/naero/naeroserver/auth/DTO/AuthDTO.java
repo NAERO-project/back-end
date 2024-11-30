@@ -1,18 +1,19 @@
 package naero.naeroserver.auth.DTO;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 
 public class AuthDTO {
     private Integer authId;
     private String authKey;
     private String email;
-    private Time endTime;
+    private LocalDateTime endTime;
     private char authStatus;
 
     public AuthDTO() {
     }
 
-    public AuthDTO(Integer authId, String authKey, String email, Time startTime, char authStatus) {
+    public AuthDTO(Integer authId, String authKey, String email, LocalDateTime startTime, char authStatus) {
         this.authId = authId;
         this.authKey = authKey;
         this.email = email;
@@ -52,11 +53,11 @@ public class AuthDTO {
         this.authKey = authKey;
     }
 
-    public Time getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Time endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 }
