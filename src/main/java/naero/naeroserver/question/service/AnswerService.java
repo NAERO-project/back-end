@@ -168,7 +168,9 @@ public class AnswerService {
 
         TblAnswer answer = answerRepository.findById(answerId).orElse(null);
         if (answer != null) {
+            TblQuestion question = questionRepository.findById(answer.getQuestionId()).orElse(null);
             answerRepository.delete(answer);
+            question.setQuestionStatus(false);
             log.info("[AnswerService] deleteAnswer() End - Success");
             return "답변 삭제 성공";
         } else {
