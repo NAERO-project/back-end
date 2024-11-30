@@ -227,5 +227,9 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
 
     TblProduct findByProductId(int id);
 
-
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "WHERE p.productCheck = 'Y'" +
+            "ORDER BY p.productCreateAt desc")
+    List<TblProduct> selectProductsList();
 }

@@ -63,6 +63,10 @@ public class ProductService {
         log.info("[ProductService] selectProductPage 시작");
         List<TblProduct> productList = productRepository.findByProductCheck();
 
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).setProductImg(IMAGE_URL + productList.get(i).getProductImg());
+        }
+
         log.info("[ProductService] selectProductPage 종료");
 
         return productList.size();
@@ -192,7 +196,6 @@ public class ProductService {
 
         Pageable pageable = PageRequest.of(0, 8); // 최신 상품 순으로 8개만 조회
         List<TblProduct> productListPreview = productRepository.findAllProductWithLimit(pageable);
-
 
         for (TblProduct tblProduct : productListPreview) {
             tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
@@ -605,5 +608,15 @@ public class ProductService {
     }
 
 
+    public Object selectProductsList() {
 
+        List<TblProduct> productListPreview = productRepository.selectProductsList();
+
+        for (TblProduct tblProduct : productListPreview) {
+            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
+        }
+
+
+        return productListPreview;
+    }
 }

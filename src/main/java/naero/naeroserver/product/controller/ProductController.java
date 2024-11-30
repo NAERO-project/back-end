@@ -33,6 +33,14 @@ public class ProductController {
         this.userService = userService;
     }
 
+    /*상품 전체 조회*/
+    @Operation(summary = "상품 리스트 전체 조회", description = "전체 상품 조회", tags = { "ProductController" })
+    @GetMapping("/products/list/home")
+    public ResponseEntity<ResponseDTO> selectProductsList(){
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", productService.selectProductsList()));
+    }
+
     /* 상품 리스트 전체 조회 (페이징) */
     @Operation(summary = "상품 리스트 전체 조회 (페이징)", description = "상품 조회 및 페이징 처리 진행", tags = { "ProductController" })
     @GetMapping("/products/more")
