@@ -89,7 +89,7 @@ public class ProductController {
         Criteria cri = new Criteria(Integer.valueOf(offset), 12);
         PagingResponseDTO pagingResponseDTO = new PagingResponseDTO();
 
-        pagingResponseDTO.setData(productService.selectProductCategoryMediumIdListPaging(largeId, cri));
+        pagingResponseDTO.setData(productService.selectProductCategoryMediumIdListPaging(largeId, mediumId, cri));
 //        pagingResponseDTO.setData(productService.selectProductCategoryListPaging(largeId, cri));
 
         pagingResponseDTO.setPageInfo(new PageDTO(cri, total));
