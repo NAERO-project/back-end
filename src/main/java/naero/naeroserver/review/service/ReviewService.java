@@ -1,5 +1,6 @@
 package naero.naeroserver.review.service;
 
+import naero.naeroserver.common.Criteria;
 import naero.naeroserver.review.dto.ReviewDTO;
 import naero.naeroserver.entity.inquiry.TblReview;
 import naero.naeroserver.review.repository.ReviewRepository;
@@ -12,13 +13,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -40,33 +44,39 @@ public class ReviewService {
     }
 
     // 사용자 기준 리뷰 조회
-    public Page<ReviewDTO> getAllReviewsByUser(Integer userId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<TblReview> reviews = reviewRepository.findByUserId(userId, pageable);
+    public Object getAllReviewsByUser(Integer userId, Criteria cri) {
 
-        // 이미지 URL 추가
-        return reviews.map(review -> {
-            ReviewDTO reviewDTO = modelMapper.map(review, ReviewDTO.class);
-            if (reviewDTO.getReviewThumbnail() != null) {
-                reviewDTO.setReviewThumbnail(IMAGE_URL + reviewDTO.getReviewThumbnail());
-            }
-            return reviewDTO;
-        });
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+
+        Pageable pageable = PageRequest.of(index, count, Sort.by("reviewId").descending());
+
+        Page<TblReview> reviews = reviewRepository.findByUserId(userId, pageable);
+        List<TblReview> reviewList = reviews.getContent();
+
+        for(int i = 0; i<reviewList.size(); i++){
+            reviewList.get(i).setReviewThumbnail(IMAGE_URL + reviewList.get(i).getReviewThumbnail());
+        }
+
+        return reviewList.stream().map(review -> modelMapper.map(review, ReviewDTO.class)).collect(Collectors.toList());
     }
 
     // 상품 기준 리뷰 조회
-    public Page<ReviewDTO> getAllReviewsByProduct(Integer productId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Object getAllReviewsByProduct(Integer productId, Criteria cri) {
+        int index = cri.getPageNum() -1;
+        int count = cri.getAmount();
+
+        Pageable pageable = PageRequest.of(index, count, Sort.by("productId").descending());
+
         Page<TblReview> reviews = reviewRepository.findByProductId(productId, pageable);
 
-        // 이미지 URL 추가
-        return reviews.map(review -> {
-            ReviewDTO reviewDTO = modelMapper.map(review, ReviewDTO.class);
-            if (reviewDTO.getReviewThumbnail() != null) {
-                reviewDTO.setReviewThumbnail(IMAGE_URL + reviewDTO.getReviewThumbnail());
-            }
-            return reviewDTO;
-        });
+        List<TblReview> reviewList = reviews.getContent();
+
+        for(int i = 0; i<reviewList.size(); i++){
+            reviewList.get(i).setReviewThumbnail(IMAGE_URL + reviewList.get(i).getReviewThumbnail());
+        }
+
+        return reviewList.stream().map(review -> modelMapper.map(review, ReviewDTO.class)).collect(Collectors.toList());
     }
 
     // 리뷰 상세 조회
@@ -85,7 +95,7 @@ public class ReviewService {
 
     // 리뷰 등록
     @Transactional
-    public String addReview(ReviewDTO reviewDTO, MultipartFile reviewImage) {
+    public String addReview(Integer productId, ReviewDTO reviewDTO, MultipartFile reviewImage) {
         log.info("[ReviewService] addReview() 시작");
 
         String imageName = UUID.randomUUID().toString().replace("-", "");
@@ -116,18 +126,23 @@ public class ReviewService {
         }
     }
 
-    // 리뷰 수정
     @Transactional
-    public String updateReview(Integer reviewId, ReviewDTO reviewDTO, MultipartFile reviewImage) {
+    public String updateReview(Integer productId, Integer reviewId, ReviewDTO reviewDTO, MultipartFile reviewImage) {
         log.info("[ReviewService] updateReview() 시작");
 
         TblReview review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰를 찾을 수 없습니다."));
 
+        if (productId == null) {
+            throw new IllegalArgumentException("Product ID cannot be null");
+        }
+
         String oldImageName = review.getReviewThumbnail();
         String savedFileName = null;
 
         try {
+            System.out.println("productId" + productId);
+            review.setProductId(productId); // productId 설정
             review.setReview(reviewDTO.getReview());
             review.setReviewRating(reviewDTO.getReviewRating());
 
@@ -173,5 +188,9 @@ public class ReviewService {
 
         log.info("[ReviewService] deleteReview() 종료");
         return "리뷰 삭제 성공";
+    }
+
+    public int getTotalQuestions(int userId) {
+        return reviewRepository.countByUserId(userId);
     }
 }

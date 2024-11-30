@@ -59,6 +59,7 @@ public class OrderController {
             cartDTOList.forEach((c) -> c.setUserId(userId));
         }
 
+        System.out.println("여기까지 왔나?");
         OrderPageDTO tempOrder = orderService.startOrder(cartDTOList);
 
         // 추후 결제 완료된 장바구니 상품 삭제하기 위해 세션에 저장

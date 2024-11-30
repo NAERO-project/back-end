@@ -10,8 +10,10 @@ import java.util.List;
 public interface AnswerRepository extends JpaRepository<TblAnswer, Integer> {
 
     // 특정 문의에 해당하는 모든 답변 조회
-    List<TblAnswer> findByQuestionId(Integer questionId);
+    TblAnswer findByQuestionId(Integer questionId);
 
     // 1:1 문의 삭제 시 문의 답변도 삭제
     void deleteByQuestionId(Integer questionId);
+
+    TblAnswer findFirstByQuestionId(Integer questionId);
 }

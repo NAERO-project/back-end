@@ -253,7 +253,7 @@ public class ProductService {
     public Object selectProductCategoryPreviewLargeList(int largeId) {
         log.info("[ProductService] selectProductCategoryPreviewLargeList() 시작");
 
-        Pageable pageable = PageRequest.of(0, 8);
+        Pageable pageable = PageRequest.of(0, 4);
         List<TblProduct> productListPreview = productRepository.selectProductCategoryPreviewLargeList(largeId, pageable);
 
         for (TblProduct tblProduct : productListPreview) {
