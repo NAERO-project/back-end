@@ -50,6 +50,7 @@ public class BannerService {
 
         for(int i=0; i<bannerList.size(); i++){
             bannerList.get(i).setBannerImg(IMAGE_URL + bannerList.get(i).getBannerImg());
+            bannerList.get(i).setBannerThumbnail(IMAGE_URL + bannerList.get(i).getBannerThumbnail());
         }
 
         log.info("[BannerService] selectBannerList() 종료");
@@ -64,6 +65,7 @@ public class BannerService {
 
         for(int i=0; i<bannerList.size(); i++){
             bannerList.get(i).setBannerImg(IMAGE_URL + bannerList.get(i).getBannerImg());
+            bannerList.get(i).setBannerThumbnail(IMAGE_URL + bannerList.get(i).getBannerThumbnail());
         }
 
         log.info("[BannerService] selectProducerBannerList() 종료");

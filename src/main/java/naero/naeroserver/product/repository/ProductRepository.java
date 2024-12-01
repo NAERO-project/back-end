@@ -48,15 +48,33 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
     List<TblProduct> findByProductCheckAndSmallCategory(@Param("largeId") Integer largeId,
                                                         @Param("mediumId") Integer mediumId);
 
+
+
     @Query("SELECT p " +
             "FROM TblProduct p " +
             "JOIN TblCategorySmall cs ON p.smallCategory.smallCategoryId = cs.smallCategoryId " +
             "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
-            "AND cm.mediumCategoryId = :mediumId " +
+            "JOIN TblCategoryLarge cl ON cm.largeCategoryId = cl.largeCategoryId " +
+            "AND cl.largeCategoryId = :largeId " +
             "AND p.productCheck = 'Y' " +
             "ORDER BY p.productCreateAt desc ")
-    Page<TblProduct> findPagedProductCheckAndSmallCategory(@Param("mediumId") Integer mediumId,
+    Page<TblProduct> findPagedProductCheckAndSmallCategory01(@Param("largeId") Integer largeId,
                                                            Pageable paging);
+
+
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "JOIN TblCategorySmall cs ON p.smallCategory.smallCategoryId = cs.smallCategoryId " +
+            "JOIN TblCategoryMedium cm ON cs.mediumCategoryId = cm.mediumCategoryId " +
+            "JOIN TblCategoryLarge cl ON cm.largeCategoryId = cl.largeCategoryId " +
+            "AND cm.mediumCategoryId = :mediumId " +
+            "AND cl.largeCategoryId = :largeId " +
+            "AND p.productCheck = 'Y' " +
+            "ORDER BY p.productCreateAt desc ")
+    Page<TblProduct> findPagedProductCheckAndSmallCategory(@Param("largeId") Integer largeId,
+                                                           @Param("mediumId") Integer mediumId,
+                                                           Pageable paging);
+
 
     //    상품 리스트 미리보기 조회
     @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.productCreateAt DESC")
@@ -209,5 +227,9 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
 
     TblProduct findByProductId(int id);
 
-
+    @Query("SELECT p " +
+            "FROM TblProduct p " +
+            "WHERE p.productCheck = 'Y'" +
+            "ORDER BY p.productCreateAt desc")
+    List<TblProduct> selectProductsList();
 }
