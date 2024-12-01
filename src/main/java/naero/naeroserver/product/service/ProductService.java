@@ -63,6 +63,10 @@ public class ProductService {
         log.info("[ProductService] selectProductPage 시작");
         List<TblProduct> productList = productRepository.findByProductCheck();
 
+        for(int i = 0; i<productList.size(); i++){
+            productList.get(i).setProductImg(IMAGE_URL + productList.get(i).getProductImg());
+        }
+
         log.info("[ProductService] selectProductPage 종료");
 
         return productList.size();
@@ -79,7 +83,7 @@ public class ProductService {
         List<TblProduct> productList = (List<TblProduct>)result.getContent();
 
         for(int i = 0; i<productList.size(); i++){
-            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+            productList.get(i).setProductImg(IMAGE_URL + productList.get(i).getProductImg());
         }
 
         log.info("[ProductService] selectProductListPaging() 종료");
@@ -97,18 +101,18 @@ public class ProductService {
         return productList.size();
     }
 
-    public Object selectProductCategoryLargeListPaging(int mediumId, Criteria cri) {
+    public Object selectProductCategoryLargeListPaging(int largeId, Criteria cri) {
         log.info("[ProductService] selectProductCategoryLargeListPaging() 시작");
 
         int index = cri.getPageNum() -1;
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-        Page<TblProduct> result = productRepository.findPagedProductCheckAndSmallCategory(mediumId, paging);
+        Page<TblProduct> result = productRepository.findPagedProductCheckAndSmallCategory01(largeId, paging);
         List<TblProduct> productList = (List<TblProduct>)result.getContent();
 
         for(int i = 0; i<productList.size(); i++){
-            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+            productList.get(i).setProductImg(IMAGE_URL + productList.get(i).getProductImg());
         }
 
         log.info("[ProductService] selectProductCategoryLargeListPaging() 종료");
@@ -126,14 +130,15 @@ public class ProductService {
         return productList.size();
     }
 
-    public Object selectProductCategoryMediumIdListPaging(int largeId, Criteria cri) {
+    /////////////////////////////////////////////////
+    public Object selectProductCategoryMediumIdListPaging(int largeId, int mediumId, Criteria cri) {
         log.info("[ProductService] selectProductCategoryMediumIdListPaging() 시작");
 
         int index = cri.getPageNum() -1;
         int count = cri.getAmount();
         Pageable paging = PageRequest.of(index, count, Sort.by("productId").descending());
 
-        Page<TblProduct> result = productRepository.findPagedProductCheckAndSmallCategory(largeId, paging);
+        Page<TblProduct> result = productRepository.findPagedProductCheckAndSmallCategory(largeId, mediumId, paging);
         List<TblProduct> productList = (List<TblProduct>)result.getContent();
 
         for(int i = 0; i<productList.size(); i++){
@@ -315,7 +320,7 @@ public class ProductService {
         List<TblProduct> productList = (List<TblProduct>)result.getContent();
 
         for(int i = 0; i<productList.size(); i++){
-            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+            productList.get(i).setProductImg(IMAGE_URL + productList.get(i).getProductImg());
         }
 
         log.info("[ProductService] selectProducerProductListPaging() 종료");
@@ -367,7 +372,7 @@ public class ProductService {
         List<TblProduct> productList = (List<TblProduct>)result.getContent();
 
         for(int i = 0 ; i < productList.size() ; i++) {
-            productList.get(i).setProductThumbnail(IMAGE_URL + productList.get(i).getProductThumbnail());
+            productList.get(i).setProductImg(IMAGE_URL + productList.get(i).getProductImg());
         }
 
         log.info("[ProductService] selectProducerProductCategoryListPaging() 종료");
@@ -603,5 +608,15 @@ public class ProductService {
     }
 
 
+    public Object selectProductsList() {
 
+        List<TblProduct> productListPreview = productRepository.selectProductsList();
+
+        for (TblProduct tblProduct : productListPreview) {
+            tblProduct.setProductImg(IMAGE_URL + tblProduct.getProductImg());
+        }
+
+
+        return productListPreview;
+    }
 }

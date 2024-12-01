@@ -319,6 +319,10 @@ CREATE TABLE `tbl_banner` (
                               `banner_accept_at`	DateTime	NULL	COMMENT '승인 날짜',
                               `approver_id`	int	NULL	COMMENT '승인자'
 );
+CREATE TRIGGER before_insert_tbl_banner
+    BEFORE INSERT ON `tbl_banner`
+    FOR EACH ROW
+    SET NEW.banner_create_at = IFNULL(NEW.banner_create_at, CURRENT_TIMESTAMP);
 
 
 CREATE TABLE `tbl_magazine` (

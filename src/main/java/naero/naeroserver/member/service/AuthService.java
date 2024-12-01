@@ -117,6 +117,9 @@ public class AuthService {
     @Transactional
     public TblAuth sendAuthEmail(String id, String key ,String email) {
         AuthDTO newAuth = EmailApi.sendAuthEmail(id, key, email);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endTime = now.plusMinutes(10);
+        newAuth.setEndTime(endTime);
 
         TblAuth savedAuth= authRepository.save(modelMapper.map(newAuth, TblAuth.class));
         System.out.println("savedAuth"+ savedAuth);
@@ -127,6 +130,7 @@ public class AuthService {
     @Transactional
     public Object checkAuthEmail(AuthDTO auth) {
         TblAuth getAuth = authRepository.findByAuthId(auth.getAuthId());
+        System.out.println("Auth"+ auth);
         LocalDateTime now = LocalDateTime.now();
         if(now.isAfter(ChronoLocalDateTime.from(getAuth.getEndTime()))){
             throw new AuthFailException("만료된 인증입니다. 인증을 다시 시도해주세요.");
