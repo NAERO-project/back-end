@@ -155,7 +155,9 @@ public class MonitoringController {
         // Combined date validation logic
         // if (parsedStartInstant.isAfter(parsedEndInstant) || parsedEndInstant.isAfter(Instant.now())) {   // 여기도 버그
         if (parsedStartInstant.isAfter(parsedEndInstant) || parsedEndInstant.isAfter(LocalDateTime.now().toInstant(ZoneOffset.UTC))) {
-            throw new IllegalArgumentException("Invalid date range: Dates cannot be after today, and the start date cannot be after the end date.");
+//            throw new IllegalArgumentException("Invalid date range: Dates cannot be after today, and the start date cannot be after the end date.");
+            throw new Error("Invalid date range: Dates cannot be after today, and the start date cannot be after the end date.");
+
         }
 
         // Call the appropriate service method based on specification
