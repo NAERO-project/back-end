@@ -12,8 +12,8 @@ import java.util.List;
 public interface MonitoringProducerListRepository extends JpaRepository<TblProduct, Integer> {
 
     @Query("SELECT new naero.naeroserver.monitoring.dto.SimplifiedProducerDTO(" +
-            "p.producerId, p.busiNo, p.producerAdd, p.producerName, p.producerPhone, " +
-            "p.withStatus, p.deliveryFee, p.deliveryCrit) " +
-            "FROM TblProducer p")
+            "pr.producerId, pr.busiNo, pr.producerAdd, pr.producerName, " +
+            "pr.producerPhone, pr.withStatus, pr.deliveryFee, pr.deliveryCrit) " +
+            "FROM TblProducer pr ")
     List<SimplifiedProducerDTO> findAllProducers();
 }

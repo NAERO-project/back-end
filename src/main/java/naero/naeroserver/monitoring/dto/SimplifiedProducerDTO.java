@@ -1,5 +1,8 @@
 package naero.naeroserver.monitoring.dto;
 
+import naero.naeroserver.entity.user.TblProducerGrade;
+import naero.naeroserver.member.dto.ProducerGradeDTO;
+
 public class SimplifiedProducerDTO {
     private int producerId;
     private String busiNo;
@@ -9,6 +12,9 @@ public class SimplifiedProducerDTO {
     private String withStatus;
     private int deliveryFee;
     private int deliveryCrit;
+
+    public SimplifiedProducerDTO() {
+    }
 
     public SimplifiedProducerDTO(int producerId, String busiNo, String producerAdd,
                                  String producerName, String producerPhone,
@@ -89,13 +95,13 @@ public class SimplifiedProducerDTO {
 
     @Override
     public String toString() {
-        return "SimpleProducerDTO{" +
+        return "SimplifiedProducerDTO{" +
                 "producerId=" + producerId +
                 ", busiNo='" + busiNo + '\'' +
                 ", producerAdd='" + producerAdd + '\'' +
                 ", producerName='" + producerName + '\'' +
                 ", producerPhone='" + producerPhone + '\'' +
-                ", withStatus=" + withStatus +
+                ", withStatus='" + withStatus + '\'' +
                 ", deliveryFee=" + deliveryFee +
                 ", deliveryCrit=" + deliveryCrit +
                 '}';

@@ -1,6 +1,7 @@
 package naero.naeroserver.monitoring.service;
 
 import naero.naeroserver.entity.product.TblProduct;
+import naero.naeroserver.entity.user.TblProducer;
 import naero.naeroserver.monitoring.dto.SimplifiedProducerDTO;
 import naero.naeroserver.monitoring.repository.*;
 import naero.naeroserver.product.dto.ProductDTO;
