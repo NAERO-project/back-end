@@ -17,7 +17,8 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
             "LEFT JOIN TblProduct pt ON pr.producerId = pt.producerId " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
-            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
+            "LEFT JOIN TblOrder o ON od.orderId = o.orderId " +
+            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant AND o.orderStatus='completed' " +
             "GROUP BY pr.producerName " +
             "ORDER BY SUM(od.amount) DESC")
     List<Map<String, Double>> findCrossByProducerAndSales(@Param("parsedStartInstant") Instant parsedStartInstant,
@@ -28,7 +29,8 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
             "LEFT JOIN TblProduct pt ON pr.producerId = pt.producerId " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
-            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
+            "LEFT JOIN TblOrder o ON od.orderId = o.orderId " +
+            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant AND o.orderStatus='completed' " +
             "AND pr.producerName = :specification " +
             "GROUP BY DATE(od.createdAt) " +
             "ORDER BY DATE(od.createdAt)")
@@ -41,7 +43,8 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
             "LEFT JOIN TblProduct pt ON pr.producerId = pt.producerId " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
-            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
+            "LEFT JOIN TblOrder o ON od.orderId = o.orderId " +
+            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant AND o.orderStatus='completed' " +
             "GROUP BY pr.producerName " +
             "ORDER BY SUM(od.count) DESC")
     List<Map<String, Double>> findCrossByProducerAndQuantity(@Param("parsedStartInstant") Instant parsedStartInstant,
@@ -52,7 +55,8 @@ public interface MonitoringProducerRepository extends JpaRepository<TblProducer,
             "LEFT JOIN TblProduct pt ON pr.producerId = pt.producerId " +
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
-            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
+            "LEFT JOIN TblOrder o ON od.orderId = o.orderId " +
+            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant AND o.orderStatus='completed' " +
             "AND pr.producerName = :specification " +
             "GROUP BY DATE(od.createdAt) " +
             "ORDER BY DATE(od.createdAt)")

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
@@ -120,14 +120,17 @@ public class MonitoringController {
                 categoryOption, indexOption, startDate, endDate, specification);
 
         // Validate and parse dates to Instant
-        Instant parsedStartInstant = validateAndParseDateTime(startDate, LocalDateTime.now().minusMonths(2));
+        Instant parsedStartInstant = validateAndParseDateTime(startDate, LocalDateTime.now().minusMonths(1));
         Instant parsedEndInstant = validateAndParseDateTime(endDate, LocalDateTime.now());
 
+        System.out.println("[날자확인] zone = " + Instant.now());
         System.out.println("[날자확인] parsedStartInstant = " + parsedStartInstant);
         System.out.println("[날자확인] parsedEndInstant = " + parsedEndInstant);
+        System.out.println();
 
         // Combined date validation logic
-        if (parsedStartInstant.isAfter(parsedEndInstant) || parsedEndInstant.isAfter(Instant.now())) {
+        // if (parsedStartInstant.isAfter(parsedEndInstant) || parsedEndInstant.isAfter(Instant.now())) {   // 여기도 버그
+        if (parsedStartInstant.isAfter(parsedEndInstant) || parsedEndInstant.isAfter(LocalDateTime.now().toInstant(ZoneOffset.UTC))) {
             throw new IllegalArgumentException("Invalid date range: Dates cannot be after today, and the start date cannot be after the end date.");
         }
 
@@ -150,7 +153,9 @@ public class MonitoringController {
             LocalDateTime localDateTime = dateTime.isEmpty()
                     ? defaultDateTime
                     : LocalDateTime.parse(dateTime.contains("T") ? dateTime : dateTime + "T00:00:00");
-            return localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+            // return localDateTime.atZone(ZoneId.systemDefault()).toInstant(); // 여기는 버그
+            // 이 과정이 반드시 필요함: UTC 인스턴스로 변환하는 걸 막음, 즉 인스턴스여도 현지시간으로 표시되는 인스턴스임
+            return localDateTime.toInstant(ZoneOffset.UTC);
         } catch (DateTimeParseException e) {
             log.error("Invalid date-time format: {}", dateTime, e);
             throw new IllegalArgumentException("Invalid date-time format: " + dateTime);
