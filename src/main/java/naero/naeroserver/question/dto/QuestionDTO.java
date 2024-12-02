@@ -9,8 +9,8 @@ public class QuestionDTO {
     private Integer questionId;
     private String questionTitle;
     private String questionContent;
-    private LocalDateTime questionDate;
-    private LocalDateTime questionUpdate;
+    private String questionDate;
+    private String questionUpdate;
     private Boolean questionStatus;
     private String questionImage;
 
@@ -19,7 +19,7 @@ public class QuestionDTO {
     public QuestionDTO() {
     }
 
-    public QuestionDTO(Integer questionId, String questionTitle, String questionContent, LocalDateTime questionDate, LocalDateTime questionUpdate, Boolean questionStatus, String questionImage, int userId) {
+    public QuestionDTO(Integer questionId, String questionTitle, String questionContent, String questionDate, String questionUpdate, Boolean questionStatus, String questionImage, int userId) {
         this.questionId = questionId;
         this.questionTitle = questionTitle;
         this.questionContent = questionContent;
@@ -54,19 +54,19 @@ public class QuestionDTO {
         this.questionContent = questionContent;
     }
 
-    public LocalDateTime getQuestionDate() {
+    public String getQuestionDate() {
         return questionDate;
     }
 
-    public void setQuestionDate(LocalDateTime questionDate) {
+    public void setQuestionDate(String questionDate) {
         this.questionDate = questionDate;
     }
 
-    public LocalDateTime getQuestionUpdate() {
+    public String getQuestionUpdate() {
         return questionUpdate;
     }
 
-    public void setQuestionUpdate(LocalDateTime questionUpdate) {
+    public void setQuestionUpdate(String questionUpdate) {
         this.questionUpdate = questionUpdate;
     }
 
