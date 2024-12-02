@@ -51,7 +51,7 @@ public class CrossStatProduct {
 
         if (othersTotal > 0) {
             result.add(Map.of(
-                    "name", "others",
+                    "name", "기타",
                     "value", othersTotal,
                     "ratio", othersTotal / overallTotal
             ));

@@ -73,12 +73,27 @@ public class EmailApi {
         return randomCode.toString();
     }
     private static String generateHtmlContent(String code) {
+        StringBuilder codeHtml = new StringBuilder();
+        for (char c : code.toCharArray()) {
+            codeHtml.append("<div style='width: 40px; height: 40px; display: inline-block; margin: 5px; border: 1px solid #27ae60; border-radius: 5px; font-size: 20px; font-weight: bold; line-height: 40px; text-align: center; color: #34495e;'>")
+                    .append(c)
+                    .append("</div>");
+        }
+
         return "<html>" +
-                "<body>" +
-                "<h1>테스트 메일</h1>" +
-                "<p>이것은 테스트 메일입니다.</p>" +
-                "<div><strong>인증 코드</strong> <p>" + code + "</p> </div>" +
+                "<head>" +
+                "<link href='https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap' rel='stylesheet'>" +
+                "</head>" +
+                "<body style='margin:0; padding:0;  font-family: \"Montserrat\", Arial, sans-serif; background:#f4f4f4; display: flex; justify-content: center; align-items: center; width:auto; height: auto;'>" +
+                "<div style='width: 470px; height: 300px; background: #ffffff; border: 1px solid rgba(123, 144, 100, 0.3); border-radius: 10px; box-sizing: border-box; text-align: center; text-align: center; padding: 20px;'>" +
+                "<h1 style='color: #2c3e50; margin-bottom: 20px;'>인증코드를 보내드립니다.</h1>" +
+                "<strong style='font-size: 20px; color: #27ae60; margin-bottom: 10px;'>Naero 인증 코드</strong>" +
+                "<div style='display: flex; justify-content: center; align-items: center;'>" +
+                codeHtml.toString() +
+                "</div>"  +
+                "</div>" +
                 "</body>" +
                 "</html>";
     }
+
 }

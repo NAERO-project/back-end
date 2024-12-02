@@ -16,7 +16,8 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
 //            "WHERE (od.createdAt IS NOT NULL AND od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
-            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
+            "LEFT JOIN TblOrder o ON od.orderId = o.orderId " +
+            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant AND o.orderStatus='completed' " +
             "GROUP BY pt.productName " +
             "ORDER BY SUM(od.amount) DESC")
     List<Map<String, Double>> findCrossByProductAndSales(@Param("parsedStartInstant") Instant parsedStartInstant,
@@ -27,7 +28,8 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
 //            "WHERE (od.createdAt IS NOT NULL AND od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
-            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
+            "LEFT JOIN TblOrder o ON od.orderId = o.orderId " +
+            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant AND o.orderStatus='completed' " +
             "GROUP BY pt.productName " +
             "ORDER BY SUM(od.count) DESC")
     List<Map<String, Double>> findCrossByProductAndQuantity(@Param("parsedStartInstant") Instant parsedStartInstant,
@@ -38,7 +40,8 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
 //            "WHERE (od.createdAt IS NOT NULL AND od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
-            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
+            "LEFT JOIN TblOrder o ON od.orderId = o.orderId " +
+            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant AND o.orderStatus='completed' " +
             "AND pt.productName = :specification " +
             "GROUP BY DATE(od.createdAt) " +
             "ORDER BY DATE(od.createdAt)")
@@ -51,7 +54,8 @@ public interface MonitoringProductRepository extends JpaRepository<TblProduct, I
             "LEFT JOIN TblOption op ON pt.productId = op.productId " +
             "LEFT JOIN TblOrderDetail od ON op.optionId = od.optionId " +
 //            "WHERE (od.createdAt IS NOT NULL AND od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant) " +
-            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant " +
+            "LEFT JOIN TblOrder o ON od.orderId = o.orderId " +
+            "WHERE od.createdAt BETWEEN :parsedStartInstant AND :parsedEndInstant AND o.orderStatus='completed' " +
             "AND pt.productName = :specification " +
             "GROUP BY DATE(od.createdAt) " +
             "ORDER BY DATE(od.createdAt)")
