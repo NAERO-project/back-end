@@ -1,6 +1,12 @@
 package naero.naeroserver.monitoring.service;
 
+import naero.naeroserver.entity.product.TblProduct;
+import naero.naeroserver.entity.user.TblProducer;
+import naero.naeroserver.monitoring.dto.SimplifiedProducerDTO;
 import naero.naeroserver.monitoring.repository.*;
+import naero.naeroserver.product.dto.ProductDTO;
+import naero.naeroserver.product.repository.ProductRepository;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +16,10 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Service
 public class MonitoringService {
@@ -21,14 +29,43 @@ public class MonitoringService {
     private final MonitoringOrderRepository monitoringOrderRepository;
     private final MonitoringUserRepository monitoringUserRepository;
     private final MonitoringItemsRepository monitoringItemsRepository;
+    private final ProductRepository productRepository;
+    private final MonitoringProducerListRepository monitoringProducerListRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public MonitoringService(MonitoringOrderRepository monitoringOrderRepository,
                              MonitoringUserRepository monitoringUserRepository,
-                             MonitoringItemsRepository monitoringItemsRepository) {
+                             MonitoringItemsRepository monitoringItemsRepository,
+                             ProductRepository productRepository,
+                             MonitoringProducerListRepository monitoringProducerListRepository,
+                             ModelMapper modelMapper) {
         this.monitoringOrderRepository = monitoringOrderRepository;
         this.monitoringUserRepository = monitoringUserRepository;
         this.monitoringItemsRepository = monitoringItemsRepository;
+        this.productRepository = productRepository;
+        this.monitoringProducerListRepository = monitoringProducerListRepository;
+        this.modelMapper = modelMapper;
+    }
+
+    public Object selectProductList() {
+        log.info("[MonitoringService] selectProductList()] Start");
+
+        List<TblProduct> productList = productRepository.findAll();
+
+        log.info("[MonitoringService] selectProductList()] End");
+
+        productList.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
+
+        return productList;
+    }
+
+    public List<SimplifiedProducerDTO> selectProducerList() {
+        log.info("[MonitoringService] selectProducerList()] Start");
+        log.info("[MonitoringService] selectProducerList()] End]");
+
+        return monitoringProducerListRepository.findAllProducers();
     }
 
     /* 설명. 24시간 매출 총액 데이터 조회 */

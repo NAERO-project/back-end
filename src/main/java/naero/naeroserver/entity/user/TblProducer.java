@@ -32,7 +32,7 @@ public class TblProducer {
     @Column(name = "producer_phone", length = 20)
     private String producerPhone;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pgrade_id")
     private TblProducerGrade pgrade;
 
