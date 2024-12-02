@@ -20,6 +20,7 @@ import naero.naeroserver.manage.repository.SearchRepository;
 import naero.naeroserver.member.repository.ProducerRepository;
 import naero.naeroserver.member.repository.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,7 @@ public class UserService {
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
 
+    @Autowired
     public UserService(UserRepository userRepository, ModelMapper modelMapper, SearchRepository searchRepository, ProducerRepository producerRepository, PasswordEncoder passwordEncoder, TokenProvider tokenProvider, UserRoleRepository userRoleRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;

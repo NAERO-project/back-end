@@ -36,6 +36,30 @@ public class MonitoringController {
         this.monitoringServiceStat = monitoringServiceStat;
     }
 
+    /* 설명. 상품 리스트 조회 */
+    @Operation(summary = "모니터링 사품 리스트 조회 요청", description = "페이지가 로딩되면 상품 리스트 조회가 진행됩니다.",
+            tags = { "MonitoringController" })
+    @GetMapping("/monitoring/product-list")
+    public ResponseEntity<ResponseDTO> selectProdutList() {
+
+        return ResponseEntity
+                .ok()
+                .body(new ResponseDTO(HttpStatus.OK, "조회 성공",
+                        monitoringService.selectProductList()));
+    }
+
+    /* 설명. 브랜드 리스트 조회 */
+    @Operation(summary = "모니터링 브랜드 리스트 조회 요청", description = "페이지가 로딩되면 브랜드 리스트 조회가 진행됩니다.",
+            tags = { "MonitoringController" })
+    @GetMapping("/monitoring/producer-list")
+    public ResponseEntity<ResponseDTO> selectProducerList() {
+
+        return ResponseEntity
+                .ok()
+                .body(new ResponseDTO(HttpStatus.OK, "조회 성공",
+                        monitoringService.selectProducerList()));
+    }
+
     /* 설명. 24시간 매출 총액 데이터 조회 */
     @Operation(summary = "24시간 매출 총액 조회 요청", description = "페이지가 로딩되면 매출 총액 조회가 진행됩니다.",
             tags = { "MonitoringController" })
@@ -131,7 +155,9 @@ public class MonitoringController {
         // Combined date validation logic
         // if (parsedStartInstant.isAfter(parsedEndInstant) || parsedEndInstant.isAfter(Instant.now())) {   // 여기도 버그
         if (parsedStartInstant.isAfter(parsedEndInstant) || parsedEndInstant.isAfter(LocalDateTime.now().toInstant(ZoneOffset.UTC))) {
-            throw new IllegalArgumentException("Invalid date range: Dates cannot be after today, and the start date cannot be after the end date.");
+//            throw new IllegalArgumentException("Invalid date range: Dates cannot be after today, and the start date cannot be after the end date.");
+            throw new Error("Invalid date range: Dates cannot be after today, and the start date cannot be after the end date.");
+
         }
 
         // Call the appropriate service method based on specification
