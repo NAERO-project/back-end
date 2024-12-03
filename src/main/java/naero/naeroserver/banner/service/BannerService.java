@@ -143,6 +143,7 @@ public class BannerService {
 
             bannerDTO.setBannerImg(replaceFileName);
             bannerDTO.setBannerThumbnail(replaceThumbnailFileName);
+            bannerDTO.setBannerCheck("N");
 
             log.info("[BannerService] 등록 이미지명 : {}", replaceFileName);
 
