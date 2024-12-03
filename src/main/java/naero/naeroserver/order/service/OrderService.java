@@ -605,9 +605,11 @@ public class OrderService {
             }
 
             // 6. 상품 재고 원복
-            TblOrderDetail orderProduct = orderDetailRepository.findByOrderId(order.getOrderId());
-            TblOption option = optionRepository.findTblOptionByOptionId(orderProduct.getOptionId());
-            option.setOptionQuantity(option.getOptionQuantity() + order.getOrderTotalCount());
+            List<TblOrderDetail> orderProduct = orderDetailRepository.findByOrderId(order.getOrderId());
+            for (TblOrderDetail o : orderProduct) {
+                TblOption option = optionRepository.findTblOptionByOptionId(o.getOptionId());
+                option.setOptionQuantity(option.getOptionQuantity() + order.getOrderTotalCount());
+            }
 
         } catch (Exception e) {
             log.error("[OrderService] 결제 취소 중 오류 발생: {}", e.getMessage(), e);

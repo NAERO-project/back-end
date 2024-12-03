@@ -33,5 +33,5 @@ public interface OrderDetailRepository extends JpaRepository<TblOrderDetail, Int
                                                                           @Param("producerId") Integer producerId);
 
     // 주문 번호로 주문 상세 조회
-    TblOrderDetail findByOrderId(Integer orderId);
+    List<TblOrderDetail> findByOrderId(Integer orderId);
 }
