@@ -242,7 +242,7 @@ public class OrderService {
             }
 
             TblUser user = userRepository.findTblUserByUserId(orderDTO.getUserId());
-            user.setUserPoint((int) (user.getUserPoint() + (orderDTO.getOrderTotalAmount() * 0.1)));
+            user.setUserPoint((int) (user.getUserPoint() + (orderDTO.getOrderTotalAmount() * 0.01)));
 
             // 2. 주문 정보 저장
 //            TblOrder order = modelMapper.map(orderDTO, TblOrder.class);
@@ -593,7 +593,7 @@ public class OrderService {
 
             // 4. 포인트 원복
             if (order.getPointDiscount() != 0) {
-                user.setUserPoint(user.getUserPoint() + order.getPointDiscount());
+                user.setUserPoint(user.getUserPoint() - order.getPointDiscount());
             }
 
             // 5. 쿠폰 상태 원복
