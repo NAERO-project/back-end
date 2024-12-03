@@ -33,7 +33,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
 //            "AND cm.mediumCategoryId = :mediumId " +
             "AND cl.largeCategoryId = :largeId " +
             "AND p.productCheck = 'Y' " +
-            "ORDER BY p.productCreateAt desc ")
+            "ORDER BY p.productId desc ")
     List<TblProduct> findByProductCheckAndSmallCategory(@Param("largeId") Integer largeId);
 
     @Query("SELECT p " +
@@ -44,7 +44,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "AND cm.mediumCategoryId = :mediumId " +
             "AND cl.largeCategoryId = :largeId " +
             "AND p.productCheck = 'Y' " +
-            "ORDER BY p.productCreateAt desc ")
+            "ORDER BY p.productId desc ")
     List<TblProduct> findByProductCheckAndSmallCategory(@Param("largeId") Integer largeId,
                                                         @Param("mediumId") Integer mediumId);
 
@@ -57,7 +57,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "JOIN TblCategoryLarge cl ON cm.largeCategoryId = cl.largeCategoryId " +
             "AND cl.largeCategoryId = :largeId " +
             "AND p.productCheck = 'Y' " +
-            "ORDER BY p.productCreateAt desc ")
+            "ORDER BY p.productId desc ")
     Page<TblProduct> findPagedProductCheckAndSmallCategory01(@Param("largeId") Integer largeId,
                                                            Pageable paging);
 
@@ -70,14 +70,14 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "AND cm.mediumCategoryId = :mediumId " +
             "AND cl.largeCategoryId = :largeId " +
             "AND p.productCheck = 'Y' " +
-            "ORDER BY p.productCreateAt desc ")
+            "ORDER BY p.productId desc ")
     Page<TblProduct> findPagedProductCheckAndSmallCategory(@Param("largeId") Integer largeId,
                                                            @Param("mediumId") Integer mediumId,
                                                            Pageable paging);
 
 
     //    상품 리스트 미리보기 조회
-    @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.productCreateAt DESC")
+    @Query("SELECT p FROM TblProduct p WHERE p.productCheck = 'Y' ORDER BY p.productId DESC")
     List<TblProduct> findAllProductWithLimit(Pageable pageable);
 
 //    @Query("SELECT p FROM TblProduct p, TblCategorySmall sc, TblCategoryMedium mc " +
@@ -94,7 +94,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "JOIN TblCategoryLarge cl ON cm.largeCategoryId = cl.largeCategoryId " +
             "AND cl.largeCategoryId = :largeId " +
             "AND p.productCheck = 'Y' " +
-            "ORDER BY p.productCreateAt desc ")
+            "ORDER BY p.productId desc ")
     List<TblProduct> selectProductCategoryPreviewLargeList(@Param("largeId") Integer largeId, Pageable pageable);
 
     //    브랜드 전체 페이지 상품 조회 (미리보기)
@@ -103,7 +103,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "JOIN TblProducer pi ON p.producerId = pi.producerId " +
             "WHERE p.producerId = :producerId " +
             "AND p.productCheck = 'Y' " +
-            "ORDER BY p.productCreateAt desc ")
+            "ORDER BY p.productId desc ")
     List<TblProduct> findByProducerIdWithLimit(@Param("producerId") Integer producerId,
                                                Pageable pageable);
 
@@ -112,14 +112,14 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "FROM TblProduct p " +
             "WHERE p.producerId = :producerId " +
             "AND p.productCheck = 'Y' " +
-            "ORDER BY p.productCreateAt desc ")
+            "ORDER BY p.productId desc ")
     List<TblProduct> findByProductCheckAndId(@Param("producerId") Integer producerId);
 
     @Query("SELECT p " +
             "FROM TblProduct p " +
             "WHERE p.producerId = :producerId " +
             "AND p.productCheck = 'Y' " +
-            "ORDER BY p.productCreateAt desc ")
+            "ORDER BY p.productId desc ")
     Page<TblProduct> findByPageProductCheckAndId(@Param("producerId") Integer producerId,
                                                  Pageable paging);
 
@@ -137,7 +137,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
     @Query("SELECT p " +
             "FROM TblProduct p " +
             "WHERE p.producerId = :producerId " +
-            "ORDER BY p.productCreateAt desc ")
+            "ORDER BY p.productId desc ")
     Page<TblProduct> findProductListByProducer(@Param("producerId") Integer producerId,
                                                      Pageable paging);
 
@@ -150,7 +150,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "WHERE p.producerId = :producerId " +
             "AND cl.largeCategoryId = :largeId " +
             "AND p.productCheck = 'Y' " +
-            "ORDER BY p.productCreateAt desc ")
+            "ORDER BY p.productId desc ")
     List<TblProduct> findByProductCheckAndSmallCategoryIdAndProducerId(@Param("producerId") Integer producerId,
                                                                        @Param("largeId") Integer largeId);
 
@@ -162,7 +162,7 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
             "WHERE p.producerId = :producerId " +
             "AND cl.largeCategoryId = :largeId " +
             "AND p.productCheck = 'Y' " +
-            "ORDER BY p.productCreateAt desc ")
+            "ORDER BY p.productId desc ")
     Page<TblProduct> findByProductCheckAndSmallCategoryIdAndProducerId(@Param("producerId") Integer producerId,
                                                                        @Param("largeId") Integer largeId,
                                                                        Pageable paging);
@@ -230,6 +230,6 @@ public interface ProductRepository extends JpaRepository<TblProduct, Integer> {
     @Query("SELECT p " +
             "FROM TblProduct p " +
             "WHERE p.productCheck = 'Y'" +
-            "ORDER BY p.productCreateAt desc")
+            "ORDER BY p.productId desc")
     List<TblProduct> selectProductsList();
 }

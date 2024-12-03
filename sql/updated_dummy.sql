@@ -238,20 +238,6 @@ INSERT INTO tbl_category_small (small_category_name, medium_category_id) VALUES
 INSERT INTO tbl_product (product_name, product_price, product_thumbnail, product_img, product_desc, product_check, producer_id, small_category_id) VALUES
 -- Medium 카테고리 1: 델리
 -- Small 카테고리 1: 프루테리언
-('비건 치즈 버거', 13000, 'image_5.jpg', 'image_5.jpg', '식물성 패티와 비건 치즈로 만든 맛있는 버거입니다.', 'Y', 1, 21),
-('템페', 9000, '15436328-7cb3-4efa-b333-980f63f8634a.jpg', '15436328-7cb3-4efa-b333-980f63f8634a.jpg', '국산 콩으로 만든 식물성 단백질 템페입니다.', 'Y', 1, 2),
-('비건 라이스볼', 9000, 'premium_photo-1721494882150-e2a03451b163.jpg', 'premium_photo-1721494882150-e2a03451b163.jpg', '건강한 아침 식사 메뉴입니다.', 'Y', 1, 1),
-('크로스바디 백', 60000, 'bag_7a61753b-e372-4ca0-84a9-24423da4cf8c.png', 'bag_7a61753b-e372-4ca0-84a9-24423da4cf8c.png', '실용적이고 스타일리시한 크로스바디 백입니다.', 'Y', 10, 108),
-('아로마 앰플', 15000, 'maison-meunier-active-botanical-facial-serum-with-coenzyme-q10-30ml-16085244149873_400x.jpg', 'maison-meunier-active-botanical-facial-serum-with-coenzyme-q10-30ml-16085244149873_400x.jpg', '친환경 성분으로 이루어진 앰플입니다.', 'Y', 10, 74),
-('비건 가죽 부츠', 60000, 'boots_137d9e31-1dc8-4e47-92e3-107a95f80ab2.png', 'boots_137d9e31-1dc8-4e47-92e3-107a95f80ab2.png', '비건 가죽 롱부츠입니다.', 'Y', 10, 99),
-('영양제', 50000, '2165e5455cb7db8360467b73b352af73.jpg', '2165e5455cb7db8360467b73b352af73.jpg', '현대인에게 필수인 멀티비타민입니다', 'Y', 10, 55),
-('귤 향수', 20000, 'minuit-sur-terre-equinoxe-30650224574577_400x.jpg', 'minuit-sur-terre-equinoxe-30650224574577_400x.jpg', '심플한 디자인의 비건 가죽 클러치 백입니다.', 'Y', 10, 74),
-('친황경 천연 비누', 3000, 'maison-meunier-activated-charcoal-face-body-vegan-cleansing-bar-lavender-tea-tree-100g-29437750837361_400x.jpg', 'maison-meunier-activated-charcoal-face-body-vegan-cleansing-bar-lavender-tea-tree-100g-29437750837361_400x.jpg', '차콜 성분의 페이셜 클렌징도 가능한 비누입니다.', 'Y', 10, 74),
-('비건 가죽 운동화', 30000, 'sn.png', 'sn.png', '사과 껍질 가죽으로 만든 유니크한 운동화입니다.', 'Y', 10, 108),
-('비건 가죽 구두', 60000, 'Screenshot_2023-08-08_at_16.35.19_5d4f73bd-28ea-44fc-9316-9695c1846cc2.jpg', 'Screenshot_2023-08-08_at_16.35.19_5d4f73bd-28ea-44fc-9316-9695c1846cc2.jpg', '비건 가죽 구두입니다.', 'Y', 10, 108),
-('비건 애플 크럼블', 9500, '36e3929f53b0c.jpg', '36e3929f53b0c.jpg', '쌀클럼블이 올라간 떠먹는 사과 파이.', 'Y', 4, 26),
-('신선한 샤인 머스켓', 12000, '028215_20240729161946.jpg', '028215_20240729161946.jpg', '당도 보장, 유기농 샤인머스켓입니다', 'Y', 1, 1),
-
 -- Small 카테고리 2: 비건
 ('부추 감자전', 12000, '1000054622729_i1_1200.jpg', '1000054622729_i1_1200.jpg', '강판에 갈아만든 부추 감자전', 'Y', 1, 2),
 ('감자 옹심이', 14000, '1000054622750_i1_1200.jpg', '1000054622750_i1_1200.jpg', '강판에 갈아만든 감자 옹심이', 'Y', 1, 2),
@@ -332,29 +318,28 @@ INSERT INTO tbl_product (product_name, product_price, product_thumbnail, product
 -- Medium 카테고리 11: 신발
 -- Small 카테고리 99: 기타 (99)
 ('실내화', 20000, '1000546123973_i1_1200.jpg', '1000546123973_i1_1200.jpg', '비건 가죽으로 제작된 편안하고 실용적인 실내화입니다.', 'Y', 10, 99),
-('비건 가죽 부츠', 60000, 'thum_image_52.png', 'boots_137d9e31-1dc8-4e47-92e3-107a95f80ab2.png', '비건 가죽 롱부츠입니다.', 'Y', 10, 99),
 ('비건 가죽 운동화', 50000, 'thum_image_52.png', 'sn.png', '사과 껍질 가죽으로 만든 유니크한 운동화입니다.', 'Y', 10, 99),
 
 -- Medium 카테고리 12: 가방
 -- Small 카테고리 108: 기타 (108)
 ('비건 스타벅스 핸드백', 85000, '14d89dba64617f5851600a0c5cfcca80.png', '14d89dba64617f5851600a0c5cfcca80.png', '친환경 비건 가죽으로 제작된 세련된 핸드백입니다.', 'Y', 10, 108),
 ('로이미니백', 70000, '1000291212320_i1_1200.jpg', '1000291212320_i1_1200.jpg', '비건 가죽으로 만든 작고 실용적인 미니백입니다.', 'Y', 10, 108),
-('에코 텀블러백', 50000, 'trans.jpg', 'trans.jpg', '심플한 디자인과 비건 소재를 사용한 텀블러백입니다.', 'Y', 10, 108);
+('에코 텀블러백', 50000, 'trans.jpg', 'trans.jpg', '심플한 디자인과 비건 소재를 사용한 텀블러백입니다.', 'Y', 10, 108),
 
+('신선한 샤인 머스켓', 12000, 'thum_image_1.png', '028215_20240729161946.jpg', '당도 보장, 유기농 샤인머스켓입니다', 'Y', 1, 1),
+('비건 애플 크럼블', 9500, 'thum_image_40.png', '36e3929f53b0c.jpg', '쌀클럼블이 올라간 떠먹는 사과 파이.', 'Y', 4, 26),
+('비건 가죽 구두', 60000, 'thum_image_52.png', 'Screenshot_2023-08-08_at_16.35.19_5d4f73bd-28ea-44fc-9316-9695c1846cc2.jpg', '비건 가죽 구두입니다.', 'Y', 10, 108),
+('비건 가죽 운동화', 30000, 'thum_image_52.png', 'sn.png', '사과 껍질 가죽으로 만든 유니크한 운동화입니다.', 'Y', 10, 108),
+('친황경 천연 비누', 3000, 'thum_image_52.png', 'maison-meunier-activated-charcoal-face-body-vegan-cleansing-bar-lavender-tea-tree-100g-29437750837361_400x.jpg', '차콜 성분의 페이셜 클렌징도 가능한 비누입니다.', 'Y', 10, 74),
+('귤 향수', 20000, 'thum_image_52.png', 'minuit-sur-terre-equinoxe-30650224574577_400x.jpg', '심플한 디자인의 비건 가죽 클러치 백입니다.', 'Y', 10, 74),
+('영양제', 50000, 'thum_image_52.png', '2165e5455cb7db8360467b73b352af73.jpg', '현대인에게 필수인 멀티비타민입니다', 'Y', 10, 55),
+('비건 가죽 부츠', 60000, 'thum_image_52.png', 'boots_137d9e31-1dc8-4e47-92e3-107a95f80ab2.png', '비건 가죽 롱부츠입니다.', 'Y', 10, 108),
+('아로마 앰플', 15000, 'thum_image_48.png', 'maison-meunier-active-botanical-facial-serum-with-coenzyme-q10-30ml-16085244149873_400x.jpg', '친환경 성분으로 이루어진 앰플입니다.', 'Y', 10, 74),
+('크로스바디 백', 60000, 'thum_image_50.png', 'bag_7a61753b-e372-4ca0-84a9-24423da4cf8c.png', '실용적이고 스타일리시한 크로스바디 백입니다.', 'Y', 10, 108),
+('비건 라이스볼', 9000, 'thum_image_4.png', 'premium_photo-1721494882150-e2a03451b163.jpg', '건강한 아침 식사 메뉴입니다.', 'Y', 1, 1),
+('템페', 9000, 'thum_image_8.png', '15436328-7cb3-4efa-b333-980f63f8634a.jpg', '국산 콩으로 만든 식물성 단백질 템페입니다.', 'Y', 1, 2),
+('비건 치즈 버거', 13000, 'thum_image_5.png', 'image_5.jpg', '식물성 패티와 비건 치즈로 만든 맛있는 버거입니다.', 'Y', 1, 2);
 
-
-
-
-# INSERT INTO tbl_product (product_name, product_price, product_thumbnail, product_img, product_desc, product_check, producer_id, small_category_id) VALUES
-#                                                                                                                                                                          ('유기농 토마토 주스', '2000', 'product_thum_image001.png','product_image001', '통통튀는 상큼한 유기농 상품 착즙 토마토 쥬-스', 'Y', 1, 3),
-#                                                                                                                                                                          ('콜라', 1200, 'product_thum_image003.png', 'product_image003.png', '시원하고 청량한 탄산 음료 콜라입니다.', 'Y',  1, 2),
-#                                                                                                                                                                          ('오렌지 주스', 2500, 'product_thum_image004.png', 'product_image004.png', '신선한 오렌지를 착즙한 과채 음료입니다.', 'Y',  2, 3),
-#                                                                                                                                                                          ('초코 케이크', 5000, 'product_thum_image005.png', 'product_image005.png', '달콤하고 진한 초코 케이크입니다.', 'Y',  2, 4),
-#                                                                                                                                                                          ('냄비 세트', 30000, 'product_thum_image006.png', 'product_image006.png', '다양한 크기의 냄비로 구성된 주방용품 세트입니다.', 'Y',  2, 5),
-#                                                                                                                                                                          ('비누 세트', 8000, 'product_thum_image007.png', 'product_image007.png', '피부에 좋은 성분을 사용한 욕실용품 비누 세트입니다.', 'Y',  2, 6),
-#                                                                                                                                                                          ('베개', 12000, 'product_thum_image008.png', 'product_image008.png', '푹신한 침실용품 베개입니다.', 'Y',  1, 7),
-#                                                                                                                                                                          ('여름 티셔츠', 7000, 'product_thum_image009.png', 'product_image009.png', '시원하고 편안한 여름 티셔츠입니다.', 'Y', 1, 8),
-#                                                                                                                                                                          ('수분 크림', 15000, 'product_thum_image010.png', 'product_image010.png', '피부에 촉촉함을 더해주는 스킨케어 수분 크림입니다.', 'Y',  2, 9);
 
 INSERT INTO tbl_review (review_image, review_thumbnail, review, review_rating, product_id, user_id) VALUES
                                                                                                         ('review_image_1.png', 'review_thumbnail_1.png', '다른 제품과 비교해도 월등히 뛰어납니다.', 4, 1, 9),
@@ -421,28 +406,81 @@ INSERT INTO tbl_coupon_list (user_id, coupon_id) VALUES
                                                      (12,1),
                                                      (12,2);
 
-INSERT INTO tbl_option (option_desc, add_price, product_id, option_quantity, option_check) VALUES
-                                                                                               ('프리미엄 업그레이드', 5000, 1, 20, 'Y'),
-                                                                                               ('사이다', 500, 1, 150, 'Y'),
-                                                                                               ('추가 사은품', 2000, 2, 30, 'Y'),
-                                                                                               ('추가 재료 선택', 1500, 2, 70, 'Y'),
-                                                                                               ('사이다', 500, 3, 150, 'Y'),
-                                                                                               ('홀케이크로 변경', 20000, 3, 50, 'Y'),
-                                                                                               ('용량 선택', 500, 4, 100, 'Y'),
-                                                                                               ('추가 사은품', 2000, 4, 30, 'Y'),
-                                                                                               ('프리미엄 업그레이드', 5000, 5, 20, 'Y'),
-                                                                                               ('추가 사은품', 2000, 6, 30, 'Y'),
-                                                                                               ('제로 칼로리', 300, 7, 150, 'Y'),
-                                                                                               ('1.25리터', 1000, 8, 100, 'Y'),
-                                                                                               ('사이다', 500, 9, 150, 'Y'),
-                                                                                               ('추가 재료 선택', 1500, 10, 70, 'Y'),
-                                                                                               ('프리미엄 업그레이드', 5000, 11, 20, 'Y'),
-                                                                                               ('추가 사은품', 2000, 12, 30, 'Y'),
-                                                                                               ('홀케이크로 변경', 20000, 13, 50, 'Y'),
-                                                                                               ('추가 재료 선택', 1500, 14, 70, 'Y'),
-                                                                                               ('프리미엄 업그레이드', 5000, 15, 20, 'Y'),
-                                                                                               ('추가 사은품', 2000, 16, 30, 'Y');
+# INSERT INTO tbl_option (option_desc, add_price, product_id, option_quantity, option_check) VALUES
+#                                                                                                ('프리미엄 업그레이드', 5000, 1, 20, 'Y'),
+#                                                                                                ('사이다', 500, 1, 150, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 2, 30, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 2, 70, 'Y'),
+#                                                                                                ('사이다', 500, 3, 150, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 3, 50, 'Y'),
+#                                                                                                ('용량 선택', 500, 4, 100, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 4, 30, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 5, 20, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 6, 30, 'Y'),
+#                                                                                                ('제로 칼로리', 300, 7, 150, 'Y'),
+#                                                                                                ('1.25리터', 1000, 8, 100, 'Y'),
+#                                                                                                ('사이다', 500, 9, 150, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 10, 70, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 11, 20, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 12, 30, 'Y'),
+#                                                                                                ('홀케이크로 변경', 20000, 13, 50, 'Y'),
+#                                                                                                ('추가 재료 선택', 1500, 14, 70, 'Y'),
+#                                                                                                ('프리미엄 업그레이드', 5000, 15, 20, 'Y'),
+#                                                                                                ('추가 사은품', 2000, 16, 30, 'Y');
 
+INSERT INTO tbl_option (option_desc, add_price, product_id, option_quantity, option_check) VALUES
+-- 신선한 샤인 머스켓 (product_id = 51)
+('추가 포도', 2000, 51, 50, 'Y'),
+('소분 포장', 1000, 51, 30, 'Y'),
+
+-- 비건 애플 크럼블 (product_id = 52)
+('추가 크럼블', 1500, 52, 40, 'Y'),
+('추가 사과 슬라이스', 1000, 52, 30, 'Y'),
+
+-- 비건 가죽 구두 (product_id = 53)
+('사이즈 변경', 3000, 53, 10, 'Y'),
+('방수 옵션 추가', 2000, 53, 15, 'Y'),
+
+-- 비건 가죽 운동화 (product_id = 54)
+('사이즈 업그레이드', 2000, 54, 15, 'Y'),
+('추가 깔창', 1000, 54, 50, 'Y'),
+
+-- 친환경 천연 비누 (product_id = 55)
+('추가 포장', 500, 55, 100, 'Y'),
+('비누 크기 업그레이드', 1500, 55, 30, 'Y'),
+
+-- 귤 향수 (product_id = 56)
+('향 농도 강화', 2000, 56, 20, 'Y'),
+('여행용 사이즈', 3000, 56, 50, 'Y'),
+
+-- 영양제 (product_id = 57)
+('멀티팩 구매', 10000, 57, 10, 'Y'),
+('비타민C 추가', 1500, 57, 30, 'Y'),
+
+-- 비건 가죽 부츠 (product_id = 58)
+('방수 처리', 3000, 58, 15, 'Y'),
+('사이즈 조정', 2000, 58, 20, 'Y'),
+
+-- 아로마 앰플 (product_id = 59)
+('대용량 업그레이드', 3000, 59, 20, 'Y'),
+('향 추가 조합', 1500, 59, 40, 'Y'),
+
+-- 크로스바디 백 (product_id = 60)
+('색상 변경', 5000, 60, 20, 'Y'),
+('추가 스트랩', 3000, 60, 10, 'Y'),
+
+-- 비건 라이스볼 (product_id = 61)
+('추가 토핑', 2000, 61, 50, 'Y'),
+('사이즈 업그레이드', 1500, 61, 30, 'Y'),
+
+-- 템페 (product_id = 62)
+('추가 템페', 3000, 62, 40, 'Y'),
+('소분 포장', 1000, 62, 30, 'Y'),
+
+-- 비건 치즈 버거 (product_id = 63)
+('치즈 추가', 1500, 63, 50, 'Y'),
+('감자튀김 추가', 2000, 63, 30, 'Y'),
+('음료 추가', 1000, 63, 40, 'Y');
 
 INSERT INTO tbl_order (order_total_amount, order_total_count, delivery_status, order_status,
                        delivery_fee, point_discount, coupon_id, coupon_discount, discount_amount,
