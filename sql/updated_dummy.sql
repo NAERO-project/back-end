@@ -511,9 +511,7 @@ INSERT INTO tbl_order_detail (option_id, count, amount,
 INSERT INTO tbl_banner (banner_thumbnail, banner_img, banner_url,
                         banner_create_at, banner_accept_status, banner_delete_at, producer_id, banner_accept_at, approver_id)VALUES
                                                                                                                                  ('photo-1615366105533-5b8f3255ea5d.jpg', 'photo-1615366105533-5b8f3255ea5d.jpg', 'nnn.com','2024-11-12 00:00:00', 'Y','2024-12-30 00:00:00',  1, '2024-11-11 00:00:00', 8 ),
-                                                                                                                                 ('photo-1615802546478-7380efa2d365.jpg', 'photo-1615802546478-7380efa2d365.jpg', 'nnn.com','2024-11-20 00:00:00', 'Y', '2024-12-30 00:00:00', 2, '2024-11-11 00:00:00', 8 ),
-                                                                                                                                 ('5b42c11407734c42a253883d237c554e.png', '5b42c11407734c42a253883d237c554e.png', 'mmm.com','2024-11-11 00:00:00','N', '2024-12-30 00:00:00', 3, NULL, NULL );
-
+                                                                                                                                 ('photo-1615802546478-7380efa2d365.jpg', 'photo-1615802546478-7380efa2d365.jpg', 'nnn.com','2024-11-20 00:00:00', 'Y', '2024-12-30 00:00:00', 2, '2024-11-11 00:00:00', 8 );
 
 INSERT INTO tbl_order (
     order_total_amount, order_total_count, delivery_status, order_status,
